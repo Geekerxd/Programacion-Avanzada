@@ -1,0 +1,18 @@
+﻿  Source.cpp
+c:\users\rishar\source\repos\semana 10\calculadora\1\source.cpp(99): warning C4244: 'argumento': conversión de '__int64' a 'int'; posible pérdida de datos
+c:\users\rishar\source\repos\semana 10\calculadora\1\source.cpp(107): warning C4244: 'argumento': conversión de '__int64' a 'int'; posible pérdida de datos
+c:\users\rishar\source\repos\semana 10\calculadora\1\source.cpp(115): warning C4244: 'argumento': conversión de '__int64' a 'int'; posible pérdida de datos
+c:\users\rishar\source\repos\semana 10\calculadora\1\source.cpp(123): warning C4244: 'argumento': conversión de '__int64' a 'int'; posible pérdida de datos
+c:\users\rishar\source\repos\semana 10\calculadora\1\source.cpp(131): warning C4244: 'argumento': conversión de '__int64' a 'int'; posible pérdida de datos
+c:\users\rishar\source\repos\semana 10\calculadora\1\source.cpp(139): warning C4244: 'argumento': conversión de '__int64' a 'int'; posible pérdida de datos
+c:\users\rishar\source\repos\semana 10\calculadora\1\source.cpp(147): warning C4244: 'argumento': conversión de '__int64' a 'int'; posible pérdida de datos
+c:\users\rishar\source\repos\semana 10\calculadora\1\source.cpp(155): warning C4244: 'argumento': conversión de '__int64' a 'int'; posible pérdida de datos
+c:\users\rishar\source\repos\semana 10\calculadora\1\source.cpp(163): warning C4244: 'argumento': conversión de '__int64' a 'int'; posible pérdida de datos
+c:\users\rishar\source\repos\semana 10\calculadora\1\source.cpp(171): warning C4244: 'argumento': conversión de '__int64' a 'int'; posible pérdida de datos
+c:\users\rishar\source\repos\semana 10\calculadora\1\source.cpp(269): warning C4244: '=': conversión de '__int64' a 'double'; posible pérdida de datos
+c:\users\rishar\source\repos\semana 10\calculadora\1\source.cpp(292): warning C4244: 'argumento': conversión de 'double' a 'int'; posible pérdida de datos
+c:\users\rishar\source\repos\semana 10\calculadora\1\source.cpp(301): warning C4244: 'argumento': conversión de 'double' a 'int'; posible pérdida de datos
+c:\users\rishar\source\repos\semana 10\calculadora\1\source.cpp(310): warning C4244: 'argumento': conversión de 'double' a 'int'; posible pérdida de datos
+c:\users\rishar\source\repos\semana 10\calculadora\1\source.cpp(393): warning C4715: 'ayu': no todas las rutas de acceso de control devuelven un valor
+c:\users\rishar\source\repos\semana 10\calculadora\1\source.cpp(427): warning C4715: 'ayu2': no todas las rutas de acceso de control devuelven un valor
+  1.vcxproj -> C:\Users\rishar\source\repos\semana 10\Calculadora\Debug\1.exe
