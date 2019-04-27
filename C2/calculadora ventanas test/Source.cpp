@@ -19,7 +19,8 @@ int _gShow = 0;
 BOOL CALLBACK ProcDialog1(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam);
 void ocultar_A(HWND Dlg); void ocultar_B(HWND Dlg); void ocultar_R(HWND Dlg);
 void restore_A(HWND Dlg, int x1, int x2); void restore_B(HWND Dlg, int x1, int x2); void restore_R(HWND Dlg, int x1, int x2);
-void leerA(HWND h); void leerB(HWND h); void EscribriResultado(HWND h); void MultiResultado_con_decilames(HWND h);
+void leerA(HWND h); void leerB(HWND h); void leerA_deci(HWND h); void leerB_deci(HWND h);
+void EscribriResultado(HWND h); void EscribriResultado_con_decilames(HWND h);
 void borrarA(HWND h); void borrarB(HWND h); void borrarR(HWND h);
 float matrixA[10][10];
 float matrixB[10][10];
@@ -32,8 +33,12 @@ int b1 = 0;
 int b2 = 0;
 
 BOOL flag = 0;
+BOOL flag_aux = 0;
+
 
 void Multiplicar(HWND h);
+void Suma(HWND h);
+void Resta(HWND h);
 
 
 int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrev, PSTR cmd, int show)
@@ -117,11 +122,13 @@ BOOL CALLBACK ProcDialog1(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
 
 
 			if (flag == 1) {
+				flag_aux = 1;
 				leerA(Dlg);
 				leerB(Dlg);
 
 				Multiplicar(Dlg);
 				//Aquí multiplica...
+				flag_aux = 0;
 			}
 
 			flag = 0;
@@ -139,17 +146,131 @@ BOOL CALLBACK ProcDialog1(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
 
 
 			if (flag == 1) {
-				MultiResultado_con_decilames(Dlg);
+				leerA_deci(Dlg);
+				leerB_deci(Dlg);
+
+				Multiplicar(Dlg);
 				//Aquí multiplica...
 			}
 
 			flag = 0;
 			return true;
 		}
+		case IDC_SUMA: {
+			
+			ocultar_R(Dlg);
+			borrarR(Dlg);
+			//...
+			if (a1 == b1 && a2==b2) {
+				restore_R(Dlg, a1, a2);
+				flag = 1;
+			}
+			else { MessageBox(Dlg, "Las filas y columas de mas matrices A y B deben ser iguales.", "Advertencia", MB_ICONWARNING); }
 
+
+			if (flag == 1) {
+				flag_aux = 1;
+				leerA(Dlg);
+				leerB(Dlg);
+
+				Suma(Dlg);
+				//Aquí Suma...
+				flag_aux = 0;
+			}
+			
+			
+			
+			flag = 0;
+			return true; }
+		case IDC_SUMA_DEC: {
+
+			ocultar_R(Dlg);
+			borrarR(Dlg);
+			//...
+			if (a1 == b1 && a2 == b2) {
+				restore_R(Dlg, a1, a2);
+				flag = 1;
+			}
+			else { MessageBox(Dlg, "Las filas y columas de mas matrices A y B deben ser iguales.", "Advertencia", MB_ICONWARNING); }
+
+
+			if (flag == 1) {
+				
+				leerA_deci(Dlg);
+				leerB_deci(Dlg);
+
+				Suma(Dlg);
+				//Aquí Suma...
+				
+			}
+
+
+
+			flag = 0;
+			return true; }
+		case IDC_RESTA: {
+
+			ocultar_R(Dlg);
+			borrarR(Dlg);
+			//...
+			if (a1 == b1 && a2 == b2) {
+				restore_R(Dlg, a1, a2);
+				flag = 1;
+			}
+			else { MessageBox(Dlg, "Las filas y columas de mas matrices A y B deben ser iguales.", "Advertencia", MB_ICONWARNING); }
+
+
+			if (flag == 1) {
+				flag_aux = 1;
+				leerA(Dlg);
+				leerB(Dlg);
+
+				Resta(Dlg);
+				//Aquí Suma...
+				flag_aux = 0;
+			}
+
+
+
+			flag = 0;
+
+			return true; }
+		case IDC_RESTA_DEC: {
+
+			ocultar_R(Dlg);
+			borrarR(Dlg);
+			//...
+			if (a1 == b1 && a2 == b2) {
+				restore_R(Dlg, a1, a2);
+				flag = 1;
+			}
+			else { MessageBox(Dlg, "Las filas y columas de mas matrices A y B deben ser iguales.", "Advertencia", MB_ICONWARNING); }
+
+
+			if (flag == 1) {
+
+				leerA_deci(Dlg);
+				leerB_deci(Dlg);
+
+				Resta(Dlg);
+				//Aquí Suma...
+
+			}
+
+
+
+			flag = 0;
+
+
+			return true; }
+
+
+
+
+		case ID_ARCHIVO_SALIR40013:{PostQuitMessage(0);return true; }
 		}//fin del switch (LOWORD(wParam))
 		return true;
-
+ 
 	}
 	case WM_CLOSE: {PostQuitMessage(0); return true; }
 	case WM_DESTROY: {return true; }
@@ -574,6 +695,418 @@ void leerB(HWND h) {
 
 
 }
+
+void leerA_deci(HWND h) {
+        char A_11	 [10]="";
+		char A_12	 [10]="";
+		char A_13	 [10]="";
+		char A_14	 [10]="";
+		char A_15	 [10]="";
+		char A_16	 [10]="";
+		char A_17	 [10]="";
+		char A_18	 [10]="";
+		char A_19	 [10]="";
+		char A_110	 [10]="";
+		char A_21	 [10]="";
+		char A_22	 [10]="";
+		char A_23	 [10]="";
+		char A_24	 [10]="";
+		char A_25	 [10]="";
+		char A_26	 [10]="";
+		char A_27	 [10]="";
+		char A_28	 [10]="";
+		char A_29	 [10]="";
+		char A_210	 [10]="";
+		char A_31	 [10]="";
+		char A_32	 [10]="";
+		char A_33	 [10]="";
+		char A_34	 [10]="";
+		char A_35	 [10]="";
+		char A_36	 [10]="";
+		char A_37	 [10]="";
+		char A_38	 [10]="";
+		char A_39	 [10]="";
+		char A_310	 [10]="";
+		char A_41	 [10]="";
+		char A_42	 [10]="";
+		char A_43	 [10]="";
+		char A_44	 [10]="";
+		char A_45	 [10]="";
+		char A_46	 [10]="";
+		char A_47	 [10]="";
+		char A_48	 [10]="";
+		char A_49	 [10]="";
+		char A_410	 [10]="";
+		char A_51	 [10]="";
+		char A_52	 [10]="";
+		char A_53	 [10]="";
+		char A_54	 [10]="";
+		char A_55	 [10]="";
+		char A_56	 [10]="";
+		char A_57	 [10]="";
+		char A_58	 [10]="";
+		char A_59	 [10]="";
+		char A_510	 [10]="";
+		char A_61	 [10]="";
+		char A_62	 [10]="";
+		char A_63	 [10]="";
+		char A_64	 [10]="";
+		char A_65	 [10]="";
+		char A_66	 [10]="";
+		char A_67	 [10]="";
+		char A_68	 [10]="";
+		char A_69	 [10]="";
+		char A_610	 [10]="";
+		char A_71	 [10]="";
+		char A_72	 [10]="";
+		char A_73	 [10]="";
+		char A_74	 [10]="";
+		char A_75	 [10]="";
+		char A_76	 [10]="";
+		char A_77	 [10]="";
+		char A_78	 [10]="";
+		char A_79	 [10]="";
+		char A_710	 [10]="";
+		char A_81	 [10]="";
+		char A_82	 [10]="";
+		char A_83	 [10]="";
+		char A_84	 [10]="";
+		char A_85	 [10]="";
+		char A_86	 [10]="";
+		char A_87	 [10]="";
+		char A_88	 [10]="";
+		char A_89	 [10]="";
+		char A_810	 [10]="";
+		char A_91	 [10]="";
+		char A_92	 [10]="";
+		char A_93	 [10]="";
+		char A_94	 [10]="";
+		char A_95	 [10]="";
+		char A_96	 [10]="";
+		char A_97	 [10]="";
+		char A_98	 [10]="";
+		char A_99	 [10]="";
+		char A_910	 [10]="";
+		char A_101	 [10]="";
+		char A_102	 [10]="";
+		char A_103	 [10]="";
+		char A_104	 [10]="";
+		char A_105	 [10]="";
+		char A_106	 [10]="";
+		char A_107	 [10]="";
+		char A_108	 [10]="";
+		char A_109	 [10]="";
+		char A_1010	 [10]="";
+
+    SendMessage(GetDlgItem(h, IDC_EDIT_A_11  ), WM_GETTEXT, 10, (LPARAM)A_11  ); matrixA[0 ][0  ] = strtod(A_11  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_12  ), WM_GETTEXT, 10, (LPARAM)A_12  ); matrixA[0 ][1  ] = strtod(A_12  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_13  ), WM_GETTEXT, 10, (LPARAM)A_13  ); matrixA[0 ][2  ] = strtod(A_13  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_14  ), WM_GETTEXT, 10, (LPARAM)A_14  ); matrixA[0 ][3  ] = strtod(A_14  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_15  ), WM_GETTEXT, 10, (LPARAM)A_15  ); matrixA[0 ][4  ] = strtod(A_15  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_16  ), WM_GETTEXT, 10, (LPARAM)A_16  ); matrixA[0 ][5  ] = strtod(A_16  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_17  ), WM_GETTEXT, 10, (LPARAM)A_17  ); matrixA[0 ][6  ] = strtod(A_17  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_18  ), WM_GETTEXT, 10, (LPARAM)A_18  ); matrixA[0 ][7  ] = strtod(A_18  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_19  ), WM_GETTEXT, 10, (LPARAM)A_19  ); matrixA[0 ][8  ] = strtod(A_19  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_110 ), WM_GETTEXT, 10, (LPARAM)A_110 ); matrixA[0 ][9  ] = strtod(A_110 ,0 );//
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_21  ), WM_GETTEXT, 10, (LPARAM)A_21  ); matrixA[1 ][0  ] = strtod(A_21  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_22  ), WM_GETTEXT, 10, (LPARAM)A_22  ); matrixA[1 ][1  ] = strtod(A_22  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_23  ), WM_GETTEXT, 10, (LPARAM)A_23  ); matrixA[1 ][2  ] = strtod(A_23  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_24  ), WM_GETTEXT, 10, (LPARAM)A_24  ); matrixA[1 ][3  ] = strtod(A_24  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_25  ), WM_GETTEXT, 10, (LPARAM)A_25  ); matrixA[1 ][4  ] = strtod(A_25  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_26  ), WM_GETTEXT, 10, (LPARAM)A_26  ); matrixA[1 ][5  ] = strtod(A_26  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_27  ), WM_GETTEXT, 10, (LPARAM)A_27  ); matrixA[1 ][6  ] = strtod(A_27  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_28  ), WM_GETTEXT, 10, (LPARAM)A_28  ); matrixA[1 ][7  ] = strtod(A_28  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_29  ), WM_GETTEXT, 10, (LPARAM)A_29  ); matrixA[1 ][8  ] = strtod(A_29  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_210 ), WM_GETTEXT, 10, (LPARAM)A_210 ); matrixA[1 ][9  ] = strtod(A_210 ,0 );//
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_31  ), WM_GETTEXT, 10, (LPARAM)A_31  ); matrixA[2 ][0  ] = strtod(A_31  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_32  ), WM_GETTEXT, 10, (LPARAM)A_32  ); matrixA[2 ][1  ] = strtod(A_32  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_33  ), WM_GETTEXT, 10, (LPARAM)A_33  ); matrixA[2 ][2  ] = strtod(A_33  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_34  ), WM_GETTEXT, 10, (LPARAM)A_34  ); matrixA[2 ][3  ] = strtod(A_34  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_35  ), WM_GETTEXT, 10, (LPARAM)A_35  ); matrixA[2 ][4  ] = strtod(A_35  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_36  ), WM_GETTEXT, 10, (LPARAM)A_36  ); matrixA[2 ][5  ] = strtod(A_36  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_37  ), WM_GETTEXT, 10, (LPARAM)A_37  ); matrixA[2 ][6  ] = strtod(A_37  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_38  ), WM_GETTEXT, 10, (LPARAM)A_38  ); matrixA[2 ][7  ] = strtod(A_38  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_39  ), WM_GETTEXT, 10, (LPARAM)A_39  ); matrixA[2 ][8  ] = strtod(A_39  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_310 ), WM_GETTEXT, 10, (LPARAM)A_310 ); matrixA[2 ][9  ] = strtod(A_310 ,0 );//
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_41  ), WM_GETTEXT, 10, (LPARAM)A_41  ); matrixA[3 ][0  ] = strtod(A_41  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_42  ), WM_GETTEXT, 10, (LPARAM)A_42  ); matrixA[3 ][1  ] = strtod(A_42  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_43  ), WM_GETTEXT, 10, (LPARAM)A_43  ); matrixA[3 ][2  ] = strtod(A_43  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_44  ), WM_GETTEXT, 10, (LPARAM)A_44  ); matrixA[3 ][3  ] = strtod(A_44  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_45  ), WM_GETTEXT, 10, (LPARAM)A_45  ); matrixA[3 ][4  ] = strtod(A_45  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_46  ), WM_GETTEXT, 10, (LPARAM)A_46  ); matrixA[3 ][5  ] = strtod(A_46  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_47  ), WM_GETTEXT, 10, (LPARAM)A_47  ); matrixA[3 ][6  ] = strtod(A_47  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_48  ), WM_GETTEXT, 10, (LPARAM)A_48  ); matrixA[3 ][7  ] = strtod(A_48  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_49  ), WM_GETTEXT, 10, (LPARAM)A_49  ); matrixA[3 ][8  ] = strtod(A_49  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_410 ), WM_GETTEXT, 10, (LPARAM)A_410 ); matrixA[3 ][9  ] = strtod(A_410 ,0 );//
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_51  ), WM_GETTEXT, 10, (LPARAM)A_51  ); matrixA[4 ][0  ] = strtod(A_51  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_52  ), WM_GETTEXT, 10, (LPARAM)A_52  ); matrixA[4 ][1  ] = strtod(A_52  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_53  ), WM_GETTEXT, 10, (LPARAM)A_53  ); matrixA[4 ][2  ] = strtod(A_53  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_54  ), WM_GETTEXT, 10, (LPARAM)A_54  ); matrixA[4 ][3  ] = strtod(A_54  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_55  ), WM_GETTEXT, 10, (LPARAM)A_55  ); matrixA[4 ][4  ] = strtod(A_55  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_56  ), WM_GETTEXT, 10, (LPARAM)A_56  ); matrixA[4 ][5  ] = strtod(A_56  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_57  ), WM_GETTEXT, 10, (LPARAM)A_57  ); matrixA[4 ][6  ] = strtod(A_57  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_58  ), WM_GETTEXT, 10, (LPARAM)A_58  ); matrixA[4 ][7  ] = strtod(A_58  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_59  ), WM_GETTEXT, 10, (LPARAM)A_59  ); matrixA[4 ][8  ] = strtod(A_59  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_510 ), WM_GETTEXT, 10, (LPARAM)A_510 ); matrixA[4 ][9  ] = strtod(A_510 ,0 );//
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_61  ), WM_GETTEXT, 10, (LPARAM)A_61  ); matrixA[5 ][0  ] = strtod(A_61  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_62  ), WM_GETTEXT, 10, (LPARAM)A_62  ); matrixA[5 ][1  ] = strtod(A_62  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_63  ), WM_GETTEXT, 10, (LPARAM)A_63  ); matrixA[5 ][2  ] = strtod(A_63  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_64  ), WM_GETTEXT, 10, (LPARAM)A_64  ); matrixA[5 ][3  ] = strtod(A_64  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_65  ), WM_GETTEXT, 10, (LPARAM)A_65  ); matrixA[5 ][4  ] = strtod(A_65  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_66  ), WM_GETTEXT, 10, (LPARAM)A_66  ); matrixA[5 ][5  ] = strtod(A_66  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_67  ), WM_GETTEXT, 10, (LPARAM)A_67  ); matrixA[5 ][6  ] = strtod(A_67  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_68  ), WM_GETTEXT, 10, (LPARAM)A_68  ); matrixA[5 ][7  ] = strtod(A_68  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_69  ), WM_GETTEXT, 10, (LPARAM)A_69  ); matrixA[5 ][8  ] = strtod(A_69  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_610 ), WM_GETTEXT, 10, (LPARAM)A_610 ); matrixA[5 ][9  ] = strtod(A_610 ,0 );//
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_71  ), WM_GETTEXT, 10, (LPARAM)A_71  ); matrixA[6 ][0  ] = strtod(A_71  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_72  ), WM_GETTEXT, 10, (LPARAM)A_72  ); matrixA[6 ][1  ] = strtod(A_72  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_73  ), WM_GETTEXT, 10, (LPARAM)A_73  ); matrixA[6 ][2  ] = strtod(A_73  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_74  ), WM_GETTEXT, 10, (LPARAM)A_74  ); matrixA[6 ][3  ] = strtod(A_74  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_75  ), WM_GETTEXT, 10, (LPARAM)A_75  ); matrixA[6 ][4  ] = strtod(A_75  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_76  ), WM_GETTEXT, 10, (LPARAM)A_76  ); matrixA[6 ][5  ] = strtod(A_76  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_77  ), WM_GETTEXT, 10, (LPARAM)A_77  ); matrixA[6 ][6  ] = strtod(A_77  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_78  ), WM_GETTEXT, 10, (LPARAM)A_78  ); matrixA[6 ][7  ] = strtod(A_78  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_79  ), WM_GETTEXT, 10, (LPARAM)A_79  ); matrixA[6 ][8  ] = strtod(A_79  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_710 ), WM_GETTEXT, 10, (LPARAM)A_710 ); matrixA[6 ][9  ] = strtod(A_710 ,0 );//
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_81  ), WM_GETTEXT, 10, (LPARAM)A_81  ); matrixA[7 ][0  ] = strtod(A_81  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_82  ), WM_GETTEXT, 10, (LPARAM)A_82  ); matrixA[7 ][1  ] = strtod(A_82  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_83  ), WM_GETTEXT, 10, (LPARAM)A_83  ); matrixA[7 ][2  ] = strtod(A_83  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_84  ), WM_GETTEXT, 10, (LPARAM)A_84  ); matrixA[7 ][3  ] = strtod(A_84  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_85  ), WM_GETTEXT, 10, (LPARAM)A_85  ); matrixA[7 ][4  ] = strtod(A_85  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_86  ), WM_GETTEXT, 10, (LPARAM)A_86  ); matrixA[7 ][5  ] = strtod(A_86  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_87  ), WM_GETTEXT, 10, (LPARAM)A_87  ); matrixA[7 ][6  ] = strtod(A_87  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_88  ), WM_GETTEXT, 10, (LPARAM)A_88  ); matrixA[7 ][7  ] = strtod(A_88  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_89  ), WM_GETTEXT, 10, (LPARAM)A_89  ); matrixA[7 ][8  ] = strtod(A_89  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_810 ), WM_GETTEXT, 10, (LPARAM)A_810 ); matrixA[7 ][9  ] = strtod(A_810 ,0 );//
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_91  ), WM_GETTEXT, 10, (LPARAM)A_91  ); matrixA[8 ][0  ] = strtod(A_91  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_92  ), WM_GETTEXT, 10, (LPARAM)A_92  ); matrixA[8 ][1  ] = strtod(A_92  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_93  ), WM_GETTEXT, 10, (LPARAM)A_93  ); matrixA[8 ][2  ] = strtod(A_93  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_94  ), WM_GETTEXT, 10, (LPARAM)A_94  ); matrixA[8 ][3  ] = strtod(A_94  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_95  ), WM_GETTEXT, 10, (LPARAM)A_95  ); matrixA[8 ][4  ] = strtod(A_95  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_96  ), WM_GETTEXT, 10, (LPARAM)A_96  ); matrixA[8 ][5  ] = strtod(A_96  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_97  ), WM_GETTEXT, 10, (LPARAM)A_97  ); matrixA[8 ][6  ] = strtod(A_97  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_98  ), WM_GETTEXT, 10, (LPARAM)A_98  ); matrixA[8 ][7  ] = strtod(A_98  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_99  ), WM_GETTEXT, 10, (LPARAM)A_99  ); matrixA[8 ][8  ] = strtod(A_99  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_910 ), WM_GETTEXT, 10, (LPARAM)A_910 ); matrixA[8 ][9  ] = strtod(A_910 ,0 );//
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_101 ), WM_GETTEXT, 10, (LPARAM)A_101 ); matrixA[9 ][0  ] = strtod(A_101 ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_102 ), WM_GETTEXT, 10, (LPARAM)A_102 ); matrixA[9 ][1  ] = strtod(A_102 ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_103 ), WM_GETTEXT, 10, (LPARAM)A_103 ); matrixA[9 ][2  ] = strtod(A_103 ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_104 ), WM_GETTEXT, 10, (LPARAM)A_104 ); matrixA[9 ][3  ] = strtod(A_104 ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_105 ), WM_GETTEXT, 10, (LPARAM)A_105 ); matrixA[9 ][4  ] = strtod(A_105 ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_106 ), WM_GETTEXT, 10, (LPARAM)A_106 ); matrixA[9 ][5  ] = strtod(A_106 ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_107 ), WM_GETTEXT, 10, (LPARAM)A_107 ); matrixA[9 ][6  ] = strtod(A_107 ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_108 ), WM_GETTEXT, 10, (LPARAM)A_108 ); matrixA[9 ][7  ] = strtod(A_108 ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_109 ), WM_GETTEXT, 10, (LPARAM)A_109 ); matrixA[9 ][8  ] = strtod(A_109 ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_A_1010), WM_GETTEXT, 10, (LPARAM)A_1010); matrixA[9 ][9  ] = strtod(A_1010,0 );//
+}
+void leerB_deci(HWND h) {
+	    char B_11	 [10]="";
+		char B_12	 [10]="";
+		char B_13	 [10]="";
+		char B_14	 [10]="";
+		char B_15	 [10]="";
+		char B_16	 [10]="";
+		char B_17	 [10]="";
+		char B_18	 [10]="";
+		char B_19	 [10]="";
+		char B_110	 [10]="";
+		char B_21	 [10]="";
+		char B_22	 [10]="";
+		char B_23	 [10]="";
+		char B_24	 [10]="";
+		char B_25	 [10]="";
+		char B_26	 [10]="";
+		char B_27	 [10]="";
+		char B_28	 [10]="";
+		char B_29	 [10]="";
+		char B_210	 [10]="";
+		char B_31	 [10]="";
+		char B_32	 [10]="";
+		char B_33	 [10]="";
+		char B_34	 [10]="";
+		char B_35	 [10]="";
+		char B_36	 [10]="";
+		char B_37	 [10]="";
+		char B_38	 [10]="";
+		char B_39	 [10]="";
+		char B_310	 [10]="";
+		char B_41	 [10]="";
+		char B_42	 [10]="";
+		char B_43	 [10]="";
+		char B_44	 [10]="";
+		char B_45	 [10]="";
+		char B_46	 [10]="";
+		char B_47	 [10]="";
+		char B_48	 [10]="";
+		char B_49	 [10]="";
+		char B_410	 [10]="";
+		char B_51	 [10]="";
+		char B_52	 [10]="";
+		char B_53	 [10]="";
+		char B_54	 [10]="";
+		char B_55	 [10]="";
+		char B_56	 [10]="";
+		char B_57	 [10]="";
+		char B_58	 [10]="";
+		char B_59	 [10]="";
+		char B_510	 [10]="";
+		char B_61	 [10]="";
+		char B_62	 [10]="";
+		char B_63	 [10]="";
+		char B_64	 [10]="";
+		char B_65	 [10]="";
+		char B_66	 [10]="";
+		char B_67	 [10]="";
+		char B_68	 [10]="";
+		char B_69	 [10]="";
+		char B_610	 [10]="";
+		char B_71	 [10]="";
+		char B_72	 [10]="";
+		char B_73	 [10]="";
+		char B_74	 [10]="";
+		char B_75	 [10]="";
+		char B_76	 [10]="";
+		char B_77	 [10]="";
+		char B_78	 [10]="";
+		char B_79	 [10]="";
+		char B_710	 [10]="";
+		char B_81	 [10]="";
+		char B_82	 [10]="";
+		char B_83	 [10]="";
+		char B_84	 [10]="";
+		char B_85	 [10]="";
+		char B_86	 [10]="";
+		char B_87	 [10]="";
+		char B_88	 [10]="";
+		char B_89	 [10]="";
+		char B_810	 [10]="";
+		char B_91	 [10]="";
+		char B_92	 [10]="";
+		char B_93	 [10]="";
+		char B_94	 [10]="";
+		char B_95	 [10]="";
+		char B_96	 [10]="";
+		char B_97	 [10]="";
+		char B_98	 [10]="";
+		char B_99	 [10]="";
+		char B_910	 [10]="";
+		char B_101	 [10]="";
+		char B_102	 [10]="";
+		char B_103	 [10]="";
+		char B_104	 [10]="";
+		char B_105	 [10]="";
+		char B_106	 [10]="";
+		char B_107	 [10]="";
+		char B_108	 [10]="";
+		char B_109	 [10]="";
+		char B_1010	 [10]="";
+
+
+
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_11  ), WM_GETTEXT, 10, (LPARAM)B_11  ); matrixB[0 ][0  ] = strtod(B_11  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_12  ), WM_GETTEXT, 10, (LPARAM)B_12  ); matrixB[0 ][1  ] = strtod(B_12  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_13  ), WM_GETTEXT, 10, (LPARAM)B_13  ); matrixB[0 ][2  ] = strtod(B_13  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_14  ), WM_GETTEXT, 10, (LPARAM)B_14  ); matrixB[0 ][3  ] = strtod(B_14  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_15  ), WM_GETTEXT, 10, (LPARAM)B_15  ); matrixB[0 ][4  ] = strtod(B_15  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_16  ), WM_GETTEXT, 10, (LPARAM)B_16  ); matrixB[0 ][5  ] = strtod(B_16  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_17  ), WM_GETTEXT, 10, (LPARAM)B_17  ); matrixB[0 ][6  ] = strtod(B_17  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_18  ), WM_GETTEXT, 10, (LPARAM)B_18  ); matrixB[0 ][7  ] = strtod(B_18  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_19  ), WM_GETTEXT, 10, (LPARAM)B_19  ); matrixB[0 ][8  ] = strtod(B_19  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_110 ), WM_GETTEXT, 10, (LPARAM)B_110 ); matrixB[0 ][9  ] = strtod(B_110 ,0 );//
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_21  ), WM_GETTEXT, 10, (LPARAM)B_21  ); matrixB[1 ][0  ] = strtod(B_21  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_22  ), WM_GETTEXT, 10, (LPARAM)B_22  ); matrixB[1 ][1  ] = strtod(B_22  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_23  ), WM_GETTEXT, 10, (LPARAM)B_23  ); matrixB[1 ][2  ] = strtod(B_23  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_24  ), WM_GETTEXT, 10, (LPARAM)B_24  ); matrixB[1 ][3  ] = strtod(B_24  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_25  ), WM_GETTEXT, 10, (LPARAM)B_25  ); matrixB[1 ][4  ] = strtod(B_25  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_26  ), WM_GETTEXT, 10, (LPARAM)B_26  ); matrixB[1 ][5  ] = strtod(B_26  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_27  ), WM_GETTEXT, 10, (LPARAM)B_27  ); matrixB[1 ][6  ] = strtod(B_27  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_28  ), WM_GETTEXT, 10, (LPARAM)B_28  ); matrixB[1 ][7  ] = strtod(B_28  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_29  ), WM_GETTEXT, 10, (LPARAM)B_29  ); matrixB[1 ][8  ] = strtod(B_29  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_210 ), WM_GETTEXT, 10, (LPARAM)B_210 ); matrixB[1 ][9  ] = strtod(B_210 ,0 );//
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_31  ), WM_GETTEXT, 10, (LPARAM)B_31  ); matrixB[2 ][0  ] = strtod(B_31  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_32  ), WM_GETTEXT, 10, (LPARAM)B_32  ); matrixB[2 ][1  ] = strtod(B_32  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_33  ), WM_GETTEXT, 10, (LPARAM)B_33  ); matrixB[2 ][2  ] = strtod(B_33  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_34  ), WM_GETTEXT, 10, (LPARAM)B_34  ); matrixB[2 ][3  ] = strtod(B_34  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_35  ), WM_GETTEXT, 10, (LPARAM)B_35  ); matrixB[2 ][4  ] = strtod(B_35  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_36  ), WM_GETTEXT, 10, (LPARAM)B_36  ); matrixB[2 ][5  ] = strtod(B_36  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_37  ), WM_GETTEXT, 10, (LPARAM)B_37  ); matrixB[2 ][6  ] = strtod(B_37  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_38  ), WM_GETTEXT, 10, (LPARAM)B_38  ); matrixB[2 ][7  ] = strtod(B_38  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_39  ), WM_GETTEXT, 10, (LPARAM)B_39  ); matrixB[2 ][8  ] = strtod(B_39  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_310 ), WM_GETTEXT, 10, (LPARAM)B_310 ); matrixB[2 ][9  ] = strtod(B_310 ,0 );//
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_41  ), WM_GETTEXT, 10, (LPARAM)B_41  ); matrixB[3 ][0  ] = strtod(B_41  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_42  ), WM_GETTEXT, 10, (LPARAM)B_42  ); matrixB[3 ][1  ] = strtod(B_42  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_43  ), WM_GETTEXT, 10, (LPARAM)B_43  ); matrixB[3 ][2  ] = strtod(B_43  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_44  ), WM_GETTEXT, 10, (LPARAM)B_44  ); matrixB[3 ][3  ] = strtod(B_44  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_45  ), WM_GETTEXT, 10, (LPARAM)B_45  ); matrixB[3 ][4  ] = strtod(B_45  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_46  ), WM_GETTEXT, 10, (LPARAM)B_46  ); matrixB[3 ][5  ] = strtod(B_46  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_47  ), WM_GETTEXT, 10, (LPARAM)B_47  ); matrixB[3 ][6  ] = strtod(B_47  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_48  ), WM_GETTEXT, 10, (LPARAM)B_48  ); matrixB[3 ][7  ] = strtod(B_48  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_49  ), WM_GETTEXT, 10, (LPARAM)B_49  ); matrixB[3 ][8  ] = strtod(B_49  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_410 ), WM_GETTEXT, 10, (LPARAM)B_410 ); matrixB[3 ][9  ] = strtod(B_410 ,0 );//
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_51  ), WM_GETTEXT, 10, (LPARAM)B_51  ); matrixB[4 ][0  ] = strtod(B_51  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_52  ), WM_GETTEXT, 10, (LPARAM)B_52  ); matrixB[4 ][1  ] = strtod(B_52  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_53  ), WM_GETTEXT, 10, (LPARAM)B_53  ); matrixB[4 ][2  ] = strtod(B_53  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_54  ), WM_GETTEXT, 10, (LPARAM)B_54  ); matrixB[4 ][3  ] = strtod(B_54  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_55  ), WM_GETTEXT, 10, (LPARAM)B_55  ); matrixB[4 ][4  ] = strtod(B_55  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_56  ), WM_GETTEXT, 10, (LPARAM)B_56  ); matrixB[4 ][5  ] = strtod(B_56  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_57  ), WM_GETTEXT, 10, (LPARAM)B_57  ); matrixB[4 ][6  ] = strtod(B_57  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_58  ), WM_GETTEXT, 10, (LPARAM)B_58  ); matrixB[4 ][7  ] = strtod(B_58  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_59  ), WM_GETTEXT, 10, (LPARAM)B_59  ); matrixB[4 ][8  ] = strtod(B_59  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_510 ), WM_GETTEXT, 10, (LPARAM)B_510 ); matrixB[4 ][9  ] = strtod(B_510 ,0 );//
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_61  ), WM_GETTEXT, 10, (LPARAM)B_61  ); matrixB[5 ][0  ] = strtod(B_61  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_62  ), WM_GETTEXT, 10, (LPARAM)B_62  ); matrixB[5 ][1  ] = strtod(B_62  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_63  ), WM_GETTEXT, 10, (LPARAM)B_63  ); matrixB[5 ][2  ] = strtod(B_63  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_64  ), WM_GETTEXT, 10, (LPARAM)B_64  ); matrixB[5 ][3  ] = strtod(B_64  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_65  ), WM_GETTEXT, 10, (LPARAM)B_65  ); matrixB[5 ][4  ] = strtod(B_65  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_66  ), WM_GETTEXT, 10, (LPARAM)B_66  ); matrixB[5 ][5  ] = strtod(B_66  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_67  ), WM_GETTEXT, 10, (LPARAM)B_67  ); matrixB[5 ][6  ] = strtod(B_67  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_68  ), WM_GETTEXT, 10, (LPARAM)B_68  ); matrixB[5 ][7  ] = strtod(B_68  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_69  ), WM_GETTEXT, 10, (LPARAM)B_69  ); matrixB[5 ][8  ] = strtod(B_69  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_610 ), WM_GETTEXT, 10, (LPARAM)B_610 ); matrixB[5 ][9  ] = strtod(B_610 ,0 );//
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_71  ), WM_GETTEXT, 10, (LPARAM)B_71  ); matrixB[6 ][0  ] = strtod(B_71  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_72  ), WM_GETTEXT, 10, (LPARAM)B_72  ); matrixB[6 ][1  ] = strtod(B_72  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_73  ), WM_GETTEXT, 10, (LPARAM)B_73  ); matrixB[6 ][2  ] = strtod(B_73  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_74  ), WM_GETTEXT, 10, (LPARAM)B_74  ); matrixB[6 ][3  ] = strtod(B_74  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_75  ), WM_GETTEXT, 10, (LPARAM)B_75  ); matrixB[6 ][4  ] = strtod(B_75  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_76  ), WM_GETTEXT, 10, (LPARAM)B_76  ); matrixB[6 ][5  ] = strtod(B_76  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_77  ), WM_GETTEXT, 10, (LPARAM)B_77  ); matrixB[6 ][6  ] = strtod(B_77  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_78  ), WM_GETTEXT, 10, (LPARAM)B_78  ); matrixB[6 ][7  ] = strtod(B_78  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_79  ), WM_GETTEXT, 10, (LPARAM)B_79  ); matrixB[6 ][8  ] = strtod(B_79  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_710 ), WM_GETTEXT, 10, (LPARAM)B_710 ); matrixB[6 ][9  ] = strtod(B_710 ,0 );//
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_81  ), WM_GETTEXT, 10, (LPARAM)B_81  ); matrixB[7 ][0  ] = strtod(B_81  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_82  ), WM_GETTEXT, 10, (LPARAM)B_82  ); matrixB[7 ][1  ] = strtod(B_82  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_83  ), WM_GETTEXT, 10, (LPARAM)B_83  ); matrixB[7 ][2  ] = strtod(B_83  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_84  ), WM_GETTEXT, 10, (LPARAM)B_84  ); matrixB[7 ][3  ] = strtod(B_84  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_85  ), WM_GETTEXT, 10, (LPARAM)B_85  ); matrixB[7 ][4  ] = strtod(B_85  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_86  ), WM_GETTEXT, 10, (LPARAM)B_86  ); matrixB[7 ][5  ] = strtod(B_86  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_87  ), WM_GETTEXT, 10, (LPARAM)B_87  ); matrixB[7 ][6  ] = strtod(B_87  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_88  ), WM_GETTEXT, 10, (LPARAM)B_88  ); matrixB[7 ][7  ] = strtod(B_88  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_89  ), WM_GETTEXT, 10, (LPARAM)B_89  ); matrixB[7 ][8  ] = strtod(B_89  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_810 ), WM_GETTEXT, 10, (LPARAM)B_810 ); matrixB[7 ][9  ] = strtod(B_810 ,0 );//
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_91  ), WM_GETTEXT, 10, (LPARAM)B_91  ); matrixB[8 ][0  ] = strtod(B_91  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_92  ), WM_GETTEXT, 10, (LPARAM)B_92  ); matrixB[8 ][1  ] = strtod(B_92  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_93  ), WM_GETTEXT, 10, (LPARAM)B_93  ); matrixB[8 ][2  ] = strtod(B_93  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_94  ), WM_GETTEXT, 10, (LPARAM)B_94  ); matrixB[8 ][3  ] = strtod(B_94  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_95  ), WM_GETTEXT, 10, (LPARAM)B_95  ); matrixB[8 ][4  ] = strtod(B_95  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_96  ), WM_GETTEXT, 10, (LPARAM)B_96  ); matrixB[8 ][5  ] = strtod(B_96  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_97  ), WM_GETTEXT, 10, (LPARAM)B_97  ); matrixB[8 ][6  ] = strtod(B_97  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_98  ), WM_GETTEXT, 10, (LPARAM)B_98  ); matrixB[8 ][7  ] = strtod(B_98  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_99  ), WM_GETTEXT, 10, (LPARAM)B_99  ); matrixB[8 ][8  ] = strtod(B_99  ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_910 ), WM_GETTEXT, 10, (LPARAM)B_910 ); matrixB[8 ][9  ] = strtod(B_910 ,0 );//
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_101 ), WM_GETTEXT, 10, (LPARAM)B_101 ); matrixB[9 ][0  ] = strtod(B_101 ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_102 ), WM_GETTEXT, 10, (LPARAM)B_102 ); matrixB[9 ][1  ] = strtod(B_102 ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_103 ), WM_GETTEXT, 10, (LPARAM)B_103 ); matrixB[9 ][2  ] = strtod(B_103 ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_104 ), WM_GETTEXT, 10, (LPARAM)B_104 ); matrixB[9 ][3  ] = strtod(B_104 ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_105 ), WM_GETTEXT, 10, (LPARAM)B_105 ); matrixB[9 ][4  ] = strtod(B_105 ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_106 ), WM_GETTEXT, 10, (LPARAM)B_106 ); matrixB[9 ][5  ] = strtod(B_106 ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_107 ), WM_GETTEXT, 10, (LPARAM)B_107 ); matrixB[9 ][6  ] = strtod(B_107 ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_108 ), WM_GETTEXT, 10, (LPARAM)B_108 ); matrixB[9 ][7  ] = strtod(B_108 ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_109 ), WM_GETTEXT, 10, (LPARAM)B_109 ); matrixB[9 ][8  ] = strtod(B_109 ,0 );
+	SendMessage(GetDlgItem(h, IDC_EDIT_B_1010), WM_GETTEXT, 10, (LPARAM)B_1010); matrixB[9 ][9  ] = strtod(B_1010,0 );//
+
+
+}
+
 void EscribriResultado(HWND h) {
 	    char R_11	 [10]="";
 		char R_12	 [10]="";
@@ -785,420 +1318,10 @@ void EscribriResultado(HWND h) {
 
 
 }
-void MultiResultado_con_decilames(HWND h) {
-	    char A_11	 [10]="";
-		char A_12	 [10]="";
-		char A_13	 [10]="";
-		char A_14	 [10]="";
-		char A_15	 [10]="";
-		char A_16	 [10]="";
-		char A_17	 [10]="";
-		char A_18	 [10]="";
-		char A_19	 [10]="";
-		char A_110	 [10]="";
-		char A_21	 [10]="";
-		char A_22	 [10]="";
-		char A_23	 [10]="";
-		char A_24	 [10]="";
-		char A_25	 [10]="";
-		char A_26	 [10]="";
-		char A_27	 [10]="";
-		char A_28	 [10]="";
-		char A_29	 [10]="";
-		char A_210	 [10]="";
-		char A_31	 [10]="";
-		char A_32	 [10]="";
-		char A_33	 [10]="";
-		char A_34	 [10]="";
-		char A_35	 [10]="";
-		char A_36	 [10]="";
-		char A_37	 [10]="";
-		char A_38	 [10]="";
-		char A_39	 [10]="";
-		char A_310	 [10]="";
-		char A_41	 [10]="";
-		char A_42	 [10]="";
-		char A_43	 [10]="";
-		char A_44	 [10]="";
-		char A_45	 [10]="";
-		char A_46	 [10]="";
-		char A_47	 [10]="";
-		char A_48	 [10]="";
-		char A_49	 [10]="";
-		char A_410	 [10]="";
-		char A_51	 [10]="";
-		char A_52	 [10]="";
-		char A_53	 [10]="";
-		char A_54	 [10]="";
-		char A_55	 [10]="";
-		char A_56	 [10]="";
-		char A_57	 [10]="";
-		char A_58	 [10]="";
-		char A_59	 [10]="";
-		char A_510	 [10]="";
-		char A_61	 [10]="";
-		char A_62	 [10]="";
-		char A_63	 [10]="";
-		char A_64	 [10]="";
-		char A_65	 [10]="";
-		char A_66	 [10]="";
-		char A_67	 [10]="";
-		char A_68	 [10]="";
-		char A_69	 [10]="";
-		char A_610	 [10]="";
-		char A_71	 [10]="";
-		char A_72	 [10]="";
-		char A_73	 [10]="";
-		char A_74	 [10]="";
-		char A_75	 [10]="";
-		char A_76	 [10]="";
-		char A_77	 [10]="";
-		char A_78	 [10]="";
-		char A_79	 [10]="";
-		char A_710	 [10]="";
-		char A_81	 [10]="";
-		char A_82	 [10]="";
-		char A_83	 [10]="";
-		char A_84	 [10]="";
-		char A_85	 [10]="";
-		char A_86	 [10]="";
-		char A_87	 [10]="";
-		char A_88	 [10]="";
-		char A_89	 [10]="";
-		char A_810	 [10]="";
-		char A_91	 [10]="";
-		char A_92	 [10]="";
-		char A_93	 [10]="";
-		char A_94	 [10]="";
-		char A_95	 [10]="";
-		char A_96	 [10]="";
-		char A_97	 [10]="";
-		char A_98	 [10]="";
-		char A_99	 [10]="";
-		char A_910	 [10]="";
-		char A_101	 [10]="";
-		char A_102	 [10]="";
-		char A_103	 [10]="";
-		char A_104	 [10]="";
-		char A_105	 [10]="";
-		char A_106	 [10]="";
-		char A_107	 [10]="";
-		char A_108	 [10]="";
-		char A_109	 [10]="";
-		char A_1010	 [10]="";
+void EscribriResultado_con_decilames(HWND h) {
+	   
+	    
 
-    SendMessage(GetDlgItem(h, IDC_EDIT_A_11  ), WM_GETTEXT, 10, (LPARAM)A_11  ); matrixA[0 ][0  ] = strtod(A_11  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_12  ), WM_GETTEXT, 10, (LPARAM)A_12  ); matrixA[0 ][1  ] = strtod(A_12  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_13  ), WM_GETTEXT, 10, (LPARAM)A_13  ); matrixA[0 ][2  ] = strtod(A_13  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_14  ), WM_GETTEXT, 10, (LPARAM)A_14  ); matrixA[0 ][3  ] = strtod(A_14  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_15  ), WM_GETTEXT, 10, (LPARAM)A_15  ); matrixA[0 ][4  ] = strtod(A_15  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_16  ), WM_GETTEXT, 10, (LPARAM)A_16  ); matrixA[0 ][5  ] = strtod(A_16  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_17  ), WM_GETTEXT, 10, (LPARAM)A_17  ); matrixA[0 ][6  ] = strtod(A_17  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_18  ), WM_GETTEXT, 10, (LPARAM)A_18  ); matrixA[0 ][7  ] = strtod(A_18  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_19  ), WM_GETTEXT, 10, (LPARAM)A_19  ); matrixA[0 ][8  ] = strtod(A_19  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_110 ), WM_GETTEXT, 10, (LPARAM)A_110 ); matrixA[0 ][9  ] = strtod(A_110 ,0 );//
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_21  ), WM_GETTEXT, 10, (LPARAM)A_21  ); matrixA[1 ][0  ] = strtod(A_21  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_22  ), WM_GETTEXT, 10, (LPARAM)A_22  ); matrixA[1 ][1  ] = strtod(A_22  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_23  ), WM_GETTEXT, 10, (LPARAM)A_23  ); matrixA[1 ][2  ] = strtod(A_23  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_24  ), WM_GETTEXT, 10, (LPARAM)A_24  ); matrixA[1 ][3  ] = strtod(A_24  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_25  ), WM_GETTEXT, 10, (LPARAM)A_25  ); matrixA[1 ][4  ] = strtod(A_25  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_26  ), WM_GETTEXT, 10, (LPARAM)A_26  ); matrixA[1 ][5  ] = strtod(A_26  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_27  ), WM_GETTEXT, 10, (LPARAM)A_27  ); matrixA[1 ][6  ] = strtod(A_27  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_28  ), WM_GETTEXT, 10, (LPARAM)A_28  ); matrixA[1 ][7  ] = strtod(A_28  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_29  ), WM_GETTEXT, 10, (LPARAM)A_29  ); matrixA[1 ][8  ] = strtod(A_29  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_210 ), WM_GETTEXT, 10, (LPARAM)A_210 ); matrixA[1 ][9  ] = strtod(A_210 ,0 );//
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_31  ), WM_GETTEXT, 10, (LPARAM)A_31  ); matrixA[2 ][0  ] = strtod(A_31  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_32  ), WM_GETTEXT, 10, (LPARAM)A_32  ); matrixA[2 ][1  ] = strtod(A_32  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_33  ), WM_GETTEXT, 10, (LPARAM)A_33  ); matrixA[2 ][2  ] = strtod(A_33  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_34  ), WM_GETTEXT, 10, (LPARAM)A_34  ); matrixA[2 ][3  ] = strtod(A_34  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_35  ), WM_GETTEXT, 10, (LPARAM)A_35  ); matrixA[2 ][4  ] = strtod(A_35  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_36  ), WM_GETTEXT, 10, (LPARAM)A_36  ); matrixA[2 ][5  ] = strtod(A_36  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_37  ), WM_GETTEXT, 10, (LPARAM)A_37  ); matrixA[2 ][6  ] = strtod(A_37  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_38  ), WM_GETTEXT, 10, (LPARAM)A_38  ); matrixA[2 ][7  ] = strtod(A_38  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_39  ), WM_GETTEXT, 10, (LPARAM)A_39  ); matrixA[2 ][8  ] = strtod(A_39  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_310 ), WM_GETTEXT, 10, (LPARAM)A_310 ); matrixA[2 ][9  ] = strtod(A_310 ,0 );//
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_41  ), WM_GETTEXT, 10, (LPARAM)A_41  ); matrixA[3 ][0  ] = strtod(A_41  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_42  ), WM_GETTEXT, 10, (LPARAM)A_42  ); matrixA[3 ][1  ] = strtod(A_42  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_43  ), WM_GETTEXT, 10, (LPARAM)A_43  ); matrixA[3 ][2  ] = strtod(A_43  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_44  ), WM_GETTEXT, 10, (LPARAM)A_44  ); matrixA[3 ][3  ] = strtod(A_44  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_45  ), WM_GETTEXT, 10, (LPARAM)A_45  ); matrixA[3 ][4  ] = strtod(A_45  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_46  ), WM_GETTEXT, 10, (LPARAM)A_46  ); matrixA[3 ][5  ] = strtod(A_46  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_47  ), WM_GETTEXT, 10, (LPARAM)A_47  ); matrixA[3 ][6  ] = strtod(A_47  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_48  ), WM_GETTEXT, 10, (LPARAM)A_48  ); matrixA[3 ][7  ] = strtod(A_48  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_49  ), WM_GETTEXT, 10, (LPARAM)A_49  ); matrixA[3 ][8  ] = strtod(A_49  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_410 ), WM_GETTEXT, 10, (LPARAM)A_410 ); matrixA[3 ][9  ] = strtod(A_410 ,0 );//
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_51  ), WM_GETTEXT, 10, (LPARAM)A_51  ); matrixA[4 ][0  ] = strtod(A_51  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_52  ), WM_GETTEXT, 10, (LPARAM)A_52  ); matrixA[4 ][1  ] = strtod(A_52  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_53  ), WM_GETTEXT, 10, (LPARAM)A_53  ); matrixA[4 ][2  ] = strtod(A_53  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_54  ), WM_GETTEXT, 10, (LPARAM)A_54  ); matrixA[4 ][3  ] = strtod(A_54  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_55  ), WM_GETTEXT, 10, (LPARAM)A_55  ); matrixA[4 ][4  ] = strtod(A_55  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_56  ), WM_GETTEXT, 10, (LPARAM)A_56  ); matrixA[4 ][5  ] = strtod(A_56  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_57  ), WM_GETTEXT, 10, (LPARAM)A_57  ); matrixA[4 ][6  ] = strtod(A_57  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_58  ), WM_GETTEXT, 10, (LPARAM)A_58  ); matrixA[4 ][7  ] = strtod(A_58  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_59  ), WM_GETTEXT, 10, (LPARAM)A_59  ); matrixA[4 ][8  ] = strtod(A_59  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_510 ), WM_GETTEXT, 10, (LPARAM)A_510 ); matrixA[4 ][9  ] = strtod(A_510 ,0 );//
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_61  ), WM_GETTEXT, 10, (LPARAM)A_61  ); matrixA[5 ][0  ] = strtod(A_61  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_62  ), WM_GETTEXT, 10, (LPARAM)A_62  ); matrixA[5 ][1  ] = strtod(A_62  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_63  ), WM_GETTEXT, 10, (LPARAM)A_63  ); matrixA[5 ][2  ] = strtod(A_63  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_64  ), WM_GETTEXT, 10, (LPARAM)A_64  ); matrixA[5 ][3  ] = strtod(A_64  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_65  ), WM_GETTEXT, 10, (LPARAM)A_65  ); matrixA[5 ][4  ] = strtod(A_65  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_66  ), WM_GETTEXT, 10, (LPARAM)A_66  ); matrixA[5 ][5  ] = strtod(A_66  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_67  ), WM_GETTEXT, 10, (LPARAM)A_67  ); matrixA[5 ][6  ] = strtod(A_67  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_68  ), WM_GETTEXT, 10, (LPARAM)A_68  ); matrixA[5 ][7  ] = strtod(A_68  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_69  ), WM_GETTEXT, 10, (LPARAM)A_69  ); matrixA[5 ][8  ] = strtod(A_69  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_610 ), WM_GETTEXT, 10, (LPARAM)A_610 ); matrixA[5 ][9  ] = strtod(A_610 ,0 );//
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_71  ), WM_GETTEXT, 10, (LPARAM)A_71  ); matrixA[6 ][0  ] = strtod(A_71  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_72  ), WM_GETTEXT, 10, (LPARAM)A_72  ); matrixA[6 ][1  ] = strtod(A_72  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_73  ), WM_GETTEXT, 10, (LPARAM)A_73  ); matrixA[6 ][2  ] = strtod(A_73  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_74  ), WM_GETTEXT, 10, (LPARAM)A_74  ); matrixA[6 ][3  ] = strtod(A_74  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_75  ), WM_GETTEXT, 10, (LPARAM)A_75  ); matrixA[6 ][4  ] = strtod(A_75  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_76  ), WM_GETTEXT, 10, (LPARAM)A_76  ); matrixA[6 ][5  ] = strtod(A_76  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_77  ), WM_GETTEXT, 10, (LPARAM)A_77  ); matrixA[6 ][6  ] = strtod(A_77  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_78  ), WM_GETTEXT, 10, (LPARAM)A_78  ); matrixA[6 ][7  ] = strtod(A_78  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_79  ), WM_GETTEXT, 10, (LPARAM)A_79  ); matrixA[6 ][8  ] = strtod(A_79  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_710 ), WM_GETTEXT, 10, (LPARAM)A_710 ); matrixA[6 ][9  ] = strtod(A_710 ,0 );//
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_81  ), WM_GETTEXT, 10, (LPARAM)A_81  ); matrixA[7 ][0  ] = strtod(A_81  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_82  ), WM_GETTEXT, 10, (LPARAM)A_82  ); matrixA[7 ][1  ] = strtod(A_82  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_83  ), WM_GETTEXT, 10, (LPARAM)A_83  ); matrixA[7 ][2  ] = strtod(A_83  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_84  ), WM_GETTEXT, 10, (LPARAM)A_84  ); matrixA[7 ][3  ] = strtod(A_84  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_85  ), WM_GETTEXT, 10, (LPARAM)A_85  ); matrixA[7 ][4  ] = strtod(A_85  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_86  ), WM_GETTEXT, 10, (LPARAM)A_86  ); matrixA[7 ][5  ] = strtod(A_86  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_87  ), WM_GETTEXT, 10, (LPARAM)A_87  ); matrixA[7 ][6  ] = strtod(A_87  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_88  ), WM_GETTEXT, 10, (LPARAM)A_88  ); matrixA[7 ][7  ] = strtod(A_88  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_89  ), WM_GETTEXT, 10, (LPARAM)A_89  ); matrixA[7 ][8  ] = strtod(A_89  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_810 ), WM_GETTEXT, 10, (LPARAM)A_810 ); matrixA[7 ][9  ] = strtod(A_810 ,0 );//
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_91  ), WM_GETTEXT, 10, (LPARAM)A_91  ); matrixA[8 ][0  ] = strtod(A_91  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_92  ), WM_GETTEXT, 10, (LPARAM)A_92  ); matrixA[8 ][1  ] = strtod(A_92  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_93  ), WM_GETTEXT, 10, (LPARAM)A_93  ); matrixA[8 ][2  ] = strtod(A_93  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_94  ), WM_GETTEXT, 10, (LPARAM)A_94  ); matrixA[8 ][3  ] = strtod(A_94  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_95  ), WM_GETTEXT, 10, (LPARAM)A_95  ); matrixA[8 ][4  ] = strtod(A_95  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_96  ), WM_GETTEXT, 10, (LPARAM)A_96  ); matrixA[8 ][5  ] = strtod(A_96  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_97  ), WM_GETTEXT, 10, (LPARAM)A_97  ); matrixA[8 ][6  ] = strtod(A_97  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_98  ), WM_GETTEXT, 10, (LPARAM)A_98  ); matrixA[8 ][7  ] = strtod(A_98  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_99  ), WM_GETTEXT, 10, (LPARAM)A_99  ); matrixA[8 ][8  ] = strtod(A_99  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_910 ), WM_GETTEXT, 10, (LPARAM)A_910 ); matrixA[8 ][9  ] = strtod(A_910 ,0 );//
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_101 ), WM_GETTEXT, 10, (LPARAM)A_101 ); matrixA[9 ][0  ] = strtod(A_101 ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_102 ), WM_GETTEXT, 10, (LPARAM)A_102 ); matrixA[9 ][1  ] = strtod(A_102 ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_103 ), WM_GETTEXT, 10, (LPARAM)A_103 ); matrixA[9 ][2  ] = strtod(A_103 ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_104 ), WM_GETTEXT, 10, (LPARAM)A_104 ); matrixA[9 ][3  ] = strtod(A_104 ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_105 ), WM_GETTEXT, 10, (LPARAM)A_105 ); matrixA[9 ][4  ] = strtod(A_105 ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_106 ), WM_GETTEXT, 10, (LPARAM)A_106 ); matrixA[9 ][5  ] = strtod(A_106 ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_107 ), WM_GETTEXT, 10, (LPARAM)A_107 ); matrixA[9 ][6  ] = strtod(A_107 ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_108 ), WM_GETTEXT, 10, (LPARAM)A_108 ); matrixA[9 ][7  ] = strtod(A_108 ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_109 ), WM_GETTEXT, 10, (LPARAM)A_109 ); matrixA[9 ][8  ] = strtod(A_109 ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_A_1010), WM_GETTEXT, 10, (LPARAM)A_1010); matrixA[9 ][9  ] = strtod(A_1010,0 );//
-	    char B_11	 [10]="";
-		char B_12	 [10]="";
-		char B_13	 [10]="";
-		char B_14	 [10]="";
-		char B_15	 [10]="";
-		char B_16	 [10]="";
-		char B_17	 [10]="";
-		char B_18	 [10]="";
-		char B_19	 [10]="";
-		char B_110	 [10]="";
-		char B_21	 [10]="";
-		char B_22	 [10]="";
-		char B_23	 [10]="";
-		char B_24	 [10]="";
-		char B_25	 [10]="";
-		char B_26	 [10]="";
-		char B_27	 [10]="";
-		char B_28	 [10]="";
-		char B_29	 [10]="";
-		char B_210	 [10]="";
-		char B_31	 [10]="";
-		char B_32	 [10]="";
-		char B_33	 [10]="";
-		char B_34	 [10]="";
-		char B_35	 [10]="";
-		char B_36	 [10]="";
-		char B_37	 [10]="";
-		char B_38	 [10]="";
-		char B_39	 [10]="";
-		char B_310	 [10]="";
-		char B_41	 [10]="";
-		char B_42	 [10]="";
-		char B_43	 [10]="";
-		char B_44	 [10]="";
-		char B_45	 [10]="";
-		char B_46	 [10]="";
-		char B_47	 [10]="";
-		char B_48	 [10]="";
-		char B_49	 [10]="";
-		char B_410	 [10]="";
-		char B_51	 [10]="";
-		char B_52	 [10]="";
-		char B_53	 [10]="";
-		char B_54	 [10]="";
-		char B_55	 [10]="";
-		char B_56	 [10]="";
-		char B_57	 [10]="";
-		char B_58	 [10]="";
-		char B_59	 [10]="";
-		char B_510	 [10]="";
-		char B_61	 [10]="";
-		char B_62	 [10]="";
-		char B_63	 [10]="";
-		char B_64	 [10]="";
-		char B_65	 [10]="";
-		char B_66	 [10]="";
-		char B_67	 [10]="";
-		char B_68	 [10]="";
-		char B_69	 [10]="";
-		char B_610	 [10]="";
-		char B_71	 [10]="";
-		char B_72	 [10]="";
-		char B_73	 [10]="";
-		char B_74	 [10]="";
-		char B_75	 [10]="";
-		char B_76	 [10]="";
-		char B_77	 [10]="";
-		char B_78	 [10]="";
-		char B_79	 [10]="";
-		char B_710	 [10]="";
-		char B_81	 [10]="";
-		char B_82	 [10]="";
-		char B_83	 [10]="";
-		char B_84	 [10]="";
-		char B_85	 [10]="";
-		char B_86	 [10]="";
-		char B_87	 [10]="";
-		char B_88	 [10]="";
-		char B_89	 [10]="";
-		char B_810	 [10]="";
-		char B_91	 [10]="";
-		char B_92	 [10]="";
-		char B_93	 [10]="";
-		char B_94	 [10]="";
-		char B_95	 [10]="";
-		char B_96	 [10]="";
-		char B_97	 [10]="";
-		char B_98	 [10]="";
-		char B_99	 [10]="";
-		char B_910	 [10]="";
-		char B_101	 [10]="";
-		char B_102	 [10]="";
-		char B_103	 [10]="";
-		char B_104	 [10]="";
-		char B_105	 [10]="";
-		char B_106	 [10]="";
-		char B_107	 [10]="";
-		char B_108	 [10]="";
-		char B_109	 [10]="";
-		char B_1010	 [10]="";
-
-
-
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_11  ), WM_GETTEXT, 10, (LPARAM)B_11  ); matrixB[0 ][0  ] = strtod(B_11  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_12  ), WM_GETTEXT, 10, (LPARAM)B_12  ); matrixB[0 ][1  ] = strtod(B_12  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_13  ), WM_GETTEXT, 10, (LPARAM)B_13  ); matrixB[0 ][2  ] = strtod(B_13  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_14  ), WM_GETTEXT, 10, (LPARAM)B_14  ); matrixB[0 ][3  ] = strtod(B_14  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_15  ), WM_GETTEXT, 10, (LPARAM)B_15  ); matrixB[0 ][4  ] = strtod(B_15  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_16  ), WM_GETTEXT, 10, (LPARAM)B_16  ); matrixB[0 ][5  ] = strtod(B_16  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_17  ), WM_GETTEXT, 10, (LPARAM)B_17  ); matrixB[0 ][6  ] = strtod(B_17  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_18  ), WM_GETTEXT, 10, (LPARAM)B_18  ); matrixB[0 ][7  ] = strtod(B_18  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_19  ), WM_GETTEXT, 10, (LPARAM)B_19  ); matrixB[0 ][8  ] = strtod(B_19  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_110 ), WM_GETTEXT, 10, (LPARAM)B_110 ); matrixB[0 ][9  ] = strtod(B_110 ,0 );//
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_21  ), WM_GETTEXT, 10, (LPARAM)B_21  ); matrixB[1 ][0  ] = strtod(B_21  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_22  ), WM_GETTEXT, 10, (LPARAM)B_22  ); matrixB[1 ][1  ] = strtod(B_22  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_23  ), WM_GETTEXT, 10, (LPARAM)B_23  ); matrixB[1 ][2  ] = strtod(B_23  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_24  ), WM_GETTEXT, 10, (LPARAM)B_24  ); matrixB[1 ][3  ] = strtod(B_24  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_25  ), WM_GETTEXT, 10, (LPARAM)B_25  ); matrixB[1 ][4  ] = strtod(B_25  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_26  ), WM_GETTEXT, 10, (LPARAM)B_26  ); matrixB[1 ][5  ] = strtod(B_26  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_27  ), WM_GETTEXT, 10, (LPARAM)B_27  ); matrixB[1 ][6  ] = strtod(B_27  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_28  ), WM_GETTEXT, 10, (LPARAM)B_28  ); matrixB[1 ][7  ] = strtod(B_28  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_29  ), WM_GETTEXT, 10, (LPARAM)B_29  ); matrixB[1 ][8  ] = strtod(B_29  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_210 ), WM_GETTEXT, 10, (LPARAM)B_210 ); matrixB[1 ][9  ] = strtod(B_210 ,0 );//
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_31  ), WM_GETTEXT, 10, (LPARAM)B_31  ); matrixB[2 ][0  ] = strtod(B_31  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_32  ), WM_GETTEXT, 10, (LPARAM)B_32  ); matrixB[2 ][1  ] = strtod(B_32  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_33  ), WM_GETTEXT, 10, (LPARAM)B_33  ); matrixB[2 ][2  ] = strtod(B_33  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_34  ), WM_GETTEXT, 10, (LPARAM)B_34  ); matrixB[2 ][3  ] = strtod(B_34  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_35  ), WM_GETTEXT, 10, (LPARAM)B_35  ); matrixB[2 ][4  ] = strtod(B_35  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_36  ), WM_GETTEXT, 10, (LPARAM)B_36  ); matrixB[2 ][5  ] = strtod(B_36  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_37  ), WM_GETTEXT, 10, (LPARAM)B_37  ); matrixB[2 ][6  ] = strtod(B_37  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_38  ), WM_GETTEXT, 10, (LPARAM)B_38  ); matrixB[2 ][7  ] = strtod(B_38  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_39  ), WM_GETTEXT, 10, (LPARAM)B_39  ); matrixB[2 ][8  ] = strtod(B_39  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_310 ), WM_GETTEXT, 10, (LPARAM)B_310 ); matrixB[2 ][9  ] = strtod(B_310 ,0 );//
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_41  ), WM_GETTEXT, 10, (LPARAM)B_41  ); matrixB[3 ][0  ] = strtod(B_41  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_42  ), WM_GETTEXT, 10, (LPARAM)B_42  ); matrixB[3 ][1  ] = strtod(B_42  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_43  ), WM_GETTEXT, 10, (LPARAM)B_43  ); matrixB[3 ][2  ] = strtod(B_43  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_44  ), WM_GETTEXT, 10, (LPARAM)B_44  ); matrixB[3 ][3  ] = strtod(B_44  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_45  ), WM_GETTEXT, 10, (LPARAM)B_45  ); matrixB[3 ][4  ] = strtod(B_45  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_46  ), WM_GETTEXT, 10, (LPARAM)B_46  ); matrixB[3 ][5  ] = strtod(B_46  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_47  ), WM_GETTEXT, 10, (LPARAM)B_47  ); matrixB[3 ][6  ] = strtod(B_47  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_48  ), WM_GETTEXT, 10, (LPARAM)B_48  ); matrixB[3 ][7  ] = strtod(B_48  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_49  ), WM_GETTEXT, 10, (LPARAM)B_49  ); matrixB[3 ][8  ] = strtod(B_49  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_410 ), WM_GETTEXT, 10, (LPARAM)B_410 ); matrixB[3 ][9  ] = strtod(B_410 ,0 );//
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_51  ), WM_GETTEXT, 10, (LPARAM)B_51  ); matrixB[4 ][0  ] = strtod(B_51  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_52  ), WM_GETTEXT, 10, (LPARAM)B_52  ); matrixB[4 ][1  ] = strtod(B_52  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_53  ), WM_GETTEXT, 10, (LPARAM)B_53  ); matrixB[4 ][2  ] = strtod(B_53  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_54  ), WM_GETTEXT, 10, (LPARAM)B_54  ); matrixB[4 ][3  ] = strtod(B_54  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_55  ), WM_GETTEXT, 10, (LPARAM)B_55  ); matrixB[4 ][4  ] = strtod(B_55  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_56  ), WM_GETTEXT, 10, (LPARAM)B_56  ); matrixB[4 ][5  ] = strtod(B_56  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_57  ), WM_GETTEXT, 10, (LPARAM)B_57  ); matrixB[4 ][6  ] = strtod(B_57  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_58  ), WM_GETTEXT, 10, (LPARAM)B_58  ); matrixB[4 ][7  ] = strtod(B_58  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_59  ), WM_GETTEXT, 10, (LPARAM)B_59  ); matrixB[4 ][8  ] = strtod(B_59  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_510 ), WM_GETTEXT, 10, (LPARAM)B_510 ); matrixB[4 ][9  ] = strtod(B_510 ,0 );//
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_61  ), WM_GETTEXT, 10, (LPARAM)B_61  ); matrixB[5 ][0  ] = strtod(B_61  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_62  ), WM_GETTEXT, 10, (LPARAM)B_62  ); matrixB[5 ][1  ] = strtod(B_62  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_63  ), WM_GETTEXT, 10, (LPARAM)B_63  ); matrixB[5 ][2  ] = strtod(B_63  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_64  ), WM_GETTEXT, 10, (LPARAM)B_64  ); matrixB[5 ][3  ] = strtod(B_64  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_65  ), WM_GETTEXT, 10, (LPARAM)B_65  ); matrixB[5 ][4  ] = strtod(B_65  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_66  ), WM_GETTEXT, 10, (LPARAM)B_66  ); matrixB[5 ][5  ] = strtod(B_66  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_67  ), WM_GETTEXT, 10, (LPARAM)B_67  ); matrixB[5 ][6  ] = strtod(B_67  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_68  ), WM_GETTEXT, 10, (LPARAM)B_68  ); matrixB[5 ][7  ] = strtod(B_68  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_69  ), WM_GETTEXT, 10, (LPARAM)B_69  ); matrixB[5 ][8  ] = strtod(B_69  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_610 ), WM_GETTEXT, 10, (LPARAM)B_610 ); matrixB[5 ][9  ] = strtod(B_610 ,0 );//
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_71  ), WM_GETTEXT, 10, (LPARAM)B_71  ); matrixB[6 ][0  ] = strtod(B_71  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_72  ), WM_GETTEXT, 10, (LPARAM)B_72  ); matrixB[6 ][1  ] = strtod(B_72  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_73  ), WM_GETTEXT, 10, (LPARAM)B_73  ); matrixB[6 ][2  ] = strtod(B_73  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_74  ), WM_GETTEXT, 10, (LPARAM)B_74  ); matrixB[6 ][3  ] = strtod(B_74  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_75  ), WM_GETTEXT, 10, (LPARAM)B_75  ); matrixB[6 ][4  ] = strtod(B_75  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_76  ), WM_GETTEXT, 10, (LPARAM)B_76  ); matrixB[6 ][5  ] = strtod(B_76  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_77  ), WM_GETTEXT, 10, (LPARAM)B_77  ); matrixB[6 ][6  ] = strtod(B_77  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_78  ), WM_GETTEXT, 10, (LPARAM)B_78  ); matrixB[6 ][7  ] = strtod(B_78  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_79  ), WM_GETTEXT, 10, (LPARAM)B_79  ); matrixB[6 ][8  ] = strtod(B_79  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_710 ), WM_GETTEXT, 10, (LPARAM)B_710 ); matrixB[6 ][9  ] = strtod(B_710 ,0 );//
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_81  ), WM_GETTEXT, 10, (LPARAM)B_81  ); matrixB[7 ][0  ] = strtod(B_81  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_82  ), WM_GETTEXT, 10, (LPARAM)B_82  ); matrixB[7 ][1  ] = strtod(B_82  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_83  ), WM_GETTEXT, 10, (LPARAM)B_83  ); matrixB[7 ][2  ] = strtod(B_83  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_84  ), WM_GETTEXT, 10, (LPARAM)B_84  ); matrixB[7 ][3  ] = strtod(B_84  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_85  ), WM_GETTEXT, 10, (LPARAM)B_85  ); matrixB[7 ][4  ] = strtod(B_85  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_86  ), WM_GETTEXT, 10, (LPARAM)B_86  ); matrixB[7 ][5  ] = strtod(B_86  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_87  ), WM_GETTEXT, 10, (LPARAM)B_87  ); matrixB[7 ][6  ] = strtod(B_87  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_88  ), WM_GETTEXT, 10, (LPARAM)B_88  ); matrixB[7 ][7  ] = strtod(B_88  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_89  ), WM_GETTEXT, 10, (LPARAM)B_89  ); matrixB[7 ][8  ] = strtod(B_89  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_810 ), WM_GETTEXT, 10, (LPARAM)B_810 ); matrixB[7 ][9  ] = strtod(B_810 ,0 );//
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_91  ), WM_GETTEXT, 10, (LPARAM)B_91  ); matrixB[8 ][0  ] = strtod(B_91  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_92  ), WM_GETTEXT, 10, (LPARAM)B_92  ); matrixB[8 ][1  ] = strtod(B_92  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_93  ), WM_GETTEXT, 10, (LPARAM)B_93  ); matrixB[8 ][2  ] = strtod(B_93  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_94  ), WM_GETTEXT, 10, (LPARAM)B_94  ); matrixB[8 ][3  ] = strtod(B_94  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_95  ), WM_GETTEXT, 10, (LPARAM)B_95  ); matrixB[8 ][4  ] = strtod(B_95  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_96  ), WM_GETTEXT, 10, (LPARAM)B_96  ); matrixB[8 ][5  ] = strtod(B_96  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_97  ), WM_GETTEXT, 10, (LPARAM)B_97  ); matrixB[8 ][6  ] = strtod(B_97  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_98  ), WM_GETTEXT, 10, (LPARAM)B_98  ); matrixB[8 ][7  ] = strtod(B_98  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_99  ), WM_GETTEXT, 10, (LPARAM)B_99  ); matrixB[8 ][8  ] = strtod(B_99  ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_910 ), WM_GETTEXT, 10, (LPARAM)B_910 ); matrixB[8 ][9  ] = strtod(B_910 ,0 );//
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_101 ), WM_GETTEXT, 10, (LPARAM)B_101 ); matrixB[9 ][0  ] = strtod(B_101 ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_102 ), WM_GETTEXT, 10, (LPARAM)B_102 ); matrixB[9 ][1  ] = strtod(B_102 ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_103 ), WM_GETTEXT, 10, (LPARAM)B_103 ); matrixB[9 ][2  ] = strtod(B_103 ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_104 ), WM_GETTEXT, 10, (LPARAM)B_104 ); matrixB[9 ][3  ] = strtod(B_104 ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_105 ), WM_GETTEXT, 10, (LPARAM)B_105 ); matrixB[9 ][4  ] = strtod(B_105 ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_106 ), WM_GETTEXT, 10, (LPARAM)B_106 ); matrixB[9 ][5  ] = strtod(B_106 ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_107 ), WM_GETTEXT, 10, (LPARAM)B_107 ); matrixB[9 ][6  ] = strtod(B_107 ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_108 ), WM_GETTEXT, 10, (LPARAM)B_108 ); matrixB[9 ][7  ] = strtod(B_108 ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_109 ), WM_GETTEXT, 10, (LPARAM)B_109 ); matrixB[9 ][8  ] = strtod(B_109 ,0 );
-	SendMessage(GetDlgItem(h, IDC_EDIT_B_1010), WM_GETTEXT, 10, (LPARAM)B_1010); matrixB[9 ][9  ] = strtod(B_1010,0 );//
-
-
-	for (int i = 0; i < a1; i++) {
-		for (int j = 0; j < b2; j++) {
-			for (int k = 0; k < b1; k++) {
-				result[i][j] += matrixA[i][k] * matrixB[k][j];
-			}
-		}
-	}
 
 
 
@@ -1738,8 +1861,9 @@ void Multiplicar(HWND h) {
 			}
 		}
 
-		EscribriResultado(h);
-		//escribri el resultado
+		if (flag_aux == 1) { EscribriResultado(h); }
+		else { EscribriResultado_con_decilames(h); }
+		
 	}
 	else {
 		MessageBox(h, "No se puede completar la multiplicación de matrices con estas matrices.", "Advertencia", MB_ICONWARNING);
@@ -1748,7 +1872,45 @@ void Multiplicar(HWND h) {
 	
 
 }
+void Suma(HWND h) {
 
+	if (a1 == b1 && a2 == b2) {
+		for (int i = 0; i < a1; i++) {
+			for (int j = 0; j < a2; j++) {
+				result[i][j] = matrixA[i][j] + matrixB[i][j];
+			}
+		}
+		if (flag_aux == 1) { EscribriResultado(h); }
+		else { EscribriResultado_con_decilames(h); }
+	}
+	else {
+		MessageBox(h, "No se puede completar la multiplicación de matrices con estas matrices.", "Advertencia", MB_ICONWARNING);
+
+	}
+
+
+
+
+
+}
+void Resta(HWND h) {
+
+	if (a1 == b1 && a2 == b2) {
+		for (int i = 0; i < a1; i++) {
+			for (int j = 0; j < a2; j++) {
+				result[i][j] = matrixA[i][j] - matrixB[i][j];
+			}
+		}
+		if (flag_aux == 1) { EscribriResultado(h); }
+		else { EscribriResultado_con_decilames(h); }
+	}
+	else {
+		MessageBox(h, "No se puede completar la multiplicación de matrices con estas matrices.", "Advertencia", MB_ICONWARNING);
+
+	}
+
+
+}
 
 
 
