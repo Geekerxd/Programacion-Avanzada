@@ -7,7 +7,8 @@
 #include <stdlib.h>
 
 #include <string>
-#include <math.h>
+//#include <math.h>
+#include <cmath>
 struct todaslash { HWND A[10]; }static HA[10], SHA[10], SHAR[10];
 
 //**************************
@@ -19,8 +20,9 @@ HINSTANCE _ghInst;
 int _gShow = 0;
 
 BOOL CALLBACK ProcDialog1(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam);
+BOOL CALLBACK Quaternion(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam);
 void handels(HWND);
-
+float truncar(float nro);
 
 void desactivarA(); void desactivarB(); void desactivarR(); 
 void activarA(string, string); void activarB(string, string); void activarR(string, string);
@@ -304,6 +306,13 @@ BOOL CALLBACK ProcDialog1(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
 			desactivarR();
 			
 			return true;}
+		case IDC_Q: {
+		
+			ghDlg = CreateDialog(_ghInst, MAKEINTRESOURCE(IDD_DIALOG2), 0, Quaternion);
+			ShowWindow(ghDlg, _gShow);
+		
+			return true;
+		}
 
 
 
@@ -321,6 +330,155 @@ BOOL CALLBACK ProcDialog1(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
 
 	return false;
 }
+BOOL CALLBACK Quaternion(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
+{
+	static HWND hE_1 = 0;  
+	static HWND hE_2 = 0;  
+	static HWND hE_3 = 0;  
+	static HWND hE_4 = 0;  
+	static HWND hE_5 = 0;
+	static HWND hE_6 = 0;
+	static HWND hE_7 = 0;
+
+	static HWND hE_8 = 0;
+	static HWND hE_9 = 0;
+	static HWND hE_10= 0;
+	
+	int G;
+	float RR[3][1];
+	RR[0][0] = 0;
+	RR[1][0] = 0;
+	RR[2][0] = 0;
+
+	float Q[3][3], P[3][1], VX,VY,VZ,X,Y,Z,A, B, C, S;
+	char Gra[10] = "";
+	char vx[10] = "";
+	char vy[10] = "";
+	char vz[10] = "";
+	char x[10] = "";
+	char y[10] = "";
+	char z[10] = "";
+
+	char r1[10] = "";
+	char r2[10] = "";
+	char r3[10] = "";
+
+	float seno, coseno;
+	
+
+	switch (Mensaje)
+	{
+	case WM_INITDIALOG:
+	{
+		/*handels(Dlg);
+		desactivarA(); desactivarB(); desactivarR();*/
+
+
+
+
+
+		hE_1 = GetDlgItem(Dlg, IDC_EDIT1 );
+		hE_2 = GetDlgItem(Dlg, IDC_EDIT2 );
+		hE_3 = GetDlgItem(Dlg, IDC_EDIT3 );
+		hE_4 = GetDlgItem(Dlg, IDC_EDIT4 );
+		hE_5 = GetDlgItem(Dlg, IDC_EDIT5 );
+		hE_6 = GetDlgItem(Dlg, IDC_EDIT6 );
+		hE_7 = GetDlgItem(Dlg, IDC_EDIT7 );
+		hE_8 = GetDlgItem(Dlg, IDC_EDIT8 );
+		hE_9 = GetDlgItem(Dlg, IDC_EDIT9 );
+		hE_10= GetDlgItem(Dlg, IDC_EDIT10);
+		
+		
+
+		return true;
+	}
+	case WM_COMMAND:
+	{
+		switch (LOWORD(wParam))
+		{
+
+		case IDC_BUTTON1: {
+		
+			SendMessage(hE_1  , WM_GETTEXT, 10, (LPARAM)Gra); G = atoi( Gra);//atoi(A_11   );
+			SendMessage(hE_2  , WM_GETTEXT, 10, (LPARAM)vx ); VX = strtod(vx , 0);
+			SendMessage(hE_3  , WM_GETTEXT, 10, (LPARAM)vy ); VY= strtod( vy , 0);
+			SendMessage(hE_4  , WM_GETTEXT, 10, (LPARAM)vz ); VZ= strtod( vz , 0);
+			SendMessage(hE_5  , WM_GETTEXT, 10, (LPARAM)x  ); X = strtod( x  , 0);
+			SendMessage(hE_6  , WM_GETTEXT, 10, (LPARAM)y  ); Y= strtod(  y  , 0);
+			SendMessage(hE_7  , WM_GETTEXT, 10, (LPARAM)z  ); Z= strtod(  z  , 0);
+			P[0][0] = X; P[1][0] = Y;  P[2][0] = Z;
+
+			seno = G * 3.14159 / 180;
+			coseno= G * 3.14159 / 180;
+
+			A = VX * sin(seno / 2);
+			B = VY * sin(seno / 2);
+			C = VZ * sin(seno / 2);
+			S = cos(coseno / 2);
+
+			Q[0][0] = 1 - 2 * pow(B, 2) - 2 * pow(C, 2);
+			Q[0][0] = truncar(Q[0][0]);   //pasa de ser un numero con muchos dijitos como "-e14653" a simple como 0.000
+			Q[0][1] = 2*A*B-2*S*C;
+			Q[0][2] = 2 * A*C + 2 * S*B;
+
+			Q[1][0] = 2 * A*B + 2 * S*C;
+			Q[1][1] = 1 - 2 * pow(A, 2) - 2 * pow(C, 2);
+			Q[1][1] = truncar(Q[1][1]);
+			Q[1][2] = 2 * B*C - 2 * S*A;
+
+			Q[2][0] = 2 * A*C - 2 * S*B;
+			Q[2][1] = 2 * B*C + 2 * S*A;
+			Q[2][2] = 1 - 2 * pow(A, 2) - 2 * pow(B, 2);
+			Q[2][2] = truncar(Q[2][2]);
+
+
+
+			
+				for (int i = 0; i < 3; i++) {
+					for (int j = 0; j < 1; j++) {
+						for (int k = 0; k < 3; k++) {
+							RR[i][j] += Q[i][k] * P[k][j];
+						}
+					}
+				}
+
+				
+				snprintf(r1, sizeof r1, "%f", RR[0][0]); SetWindowText(hE_8 , r1);
+				snprintf(r2, sizeof r2, "%f", RR[0][1]); SetWindowText(hE_9 , r2);
+				snprintf(r3, sizeof r3, "%f", RR[0][2]); SetWindowText(hE_10, r3);
+			
+
+
+			return true; }//	fin de case IDC_BUTTON1
+
+
+
+
+
+		case ID_SALIR02: {   DestroyWindow(Dlg);	return true; }
+
+		case ID_ARCHIVO_SALIR40013: {PostQuitMessage(0); return true; }
+		}//fin del switch (LOWORD(wParam))
+		return true;
+
+	}
+	case WM_CLOSE: {/**/ return true; }
+	case WM_DESTROY: {return true; }
+
+
+	}//fin del switch (Mensaje)
+
+
+	return false;
+}
+
+float truncar(float nro) {
+	long x = 100 * nro;
+	float y = (float)x / (float)100;
+	return y;
+}
+
+
 void leerA(HWND h) {
 	    char A_11	 [10]="";
 		char A_12	 [10]="";
