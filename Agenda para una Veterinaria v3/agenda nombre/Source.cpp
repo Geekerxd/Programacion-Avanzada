@@ -28,47 +28,49 @@ struct node
 	
 
 
-node *inicio = 0, *last = 0, *prev = 0, *ant = 0;
-node *nuevo;
-char file[80] = "citas.txt";
-char _arch_esp[] = "species.txt";
-char _arch_dat[] = "Datos.txt";
-char _pic[MAX_PATH] =  "" ;
+node *inicio = 0, *last = 0, *prev = 0, *ant = 0, *nuevo;
+
+char file[80]        = "citas.txt";
+char _arch_esp[]     = "species.txt";
+char _arch_dat[]     = "Datos.txt";
+char _pic[MAX_PATH]  =  "" ;
 char _pic2[MAX_PATH] = "";
 
 
-void AgregaNodo(node Datos);
-void MostarLista(HWND objeto, UINT mensa);
-void LlenaEspecies(HWND objeto, UINT mensa, char *file);
+void AgregaNodo    (node Datos);
+void MostarLista   (HWND objeto, UINT mensa);
+void LlenaEspecies (HWND objeto, UINT mensa, char *file);
+void PonImagen     (HWND dialog, WPARAM IDC, char *imagen);
+bool CapturaNodo   (HWND Dlg, node*Punt);                  //bool
 
-bool CapturaNodo(HWND Dlg, node*Punt);
+char*ConvierteFecha(char*Fecha);                           //char
 //node*BuscarDato(int id);
 
 
-char*ConvierteFecha(char*Fecha);
+
 
 
 void LeeArchivo();
 void EscribirArchivo();
 
-void LeeDatos();
+void LeeDatos();                                           //imágenes
 
 HWND ghDlg = 0;
 HINSTANCE _hInst;
 int _show = 0;
 
 
-BOOL CALLBACK ProcDialog1(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam);
-BOOL CALLBACK informacion(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam);
-BOOL CALLBACK informacion2(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam);
-BOOL CALLBACK InfDoc(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam);
-BOOL CALLBACK Alta(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam);
-BOOL CALLBACK Baja(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam);
-BOOL CALLBACK Ver_Agen(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam);
-BOOL CALLBACK Modificar(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam);
+BOOL CALLBACK ProcDialog1  (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam);
+BOOL CALLBACK informacion  (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam);
+BOOL CALLBACK informacion2 (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam);
+BOOL CALLBACK InfDoc       (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam);
+BOOL CALLBACK Alta         (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam);
+BOOL CALLBACK Baja         (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam);
+BOOL CALLBACK Ver_Agen     (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam);
+BOOL CALLBACK Modificar    (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam);
 
 
-void PonImagen(HWND dialog, WPARAM IDC, char *imagen);
+
 
 
 
@@ -119,7 +121,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrev, PSTR cmd, int show)
 
 
 
-BOOL CALLBACK ProcDialog1(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
+BOOL CALLBACK ProcDialog1  (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
 {
 	static HBITMAP bmp2;
 	static HBITMAP bmp2_02;
@@ -224,7 +226,7 @@ BOOL CALLBACK ProcDialog1(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
 	}
 	return false;
 }
-BOOL CALLBACK informacion(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
+BOOL CALLBACK informacion  (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
 {
 	static HBITMAP bmp1, bmp2;
 	switch (Mensaje)
@@ -260,7 +262,7 @@ BOOL CALLBACK informacion(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
 	}
 	return false;
 }
-BOOL CALLBACK informacion2(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
+BOOL CALLBACK informacion2 (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
 {
 
 	switch (Mensaje)
@@ -288,7 +290,7 @@ BOOL CALLBACK informacion2(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
 	}
 	return false;
 }
-BOOL CALLBACK InfDoc(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
+BOOL CALLBACK InfDoc       (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
 {
 	static HBITMAP bmp1, bmp2;
 
@@ -345,7 +347,7 @@ BOOL CALLBACK InfDoc(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
 	}
 	return false;
 }
-BOOL CALLBACK Alta(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
+BOOL CALLBACK Alta         (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
 {
 
 	char cliente[20] = "";
@@ -414,7 +416,7 @@ BOOL CALLBACK Alta(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
 	}
 	return false;
 }
-BOOL CALLBACK Baja(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
+BOOL CALLBACK Baja         (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
 {
 
 
@@ -447,7 +449,7 @@ BOOL CALLBACK Baja(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
 	}
 	return false;
 }
-BOOL CALLBACK Ver_Agen(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
+BOOL CALLBACK Ver_Agen     (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
 {
 	static HWND hlist = 0;
 
@@ -499,9 +501,7 @@ BOOL CALLBACK Ver_Agen(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
 	}
 	return false;
 }
-
-
-BOOL CALLBACK Modificar(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
+BOOL CALLBACK Modificar    (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
 {
 
 
@@ -537,7 +537,7 @@ BOOL CALLBACK Modificar(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
 
 
 
-void PonImagen(HWND dialog, WPARAM IDC, char *imagen) {
+void PonImagen     (HWND dialog, WPARAM IDC, char *imagen) {
 
 	static HBITMAP bmp1, bmp2;
 	//Al objeto bmp1, se le asigna sin imagen:
@@ -555,8 +555,7 @@ void PonImagen(HWND dialog, WPARAM IDC, char *imagen) {
 		(LPARAM)bmp2);
 
 }
-
-void AgregaNodo(node Datos) {
+void AgregaNodo    (node Datos) {
 	node*aux = 0;
 	aux = new node;
 	aux->sig = 0;
@@ -577,8 +576,7 @@ void AgregaNodo(node Datos) {
 		last = aux;
 	}
 };
-
-void MostarLista(HWND objeto, UINT mensa) {
+void MostarLista   (HWND objeto, UINT mensa) {
 	node datitos;
 	
 	char TextCom[300];// cambiar este 300.
@@ -644,7 +642,7 @@ void MostarLista(HWND objeto, UINT mensa) {
 	
 
 };
-void LlenaEspecies(HWND objeto, UINT mensa, char *file)
+void LlenaEspecies (HWND objeto, UINT mensa, char *file)
 {
 	ifstream archi;
 	char row[30] = "";
@@ -662,7 +660,7 @@ void LlenaEspecies(HWND objeto, UINT mensa, char *file)
 	}
 
 }
-bool CapturaNodo(HWND Dlg, node*Punt) {
+bool CapturaNodo   (HWND Dlg, node*Punt) {
 	bool exc = false;
 	char mensa[] = "";
 	node datitos;
@@ -775,7 +773,6 @@ void LeeArchivo()
 		printf("El archivo no se pudo abrir.");
 	}
 };
-
 void EscribirArchivo()
 {
 	node info;
@@ -803,7 +800,6 @@ void EscribirArchivo()
 
 
 }
-
 void LeeDatos() {
 
 	ifstream aechi;
