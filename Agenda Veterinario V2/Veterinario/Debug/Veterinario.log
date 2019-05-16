@@ -1,9 +1,0 @@
-﻿  Source.cpp
-c:\users\rishar\source\repos\agenda carpeta 2\veterinario\source.cpp(554): warning C4101: 'Motiv': variable local sin referencia
-c:\users\rishar\source\repos\agenda carpeta 2\veterinario\source.cpp(552): warning C4101: 'PhoneClt': variable local sin referencia
-c:\users\rishar\source\repos\agenda carpeta 2\veterinario\source.cpp(548): warning C4101: 'datitos': variable local sin referencia
-c:\users\rishar\source\repos\agenda carpeta 2\veterinario\source.cpp(555): warning C4101: 'Dineros': variable local sin referencia
-c:\users\rishar\source\repos\agenda carpeta 2\veterinario\source.cpp(553): warning C4101: 'NombreMas': variable local sin referencia
-c:\users\rishar\source\repos\agenda carpeta 2\veterinario\source.cpp(747): warning C4101: 'info': variable local sin referencia
-c:\users\rishar\source\repos\agenda carpeta 2\veterinario\source.cpp(716): warning C4172: devolución de dirección de la variable local o temporal: FechaOk
-  Veterinario.vcxproj -> C:\Users\rishar\source\repos\Agenda carpeta 2\Debug\Veterinario.exe
