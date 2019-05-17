@@ -10,40 +10,40 @@ using namespace std;
 
 struct node
 {
-	char	CltName[30];
-	char	Phone[13];
-	char	species[30];
-	char	MasName[30];
-	char	Motivo[150];
-	char	cost[10];
-
-	char	date[11];
-	char	time[9];
+	char	date[11];      // Fecha
+	char	time[9];       // Hora
+	char	CltName[30];   // Nombre del Cliente
+	char	Phone[13];     // Teléfono del contacto
+	char	species[30];   // Especie de la mascota
+	char	MasName[30];   // Nombre de la mascota
+	char	Motivo[150];   // Motivo de la consulta
+	char	cost[10];      // Costo de la Consulta
 
 	//bool	urgent;
 	//bool	gender;
+
 	node	*sig;
 	node	*ante;
 };
 	
 
-
 node *inicio = 0, *last = 0, *prev = 0, *ant = 0, *nuevo;
 
-char file[80]        = "citas.txt";
-char _arch_esp[]     = "species.txt";
-char _arch_dat[]     = "Datos.txt";
-char _pic[MAX_PATH]  =  "" ;
-char _pic2[MAX_PATH] = "";
+char file[80]        = "citas.txt";      //Nombre del archivo donde están, de forma binaria, todos todos los datos de las CITAS.
+char _arch_esp[]     = "species.txt";    //Nombre del archivo donde estan todos los nombres de las "ESPECIES de la MASCOTAS".
+char _arch_dat[]     = "Datos.txt";      //Nombre del archivo donde estan todas las direcciones de las IMAGENES.
+
+char _pic[MAX_PATH]  =  "" ;             //Variable que almacena la direccion de la imágen 1.
+char _pic2[MAX_PATH] =  "";              //Variable que almacena la direccion de la imágen 2.
 
 
 void AgregaNodo    (node Datos);
 void MostarLista   (HWND objeto, UINT mensa);
 void LlenaEspecies (HWND objeto, UINT mensa, char *file);
 void PonImagen     (HWND dialog, WPARAM IDC, char *imagen);
-bool CapturaNodo   (HWND Dlg, node*Punt);                  //bool
+bool CapturaNodo   (HWND Dlg, node*Punt);                  //Funcion tipo bool
 
-char*ConvierteFecha(char*Fecha);                           //char
+char*ConvierteFecha(char*Fecha);                           //Funcion tipo char
 //node*BuscarDato(int id);
 
 
@@ -77,26 +77,24 @@ BOOL CALLBACK Modificar    (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 
 
 
-//************************************************************************************************************************************************************************
-//************************************************************************************************************************************************************************
-//************************************************************************************************************************************************************************
+//*****************************************************************************************************************************
+//*****************************************************************************************************************************
+//*****************************************************************************************************************************
 
 int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrev, PSTR cmd, int show)
 {
 
 	LeeArchivo();
-	_hInst = hInst;
-	_show = show;
-
 	LeeDatos();
 
 
 
+	_hInst = hInst;
+	_show = show;
+
 	ghDlg = CreateDialog(hInst, MAKEINTRESOURCE(IDD_DIALOG1),
 		0, ProcDialog1);
 	ShowWindow(ghDlg, show);
-
-
 
 	MSG msg;
 	ZeroMemory(&msg, sizeof(MSG));
@@ -108,13 +106,13 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrev, PSTR cmd, int show)
 			DispatchMessage(&msg);
 		}
 	}
-	EscribirArchivo();
+	
 	return (int)msg.wParam;
 }
 
-//************************************************************************************************************************************************************************
-//************************************************************************************************************************************************************************
-//************************************************************************************************************************************************************************
+//*****************************************************************************************************************************
+//*****************************************************************************************************************************
+//*****************************************************************************************************************************
 
 
 
@@ -129,21 +127,12 @@ BOOL CALLBACK ProcDialog1  (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 	{
 	case WM_INITDIALOG:
 	{
-
-
-	
-
-		//Al objeto bmp2, se le asigna una imagen local:
-		bmp2 = (HBITMAP)LoadImage(NULL, _pic,
-			IMAGE_BITMAP,83, 108, LR_LOADFROMFILE);
-
+		//imagen de perfíl del Doctor
+		bmp2 = (HBITMAP)LoadImage(NULL, _pic,IMAGE_BITMAP,83, 108, LR_LOADFROMFILE);
 		SendDlgItemMessage(Dlg, IDC_hi, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)bmp2);
 
-
-		//Al objeto bmp2, se le asigna una imagen local:
-		bmp2_02 = (HBITMAP)LoadImage(NULL, _pic2,
-			IMAGE_BITMAP, 500, 50, LR_LOADFROMFILE);
-
+		//Imagen de "Bienvenido al menú principal de la Agenda para Veterinaria"
+		bmp2_02 = (HBITMAP)LoadImage(NULL, _pic2,IMAGE_BITMAP, 500, 50, LR_LOADFROMFILE);
 		SendDlgItemMessage(Dlg, IDC_bienve, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)bmp2_02);
 
 
@@ -152,6 +141,7 @@ BOOL CALLBACK ProcDialog1  (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 	{
 		switch (LOWORD(wParam))
 		{
+			//botones de la área del menú principal
 		case IDC_BUTTON1:
 
 			DialogBox(_hInst, MAKEINTRESOURCE(IDD_Doc_Inf), Dlg, InfDoc);
@@ -166,14 +156,25 @@ BOOL CALLBACK ProcDialog1  (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 			DialogBox(_hInst, MAKEINTRESOURCE(IDD_ver_agenda), Dlg, Ver_Agen);
 			return true; 
 		case IDC_BUTTON4:
-			//Guardar el Archivo
 
+			if (MessageBox(Dlg, "¿Quieres guardadr los cambios?",
+				"Alto",
+				MB_YESNO |
+				MB_ICONASTERISK | MB_DEFBUTTON1) == IDYES)
+			{
+				//MessageBox(Dlg, "Se guardó", "informacion", MB_OK | MB_ICONINFORMATION);
+				EscribirArchivo();
 
-			PostQuitMessage(0);
+				PostQuitMessage(0);
+			}
+			else {
+				//MessageBox(Dlg, "No se guardó", "informacion", MB_OK | MB_ICONEXCLAMATION);
+				PostQuitMessage(0);
+			}
 			return true;
 
 
-
+			//botones del menú de arriba
 		case ID_MENU_INFORMACIONDELDOCTOR:
 
 			DialogBox(_hInst, MAKEINTRESOURCE(IDD_Doc_Inf), Dlg, InfDoc);
@@ -196,34 +197,63 @@ BOOL CALLBACK ProcDialog1  (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 			return true;
 			
 		case ID_salir:
-			//Guardar el Archivo
 
-			PostQuitMessage(0);
+			if (MessageBox(Dlg, "¿Quieres guardadr los cambios?",
+				"Alto",
+				MB_YESNO |
+				MB_ICONASTERISK | MB_DEFBUTTON1) == IDYES)
+			{
+				//MessageBox(Dlg, "Se guardó", "informacion", MB_OK | MB_ICONINFORMATION);
+				EscribirArchivo();
+
+				PostQuitMessage(0);
+			}
+			else {
+				//MessageBox(Dlg, "No se guardó", "informacion", MB_OK | MB_ICONEXCLAMATION);
+				PostQuitMessage(0);
+			}
+
+
 			return true;
 
-		case ID_VER_INFORMAION:
+			//éxtras
+		case ID_VER_INFORMAION: //éste es "modal"
 		
 			DialogBox(_hInst, MAKEINTRESOURCE(IDD_Ven_Inf), Dlg, informacion);//Mismo callback informacion
 			return true;
-		case ID_ACERCA:
+		case ID_ACERCA:         //éste es "NO modal"
 			HWND Dialg = CreateDialog(_hInst, MAKEINTRESOURCE(IDD_Ven_Ace), Dlg, informacion2);
 
 			ShowWindow(Dialg, _show);
 
-			//DialogBox(_hInst, MAKEINTRESOURCE(IDD_Ven_Ace), Dlg, informacion);//Mismo callback informacion 
 			return true;
 
 		
 
-		}
-		return true; }
+		}// fin de "switch (LOWORD(wParam))"
+		return true; 
+	}// fin de "case WM_COMMAND"
 	case WM_CLOSE:
 	{
-		PostQuitMessage(0);
+
+		if (MessageBox(Dlg,"¿Quieres guardadr los cambios?",
+			"Alto",
+			MB_YESNO |
+			MB_ICONASTERISK | MB_DEFBUTTON1) == IDYES)
+		{
+			//MessageBox(Dlg, "Se guardó","informacion",MB_OK | MB_ICONINFORMATION);
+			EscribirArchivo();
+
+			PostQuitMessage(0);
+		}
+		else {  
+			//MessageBox(Dlg, "No se guardó", "informacion", MB_OK | MB_ICONEXCLAMATION);
+			PostQuitMessage(0); }
+
+		
 		return true; }
-	case WM_DESTROY:
-	{return true; }
-	}
+	case WM_DESTROY:{return true;}
+	}//fin de "switch (Mensaje)"
 	return false;
 }
 BOOL CALLBACK informacion  (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
@@ -349,13 +379,11 @@ BOOL CALLBACK InfDoc       (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 }
 BOOL CALLBACK Alta         (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
 {
+	static HWND hCboSpc = 0; //handle conbo box species
 
 	char cliente[20] = "";
-	static HWND hCboSpc = 0;
+
 	node temp;
-
-	
-
 
 
 	switch (Mensaje)
@@ -364,11 +392,6 @@ BOOL CALLBACK Alta         (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 	{
 		
 		hCboSpc = GetDlgItem(Dlg, IDC_COMBO1);
-		/*
-		SendMessage(hCboSpc, CB_ADDSTRING, 0, (LPARAM)"BOA");
-		SendMessage(hCboSpc, CB_ADDSTRING, 0, (LPARAM)"PITON");
-		SendMessage(hCboSpc, CB_ADDSTRING, 0, (LPARAM)"ANACONDA");
-		*/
 		LlenaEspecies(hCboSpc, CB_ADDSTRING, _arch_esp);
 
 
@@ -379,41 +402,55 @@ BOOL CALLBACK Alta         (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 		switch (LOWORD(wParam))
 		{
 
-		case IDOK:
-			EndDialog(Dlg, 0);
-			return true;
+		
 		case IDCANCEL:
-			EndDialog(Dlg, 0);
+
+			if (MessageBox(Dlg, "¿Quieres salir sin agregar cita?","Alto",MB_YESNO |MB_ICONASTERISK | MB_DEFBUTTON1) == IDYES)
+			{EndDialog(Dlg, 0);}else {}
+
 			return true;
 		case IDC_AGREGAR:
+
+
 			if (CapturaNodo(Dlg, &temp) == false){
+
+				   // Siempre se va por aquí, aunque no entiendo porque se iría por "bool=====>verdadero"
 			AgregaNodo(temp);
 			MessageBox(Dlg, "Elemento agregado", "Agregar Cita", MB_OK + MB_ICONINFORMATION);
-			}
-			else
-			{
+			       // Esto pasa cada vez que presiono el botón de agregar.
 
-				MessageBox(Dlg, "No se pudo abrir", "hmmm", MB_OK + MB_ICONINFORMATION);
+
 			}
-			//CapturaNodo(Dlg,temp);
-			//AgregaNodo(temp);
-			//
+			else{MessageBox(Dlg, "No se pudo abrir", "hmmm", MB_OK + MB_ICONINFORMATION);}
+
+			//                    <<< Esto haría mas o menos lo mismo: >>>
+
+			//CapturaNodo(Dlg,temp);                 << Primero se guardan los datos en el nodo                    >>
+			//AgregaNodo(temp);                      << Después el nodo es acomodado en la lista doblemente ligada >>
+
+
 			//MessageBox(Dlg, "Elemento agregado", "Agregar Cita", MB_OK + MB_ICONINFORMATION);
 
-			return true;
 
 
-		}
-		return true; }
+			return true;    //Fin de "case IDC_AGREGAR"
+		}//fin del switch (LOWORD(wParam))
+		return true;
+	}//fin del case WM_COMMAND:
 	case WM_CLOSE:
 	{
-		EndDialog(Dlg, 0);
+		if (MessageBox(Dlg, "¿Quieres salir sin agregar cita?", "Alto", MB_YESNO | MB_ICONASTERISK | MB_DEFBUTTON1) == IDYES)
+		{
+			EndDialog(Dlg, 0);
+		}
+		else {}
 		return true; }
 	case WM_DESTROY:
 	{
 		
 	return true; }
-	}
+	}//fin del switch (Mensaje)
+
 	return false;
 }
 BOOL CALLBACK Baja         (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
@@ -644,6 +681,10 @@ void MostarLista   (HWND objeto, UINT mensa) {
 };
 void LlenaEspecies (HWND objeto, UINT mensa, char *file)
 {
+	// objeto  ===   hCboSpc
+	// mensa   ===   CB_ADDSTRING
+	// file    ===   _arch_esp
+
 	ifstream archi;
 	char row[30] = "";
 	archi.open(file);
@@ -709,6 +750,8 @@ bool CapturaNodo   (HWND Dlg, node*Punt) {
 	return exc;
 
 };
+
+
 //
 //node*BuscarDato(int id)
 //{
