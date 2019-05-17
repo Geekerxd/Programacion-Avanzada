@@ -1,4 +1,0 @@
-﻿  MAIN.cpp
-c:\users\rishar\source\repos\semana 10\project_del_profe\27marzo\main.cpp(353): warning C4101: 'info': variable local sin referencia
-c:\users\rishar\source\repos\semana 10\project_del_profe\27marzo\main.cpp(392): warning C4172: devolución de dirección de la variable local o temporal: FechaOk
-  27marzo.vcxproj -> C:\Users\rishar\source\repos\semana 10\Project_del_Profe\Debug\27marzo.exe
