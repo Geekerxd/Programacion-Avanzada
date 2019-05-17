@@ -384,8 +384,6 @@ BOOL CALLBACK Alta         (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 	char cliente[20] = "";
 
 	node temp;
-
-
 	switch (Mensaje)
 	{
 	case WM_INITDIALOG:
@@ -401,49 +399,40 @@ BOOL CALLBACK Alta         (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 	{
 		switch (LOWORD(wParam))
 		{
+		case IDCANCEL: {
 
-		
-		case IDCANCEL:
-
-			if (MessageBox(Dlg, "¿Quieres salir sin agregar cita?","Alto",MB_YESNO |MB_ICONASTERISK | MB_DEFBUTTON1) == IDYES)
-			{EndDialog(Dlg, 0);}else {}
-
-			return true;
+					   /*if (MessageBox(Dlg, "¿Quieres salir sin agregar cita?","Alto",MB_YESNO |MB_ICONASTERISK | MB_DEFBUTTON1) == IDYES)
+					   {EndDialog(Dlg, 0);}else {}*/
+					   EndDialog(Dlg, 0);
+					   return true;
+		}
 		case IDC_AGREGAR:
-
-
-			if (CapturaNodo(Dlg, &temp) == false){
-
-				   // Siempre se va por aquí, aunque no entiendo porque se iría por "bool=====>verdadero"
+			if (CapturaNodo(Dlg, &temp) == false){                                                 // Siempre se va por aquí, aunque no entiendo porque se iría por "bool=====>verdadero"
 			AgregaNodo(temp);
-			MessageBox(Dlg, "Elemento agregado", "Agregar Cita", MB_OK + MB_ICONINFORMATION);
-			       // Esto pasa cada vez que presiono el botón de agregar.
-
-
+			MessageBox(Dlg, "Elemento agregado", "Agregar Cita", MB_OK + MB_ICONINFORMATION);      // Esto pasa cada vez que presiono el botón de agregar.
 			}
 			else{MessageBox(Dlg, "No se pudo abrir", "hmmm", MB_OK + MB_ICONINFORMATION);}
 
-			//                    <<< Esto haría mas o menos lo mismo: >>>
-
-			//CapturaNodo(Dlg,temp);                 << Primero se guardan los datos en el nodo                    >>
-			//AgregaNodo(temp);                      << Después el nodo es acomodado en la lista doblemente ligada >>
-
+			//                                                                                        <<< Esto haría mas o menos lo mismo: >>>
+			//CapturaNodo(Dlg,temp);                                                               << Primero se guardan los datos en el nodo                    >>
+			//AgregaNodo(temp);                                                                    << Después el nodo es acomodado en la lista doblemente ligada >>
 
 			//MessageBox(Dlg, "Elemento agregado", "Agregar Cita", MB_OK + MB_ICONINFORMATION);
 
 
 
-			return true;    //Fin de "case IDC_AGREGAR"
-		}//fin del switch (LOWORD(wParam))
+			return true;    ///FIN de "case IDC_AGREGAR"
+		}///FIN del switch (LOWORD(wParam))
 		return true;
-	}//fin del case WM_COMMAND:
+	}///FIN del case WM_COMMAND:
 	case WM_CLOSE:
 	{
-		if (MessageBox(Dlg, "¿Quieres salir sin agregar cita?", "Alto", MB_YESNO | MB_ICONASTERISK | MB_DEFBUTTON1) == IDYES)
+		/*if (MessageBox(Dlg, "¿Quieres salir sin agregar cita?", "Alto", MB_YESNO | MB_ICONASTERISK | MB_DEFBUTTON1) == IDYES)
 		{
 			EndDialog(Dlg, 0);
 		}
-		else {}
+		else {}*/
+		EndDialog(Dlg, 0);
 		return true; }
 	case WM_DESTROY:
 	{
@@ -593,6 +582,7 @@ void PonImagen     (HWND dialog, WPARAM IDC, char *imagen) {
 
 }
 void AgregaNodo    (node Datos) {
+	//ME QUEDÉ AQUÍ REVISANDO
 	node*aux = 0;
 	aux = new node;
 	aux->sig = 0;
@@ -671,7 +661,7 @@ void MostarLista   (HWND objeto, UINT mensa) {
 		MessageBox(objeto,"", "" ,  MB_OK);
 		MessageBox(objeto,"", "" ,  MB_OK);*/
 		
-		SendMessage(objeto, mensa, 0, (LPARAM)"——————————————————————————————");
+		//SendMessage(objeto, mensa, 0, (LPARAM)"——————————————————————————————");
 		
 		aux = aux->sig;
 	}
@@ -704,16 +694,16 @@ void LlenaEspecies (HWND objeto, UINT mensa, char *file)
 bool CapturaNodo   (HWND Dlg, node*Punt) {
 	bool exc = false;
 	char mensa[] = "";
-	node datitos;
+	node datitos=*Punt;        //esto era el problema?
 	static HWND hCombo = 0;
 	hCombo = GetDlgItem(Dlg, IDC_COMBO1);
 
-	char TextCom[80];
-	char NombreClt[80];
-	char PhoneClt[80];
-	char NombreMas[80];
-	char Motiv[150];
-	char Dineros[80];
+	char TextCom[80];    //bombo box
+	char NombreClt[80];  //nombre del cliente
+	char PhoneClt[80];   //telefono
+	char NombreMas[80];  //nombre de la mascota
+	char Motiv[150];     //
+	char Dineros[80];    //
 	char fecha_temp[11] = "";
 
 	int index = SendMessage(hCombo, CB_GETCURSEL, 0, 0);
@@ -806,7 +796,7 @@ void LeeArchivo()
 		archivaldo.read((char*)&info, sizeof(node));
 		while (!archivaldo.eof())
 		{
-			AgregaNodo(info);
+			AgregaNodo(info);                                //aqui se acomoda el nodo en la lista ligada
 			archivaldo.read((char*)&info, sizeof(node));
 		}
 		archivaldo.close();
@@ -843,6 +833,7 @@ void EscribirArchivo()
 
 
 }
+
 void LeeDatos() {
 
 	ifstream aechi;
