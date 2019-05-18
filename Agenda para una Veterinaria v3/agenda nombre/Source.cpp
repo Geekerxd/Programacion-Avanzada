@@ -123,11 +123,14 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrev, PSTR cmd, int show)
 
 BOOL CALLBACK ProcDialog1  (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
 {
-	
+	static HWND hlist = 0;
 	switch (Mensaje)
 	{
 	case WM_INITDIALOG:
 	{
+
+		
+
 		PonImagen(Dlg, IDC_hi, _pic, 83, 108);
 		PonImagen(Dlg, IDC_bienve, _pic2, 500, 50);
 
@@ -138,7 +141,8 @@ BOOL CALLBACK ProcDialog1  (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 		{
 			//botones de la área del menú principal
 		case IDC_BUTTON1:
-
+			hlist = GetDlgItem(Dlg, IDC_LIST_M);
+			MostarLista(hlist, LB_ADDSTRING);
 			DialogBox(_hInst, MAKEINTRESOURCE(IDD_Doc_Inf), Dlg, InfDoc);
 			return true;
 
@@ -389,8 +393,10 @@ BOOL CALLBACK Alta         (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 
 
 
-			int index = SendMessage(hCboSpc, CB_GETCURSEL, 0, 0);
-			SendMessage(hCboSpc, CB_GETLBTEXT, (WPARAM)index, (LPARAM)aux->species);
+			/*int index = SendMessage(hCboSpc, CB_GETCURSEL, 0, 0);
+			SendMessage(hCboSpc, CB_GETLBTEXT, (WPARAM)index, (LPARAM)aux->species);*/
+
+			SendMessage(hCboSpc, WM_GETTEXT, (WPARAM)80, (LPARAM)aux->species);
 			SendDlgItemMessage(Dlg, IDC_EDIT1, WM_GETTEXT, (WPARAM)80, (LPARAM)aux->CltName);
 			SendDlgItemMessage(Dlg, IDC_EDIT2, WM_GETTEXT, (WPARAM)80, (LPARAM)aux->Phone);
 			SendDlgItemMessage(Dlg, IDC_EDIT3, WM_GETTEXT, (WPARAM)80, (LPARAM)aux->MasName);
@@ -413,6 +419,8 @@ BOOL CALLBACK Alta         (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 
 				last = aux;
 			}
+
+			MessageBox(Dlg, "Elemento agregado", "Agregar Cita", MB_OK + MB_ICONINFORMATION);
 
 			//delete aux;
 
@@ -497,11 +505,11 @@ BOOL CALLBACK Ver_Agen     (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 
 
 		hlist = GetDlgItem(Dlg, IDC_LIST1);
-		
+		MostarLista(hlist, LB_ADDSTRING);
 		
 		//SendDlgItemMessage(Dlg, IDC_LIST1, LB_RESETCONTENT, 0, 0);
 
-		MostarLista(hlist, LB_ADDSTRING);
+	
 		
 		
 
@@ -689,30 +697,28 @@ void MostarLista   (HWND objeto, UINT mensa) {
 		
 
 		strcpy(NombreClt, aux->CltName);
-
 		strcpy(TextCom,   aux->species);
-
-		/*
 		strcpy(PhoneClt,  aux->Phone);
 		strcpy(NombreMas, aux->MasName);
 		strcpy(Motiv,     aux->Motivo);
 		strcpy(Dineros,   aux->cost);
 		strcpy(fecha_temp,aux->date);
 		strcpy(hora_temp, aux->time);
-*/
-		SendMessage(objeto, mensa, 0, (LPARAM)NombreClt);
+
 
 		//Me salen númerons raros como: íííííííííííííííííííííííí. seguramente están en binario
 
 		//MessageBox(objeto, TextCom, "", MB_OK);
+		SendMessage(objeto, mensa, 0, (LPARAM)fecha_temp);
+		SendMessage(objeto, mensa, 0, (LPARAM)hora_temp);
+		SendMessage(objeto, mensa, 0, (LPARAM)NombreClt);
+		SendMessage(objeto, mensa, 0, (LPARAM)PhoneClt);
+		SendMessage(objeto, mensa, 0, (LPARAM)TextCom);
 		
-		//SendMessage(objeto, mensa, 0, (LPARAM)TextCom);
-		//SendMessage(objeto, mensa, 0, (LPARAM)PhoneClt);
-		//SendMessage(objeto, mensa, 0, (LPARAM)NombreMas);
-		//SendMessage(objeto, mensa, 0, (LPARAM)Motiv);
-		//SendMessage(objeto, mensa, 0, (LPARAM)Dineros);
-		//SendMessage(objeto, mensa, 0, (LPARAM)fecha_temp);
-		//SendMessage(objeto, mensa, 0, (LPARAM)hora_temp);
+		SendMessage(objeto, mensa, 0, (LPARAM)NombreMas);
+		SendMessage(objeto, mensa, 0, (LPARAM)Motiv);
+		SendMessage(objeto, mensa, 0, (LPARAM)Dineros);
+		SendMessage(objeto, mensa, 0, (LPARAM)"——————————————————————————————");
 		
 
 		/*
@@ -725,7 +731,7 @@ void MostarLista   (HWND objeto, UINT mensa) {
 		MessageBox(objeto,"", "" ,  MB_OK);
 		MessageBox(objeto,"", "" ,  MB_OK);*/
 		
-		//SendMessage(objeto, mensa, 0, (LPARAM)"——————————————————————————————");
+		
 		
 		aux = aux->sig;
 	}
@@ -799,20 +805,41 @@ char*ConvierteFecha(char*Fecha)
 
 void LeeArchivo()
 {
-	node info;
+	//node info;
 	node *pinfo = 0;
 
 	ifstream archivaldo;
-	archivaldo.open(file, ios::binary);
+	archivaldo.open(file, ios::binary);  // | ios::trunc
 	if (archivaldo.is_open())
 	{
-		// crear la lista ligada
-		archivaldo.read((char*)&info, sizeof(node));
-		while (!archivaldo.eof())
-		{
-			AgregaNodo(info);                                //aqui se acomoda el nodo en la lista ligada
-			archivaldo.read((char*)&info, sizeof(node));
+		 pinfo = new node;
+		archivaldo.read((char*)pinfo, sizeof(node));
+		pinfo->ante = 0;
+		pinfo->sig= 0;
+
+		while (!archivaldo.eof()) {
+			if (inicio == 0)
+			{
+				inicio = pinfo;
+				last = pinfo;
+			}
+			else
+			{
+				last->sig = pinfo;
+				pinfo->ante = last;
+
+				last = pinfo;
+			}
+
+			pinfo = new node;
+			archivaldo.read((char*)pinfo, sizeof(node));
+			pinfo->ante = 0;
+			pinfo->sig = 0;
+
 		}
+			//AgregaNodo(info);                                //aqui se acomoda el nodo en la lista ligada
+			//archivaldo.read((char*)&info, sizeof(node));
+		
 		archivaldo.close();
 	}
 	else
