@@ -94,8 +94,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrev, PSTR cmd, int show)
 	_hInst = hInst;
 	_show = show;
 
-	ghDlg = CreateDialog(hInst, MAKEINTRESOURCE(IDD_DIALOG1),
-		0, ProcDialog1);
+	ghDlg = CreateDialog(hInst, MAKEINTRESOURCE(IDD_DIALOG1),0, ProcDialog1);
 	ShowWindow(ghDlg, show);
 
 	MSG msg;
@@ -119,8 +118,6 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrev, PSTR cmd, int show)
 
 
 
-
-
 BOOL CALLBACK ProcDialog1  (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
 {
 	static HWND hlist = 0;
@@ -129,6 +126,8 @@ BOOL CALLBACK ProcDialog1  (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 	case WM_INITDIALOG:
 	{
 
+		hlist = GetDlgItem(Dlg, IDC_LIST_M);
+		MostarLista(hlist, LB_ADDSTRING);
 		
 
 		PonImagen(Dlg, IDC_hi, _pic, 83, 108);
@@ -139,22 +138,38 @@ BOOL CALLBACK ProcDialog1  (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 	{
 		switch (LOWORD(wParam))
 		{
-			//botones de la área del menú principal
-		case IDC_BUTTON1:
-			hlist = GetDlgItem(Dlg, IDC_LIST_M);
-			MostarLista(hlist, LB_ADDSTRING);
-			DialogBox(_hInst, MAKEINTRESOURCE(IDD_Doc_Inf), Dlg, InfDoc);
-			return true;
+			 // Botones de la área del menú principal
+		case IDC_BUTTON1: { //Informacion del doctor
 
-		case IDC_BUTTON2:
+			DialogBox(_hInst, MAKEINTRESOURCE(IDD_Doc_Inf), Dlg, InfDoc);
+
+			EndDialog(Dlg, 0);
+			ghDlg = CreateDialog(_hInst, MAKEINTRESOURCE(IDD_DIALOG1), 0, ProcDialog1);
+			ShowWindow(ghDlg, _show);
+
+			return true;
+		}
+		case IDC_BUTTON2: { //Dar de Alta
 
 			DialogBox(_hInst, MAKEINTRESOURCE(IDD_alta), Dlg, Alta);
+
+			EndDialog(Dlg, 0);
+			ghDlg = CreateDialog(_hInst, MAKEINTRESOURCE(IDD_DIALOG1), 0, ProcDialog1);
+			ShowWindow(ghDlg, _show);
+
 			return true;
-		case IDC_BUTTON3:
+		}
+		case IDC_BUTTON3: { //Agenda
 
 			DialogBox(_hInst, MAKEINTRESOURCE(IDD_ver_agenda), Dlg, Ver_Agen);
-			return true; 
-		case IDC_BUTTON4:
+
+			EndDialog(Dlg, 0);
+			ghDlg = CreateDialog(_hInst, MAKEINTRESOURCE(IDD_DIALOG1), 0, ProcDialog1);
+			ShowWindow(ghDlg, _show);
+
+			return true;
+		}
+		case IDC_BUTTON4: { //salir y guardar
 
 			if (MessageBox(Dlg, "¿Quieres guardadr los cambios?",
 				"Alto",
@@ -171,67 +186,80 @@ BOOL CALLBACK ProcDialog1  (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 				PostQuitMessage(0);
 			}
 			return true;
+		}
 
-
-			//botones del menú de arriba
-		case ID_MENU_INFORMACIONDELDOCTOR:
+			 // Botones del menú de arriba
+		case ID_MENU_INFORMACIONDELDOCTOR: {
 
 			DialogBox(_hInst, MAKEINTRESOURCE(IDD_Doc_Inf), Dlg, InfDoc);
+			EndDialog(Dlg, 0);
+			ghDlg = CreateDialog(_hInst, MAKEINTRESOURCE(IDD_DIALOG1), 0, ProcDialog1);
+			ShowWindow(ghDlg, _show);
 			return true;
-		case ID__DARDEALTA:
+		}
+		case ID__DARDEALTA: {
 
 			DialogBox(_hInst, MAKEINTRESOURCE(IDD_alta), Dlg, Alta);
+			EndDialog(Dlg, 0);
+			ghDlg = CreateDialog(_hInst, MAKEINTRESOURCE(IDD_DIALOG1), 0, ProcDialog1);
+			ShowWindow(ghDlg, _show);
 			return true;
-		case ID__DARDEBAJA:
+		}
+		case ID__DARDEBAJA: {
 
 			DialogBox(_hInst, MAKEINTRESOURCE(IDD_baja), Dlg, Baja);
 			return true;
-		case ID__VERAGENDA:
+		}
+		case ID__VERAGENDA: {
 
 			DialogBox(_hInst, MAKEINTRESOURCE(IDD_ver_agenda), Dlg, Ver_Agen);
+			EndDialog(Dlg, 0);
+			ghDlg = CreateDialog(_hInst, MAKEINTRESOURCE(IDD_DIALOG1), 0, ProcDialog1);
+			ShowWindow(ghDlg, _show);
 			return true;
-		case ID__MODIFICAR_CITA:
+		}
+		case ID__MODIFICAR_CITA: {
 
 			DialogBox(_hInst, MAKEINTRESOURCE(IDD_modi_cita), Dlg, Modificar);
 			return true;
-			
-		case ID_salir:
+		}
 
-			if (MessageBox(Dlg, "¿Quieres guardadr los cambios?",
-				"Alto",
-				MB_YESNO |
-				MB_ICONASTERISK | MB_DEFBUTTON1) == IDYES)
-			{
-				//MessageBox(Dlg, "Se guardó", "informacion", MB_OK | MB_ICONINFORMATION);
-				EscribirArchivo();
+		case ID_salir: {
 
-				PostQuitMessage(0);
-			}
-			else {
-				//MessageBox(Dlg, "No se guardó", "informacion", MB_OK | MB_ICONEXCLAMATION);
-				PostQuitMessage(0);
-			}
+					   if (MessageBox(Dlg, "¿Quieres guardadr los cambios?",
+						   "Alto",
+						   MB_YESNO |
+						   MB_ICONASTERISK | MB_DEFBUTTON1) == IDYES)
+					   {
+						   //MessageBox(Dlg, "Se guardó", "informacion", MB_OK | MB_ICONINFORMATION);
+						   EscribirArchivo();
+
+						   PostQuitMessage(0);
+					   }
+					   else {
+						   //MessageBox(Dlg, "No se guardó", "informacion", MB_OK | MB_ICONEXCLAMATION);
+						   PostQuitMessage(0);
+					   }
 
 
-			return true;
-
-			//éxtras
+					   return true;
+		}
+			 // éxtras
 		case ID_VER_INFORMAION: //éste es "modal"
 		
-			DialogBox(_hInst, MAKEINTRESOURCE(IDD_Ven_Inf), Dlg, informacion);//Mismo callback informacion
+			DialogBox(_hInst, MAKEINTRESOURCE(IDD_Ven_Inf), Dlg, informacion);
 			return true;
 		case ID_ACERCA:         //éste es "NO modal"
+
 			HWND Dialg = CreateDialog(_hInst, MAKEINTRESOURCE(IDD_Ven_Ace), Dlg, informacion2);
-
 			ShowWindow(Dialg, _show);
-
 			return true;
 
 		
 
-		}// fin de "switch (LOWORD(wParam))"
+		}/// fin de "switch (LOWORD(wParam))"
 		return true; 
-	}// fin de "case WM_COMMAND"
+	}/// fin de "case WM_COMMAND"
 	case WM_CLOSE:
 	{
 
@@ -252,7 +280,7 @@ BOOL CALLBACK ProcDialog1  (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 		
 		return true; }
 	case WM_DESTROY:{return true;}
-	}//fin de "switch (Mensaje)"
+	}///fin de "switch (Mensaje)"
 	return false;
 }
 BOOL CALLBACK informacion  (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
@@ -678,14 +706,14 @@ void AgregaNodo    (node Datos) {
 void MostarLista   (HWND objeto, UINT mensa) {
 	node datitos;
 	
-	char TextCom[300];// cambiar este 300.
-	char NombreClt[80];
-	char PhoneClt[80];
-	char NombreMas[80];
-	char Motiv[150];
-	char Dineros[80];
-	char fecha_temp[11] = "";
-	char hora_temp[11] = "";
+	char TextCom    [300]="";
+	char NombreClt  [80] ="";
+	char PhoneClt   [80] ="";
+	char NombreMas  [80] ="";
+	char Motiv      [150]="";
+	char Dineros    [80] ="";
+	char fecha_temp [11] ="";
+	char hora_temp  [11] ="";
 
 
 	//--------------------------------------
@@ -696,14 +724,14 @@ void MostarLista   (HWND objeto, UINT mensa) {
 	{
 		
 
-		strcpy(NombreClt, aux->CltName);
-		strcpy(TextCom,   aux->species);
-		strcpy(PhoneClt,  aux->Phone);
-		strcpy(NombreMas, aux->MasName);
-		strcpy(Motiv,     aux->Motivo);
-		strcpy(Dineros,   aux->cost);
-		strcpy(fecha_temp,aux->date);
-		strcpy(hora_temp, aux->time);
+		strcpy(NombreClt, aux->CltName );
+		strcpy(TextCom,   aux->species );
+		strcpy(PhoneClt,  aux->Phone   );
+		strcpy(NombreMas, aux->MasName );
+		strcpy(Motiv,     aux->Motivo  );
+		strcpy(Dineros,   aux->cost    );
+		strcpy(fecha_temp,aux->date    );
+		strcpy(hora_temp, aux->time    );
 
 
 		//Me salen númerons raros como: íííííííííííííííííííííííí. seguramente están en binario
@@ -714,22 +742,22 @@ void MostarLista   (HWND objeto, UINT mensa) {
 		SendMessage(objeto, mensa, 0, (LPARAM)NombreClt);
 		SendMessage(objeto, mensa, 0, (LPARAM)PhoneClt);
 		SendMessage(objeto, mensa, 0, (LPARAM)TextCom);
-		
 		SendMessage(objeto, mensa, 0, (LPARAM)NombreMas);
 		SendMessage(objeto, mensa, 0, (LPARAM)Motiv);
 		SendMessage(objeto, mensa, 0, (LPARAM)Dineros);
+
 		SendMessage(objeto, mensa, 0, (LPARAM)"——————————————————————————————");
 		
 
-		/*
-		MessageBox(objeto,"", "" ,  MB_OK);
-		MessageBox(objeto,"", "" ,  MB_OK);
-		MessageBox(objeto,"", "" ,  MB_OK);
-		MessageBox(objeto,"", "" ,  MB_OK);
-		MessageBox(objeto,"", "" ,  MB_OK);
-		MessageBox(objeto,"", "" ,  MB_OK);
-		MessageBox(objeto,"", "" ,  MB_OK);
-		MessageBox(objeto,"", "" ,  MB_OK);*/
+		
+	/*	MessageBox(ghDlg, aux->CltName, "", MB_OK);
+		MessageBox(ghDlg, aux->species, "", MB_OK);
+		MessageBox(ghDlg, aux->Phone, "", MB_OK);
+		MessageBox(ghDlg, aux->MasName, "", MB_OK);
+		MessageBox(ghDlg, aux->Motivo, "", MB_OK);
+		MessageBox(ghDlg, aux->cost, "", MB_OK);
+		MessageBox(ghDlg, aux->date, "", MB_OK);
+		MessageBox(ghDlg, aux->time, "" ,  MB_OK);*/
 		
 		
 		
