@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#include <commdlg.h> //1. 
+
 using namespace std;
 
 
@@ -362,6 +364,9 @@ BOOL CALLBACK Alta         (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 		LlenaEspecies(hCboSpc, CB_ADDSTRING, _arch_esp);
 
 
+		//El "hCboSpc"==="hCombo"  //esto es temporal
+		
+		
 		return true; 
 	}
 	case WM_COMMAND:
@@ -376,17 +381,54 @@ BOOL CALLBACK Alta         (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 					   return true;
 		}
 		case IDC_AGREGAR:
-			if (CapturaNodo(Dlg, &temp) == false){                                                 // Siempre se va por aquí, aunque no entiendo porque se iría por "bool=====>verdadero"
-			AgregaNodo(temp);
-			MessageBox(Dlg, "Elemento agregado", "Agregar Cita", MB_OK + MB_ICONINFORMATION);      // Esto pasa cada vez que presiono el botón de agregar.
+
+			node *aux = 0;
+			aux = new node;
+			aux->sig = 0;
+			aux->ante = 0;
+
+
+
+			int index = SendMessage(hCboSpc, CB_GETCURSEL, 0, 0);
+			SendMessage(hCboSpc, CB_GETLBTEXT, (WPARAM)index, (LPARAM)aux->species);
+			SendDlgItemMessage(Dlg, IDC_EDIT1, WM_GETTEXT, (WPARAM)80, (LPARAM)aux->CltName);
+			SendDlgItemMessage(Dlg, IDC_EDIT2, WM_GETTEXT, (WPARAM)80, (LPARAM)aux->Phone);
+			SendDlgItemMessage(Dlg, IDC_EDIT3, WM_GETTEXT, (WPARAM)80, (LPARAM)aux->MasName);
+			SendDlgItemMessage(Dlg, IDC_EDIT4, WM_GETTEXT, (WPARAM)150, (LPARAM)aux->Motivo);
+			SendDlgItemMessage(Dlg, IDC_EDIT5, WM_GETTEXT, (WPARAM)80, (LPARAM)aux->cost);
+
+			SendDlgItemMessage(Dlg, IDC_FECHA, WM_GETTEXT, (WPARAM)11, (LPARAM)aux->date);
+			SendDlgItemMessage(Dlg, IDC_HORA, WM_GETTEXT, (WPARAM)6, (LPARAM)aux->time);
+
+
+			if (inicio == 0)
+			{
+				inicio = aux;
+				last = aux;
 			}
-			else{MessageBox(Dlg, "No se pudo abrir", "hmmm", MB_OK + MB_ICONINFORMATION);}
+			else
+			{
+				last->sig = aux;
+				aux->ante = last;
 
-			//                                                                                        <<< Esto haría mas o menos lo mismo: >>>
-			//CapturaNodo(Dlg,temp);                                                               << Primero se guardan los datos en el nodo                    >>
-			//AgregaNodo(temp);                                                                    << Después el nodo es acomodado en la lista doblemente ligada >>
+				last = aux;
+			}
 
-			//MessageBox(Dlg, "Elemento agregado", "Agregar Cita", MB_OK + MB_ICONINFORMATION);
+			//delete aux;
+
+			//if (CapturaNodo(Dlg, &temp) == false){                                                 //todo esto es por las validaciones
+			//AgregaNodo(temp);
+
+
+			//MessageBox(Dlg, "Elemento agregado", "Agregar Cita", MB_OK + MB_ICONINFORMATION);      // Esto pasa cada vez que presiono el botón de agregar.
+			//}
+			//else{MessageBox(Dlg, "No se pudo abrir", "hmmm", MB_OK + MB_ICONINFORMATION);}
+
+			////                                                                                        <<< Esto haría mas o menos lo mismo: >>>
+			////CapturaNodo(Dlg,temp);                                                               << Primero se guardan los datos en el nodo                    >>
+			////AgregaNodo(temp);                                                                    << Después el nodo es acomodado en la lista doblemente ligada >>
+
+			////MessageBox(Dlg, "Elemento agregado", "Agregar Cita", MB_OK + MB_ICONINFORMATION);
 
 
 
@@ -550,6 +592,57 @@ void PonImagen     (HWND dialog, WPARAM IDC, char *imagen,int m, int n) {
 		(LPARAM)bmp2);
 
 }
+
+bool CapturaNodo(HWND Dlg, node*Punt) {
+	bool exc = false;
+	char mensa[] = "";
+	node datitos = *Punt;        //esto era el problema?
+	static HWND hCombo = 0;
+	hCombo = GetDlgItem(Dlg, IDC_COMBO1);
+
+	char TextCom[80];    //bombo box
+	char NombreClt[80];  //nombre del cliente
+	char PhoneClt[80];   //telefono
+	char NombreMas[80];  //nombre de la mascota
+	char Motiv[150];     //
+	char Dineros[80];    //
+	char fecha_temp[11] = "";
+
+	int index = SendMessage(hCombo, CB_GETCURSEL, 0, 0);
+	SendMessage(hCombo, CB_GETLBTEXT, (WPARAM)index, (LPARAM)TextCom);
+	SendDlgItemMessage(Dlg, IDC_EDIT1, WM_GETTEXT, (WPARAM)80, (LPARAM)NombreClt);
+	SendDlgItemMessage(Dlg, IDC_EDIT2, WM_GETTEXT, (WPARAM)80, (LPARAM)PhoneClt);
+	SendDlgItemMessage(Dlg, IDC_EDIT3, WM_GETTEXT, (WPARAM)80, (LPARAM)NombreMas);
+	SendDlgItemMessage(Dlg, IDC_EDIT4, WM_GETTEXT, (WPARAM)150, (LPARAM)Motiv);
+	SendDlgItemMessage(Dlg, IDC_EDIT5, WM_GETTEXT, (WPARAM)80, (LPARAM)Dineros);
+
+	SendDlgItemMessage(Dlg, IDC_FECHA, WM_GETTEXT, (WPARAM)11, (LPARAM)fecha_temp);
+	SendDlgItemMessage(Dlg, IDC_HORA, WM_GETTEXT, (WPARAM)6, (LPARAM)datitos.time);
+
+	strcpy(datitos.date, ConvierteFecha(fecha_temp));
+
+
+	// AQUI: validar...
+	if (exc == true) {
+		strcpy(mensa, "favor de capturar nombre\n");
+	}
+
+	strcpy(datitos.species, TextCom);
+	strcpy(datitos.CltName, NombreClt);
+	strcpy(datitos.Phone, PhoneClt);
+	strcpy(datitos.MasName, NombreMas);
+	strcpy(datitos.Motivo, Motiv);
+	strcpy(datitos.cost, Dineros);
+
+	if (exc) {     //tene que pasar por aqui??
+		Punt = 0;
+		MessageBox(Dlg, mensa, "  ", MB_OK);
+		Punt = &datitos;
+	}
+
+	return exc;
+
+};
 void AgregaNodo    (node Datos) {
 	//ME QUEDÉ AQUÍ REVISANDO // ya no
 	node*aux = 0;
@@ -573,6 +666,7 @@ void AgregaNodo    (node Datos) {
 		last = aux;
 	}
 };
+
 void MostarLista   (HWND objeto, UINT mensa) {
 	node datitos;
 	
@@ -661,57 +755,6 @@ void LlenaEspecies (HWND objeto, UINT mensa, char *file)
 	}
 
 }
-bool CapturaNodo   (HWND Dlg, node*Punt) {
-	bool exc = false;
-	char mensa[] = "";
-	node datitos=*Punt;        //esto era el problema?
-	static HWND hCombo = 0;
-	hCombo = GetDlgItem(Dlg, IDC_COMBO1);
-
-	char TextCom[80];    //bombo box
-	char NombreClt[80];  //nombre del cliente
-	char PhoneClt[80];   //telefono
-	char NombreMas[80];  //nombre de la mascota
-	char Motiv[150];     //
-	char Dineros[80];    //
-	char fecha_temp[11] = "";
-
-	int index = SendMessage(hCombo, CB_GETCURSEL, 0, 0);
-	SendMessage(hCombo, CB_GETLBTEXT, (WPARAM)index, (LPARAM)TextCom);
-	SendDlgItemMessage(Dlg, IDC_EDIT1, WM_GETTEXT, (WPARAM)80, (LPARAM)NombreClt);
-	SendDlgItemMessage(Dlg, IDC_EDIT2, WM_GETTEXT, (WPARAM)80, (LPARAM)PhoneClt);
-	SendDlgItemMessage(Dlg, IDC_EDIT3, WM_GETTEXT, (WPARAM)80, (LPARAM)NombreMas);
-	SendDlgItemMessage(Dlg, IDC_EDIT4, WM_GETTEXT, (WPARAM)150, (LPARAM)Motiv);
-	SendDlgItemMessage(Dlg, IDC_EDIT5, WM_GETTEXT, (WPARAM)80, (LPARAM)Dineros);
-
-	SendDlgItemMessage(Dlg, IDC_FECHA, WM_GETTEXT, (WPARAM)11, (LPARAM)fecha_temp);
-	SendDlgItemMessage(Dlg, IDC_HORA, WM_GETTEXT, (WPARAM)6, (LPARAM)datitos.time);
-
-	strcpy(datitos.date, ConvierteFecha(fecha_temp));
-
-	
-	// AQUI: validar...
-	if (exc == true) {
-		strcpy(mensa,"favor de capturar nombre\n");
-	}
-	
-	strcpy(datitos.species, TextCom);
-	strcpy(datitos.CltName, NombreClt);
-	strcpy(datitos.Phone, PhoneClt);
-	strcpy(datitos.MasName, NombreMas);
-	strcpy(datitos.Motivo, Motiv);
-	strcpy(datitos.cost, Dineros);
-
-	if (exc) {     //tene que pasar por aqui??
-		Punt = 0;
-		MessageBox(Dlg,mensa,"  ",MB_OK);
-		Punt = &datitos;
-	}
-	
-	return exc;
-
-};
-
 
 //
 //node*BuscarDato(int id)
