@@ -40,7 +40,7 @@ char _pic2[MAX_PATH] =  "";              //Variable que almacena la direccion de
 void AgregaNodo    (node Datos);
 void MostarLista   (HWND objeto, UINT mensa);
 void LlenaEspecies (HWND objeto, UINT mensa, char *file);
-void PonImagen     (HWND dialog, WPARAM IDC, char *imagen);
+void PonImagen     (HWND dialog, WPARAM IDC, char *imagen, int m, int n);
 bool CapturaNodo   (HWND Dlg, node*Punt);                  //Funcion tipo bool
 
 char*ConvierteFecha(char*Fecha);                           //Funcion tipo char
@@ -121,20 +121,13 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrev, PSTR cmd, int show)
 
 BOOL CALLBACK ProcDialog1  (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
 {
-	static HBITMAP bmp2;
-	static HBITMAP bmp2_02;
+	
 	switch (Mensaje)
 	{
 	case WM_INITDIALOG:
 	{
-		//imagen de perfíl del Doctor
-		bmp2 = (HBITMAP)LoadImage(NULL, _pic,IMAGE_BITMAP,83, 108, LR_LOADFROMFILE);
-		SendDlgItemMessage(Dlg, IDC_hi, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)bmp2);
-
-		//Imagen de "Bienvenido al menú principal de la Agenda para Veterinaria"
-		bmp2_02 = (HBITMAP)LoadImage(NULL, _pic2,IMAGE_BITMAP, 500, 50, LR_LOADFROMFILE);
-		SendDlgItemMessage(Dlg, IDC_bienve, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)bmp2_02);
-
+		PonImagen(Dlg, IDC_hi, _pic, 83, 108);
+		PonImagen(Dlg, IDC_bienve, _pic2, 500, 50);
 
 		return true; }
 	case WM_COMMAND:
@@ -258,20 +251,14 @@ BOOL CALLBACK ProcDialog1  (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 }
 BOOL CALLBACK informacion  (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
 {
-	static HBITMAP bmp1, bmp2;
+	
 	switch (Mensaje)
 	{
 	case WM_INITDIALOG:
 	{
-		bmp1 = (HBITMAP)SendDlgItemMessage(Dlg, IDC_hola,
-			STM_GETIMAGE, IMAGE_BITMAP, 0);
 
-		//Al objeto bmp2, se le asigna una imagen local:
-		bmp2 = (HBITMAP)LoadImage(NULL, _pic,
-			IMAGE_BITMAP, 100, 100, LR_LOADFROMFILE);
+		PonImagen(Dlg, IDC_hola, _pic, 83, 108);
 
-		SendDlgItemMessage(Dlg, IDC_hola, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)bmp2);
-		
 		return true; }
 	case WM_COMMAND:
 	{
@@ -322,31 +309,13 @@ BOOL CALLBACK informacion2 (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 }
 BOOL CALLBACK InfDoc       (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
 {
-	static HBITMAP bmp1, bmp2;
-
+	
 
 	switch (Mensaje)
 	{
 	case WM_INITDIALOG:
 	{
-		//PonImagen(Dlg, IDC_IMAGEN, _pic);
-
-		
-		//Al objeto bmp1, se le asigna sin imagen:
-		bmp1 = (HBITMAP)SendDlgItemMessage(Dlg, IDC_h,
-			STM_GETIMAGE, IMAGE_BITMAP, 0);
-
-		//Al objeto bmp2, se le asigna una imagen local:
-		bmp2 = (HBITMAP)LoadImage(NULL, _pic,
-			IMAGE_BITMAP, 100, 100, LR_LOADFROMFILE);
-
-		SendDlgItemMessage(Dlg, IDC_h, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)bmp2);
-		//SendDlgItemMessage(
-		//	Dlg,
-		//	IDC_IMAGEN,
-		//	STM_SETIMAGE,
-		//	IMAGE_BITMAP,
-		//	(LPARAM)bmp2);
+		PonImagen(Dlg, IDC_h, _pic, 83, 108);
 
 		return true; }
 	case WM_COMMAND:
@@ -563,7 +532,7 @@ BOOL CALLBACK Modificar    (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 
 
 
-void PonImagen     (HWND dialog, WPARAM IDC, char *imagen) {
+void PonImagen     (HWND dialog, WPARAM IDC, char *imagen,int m, int n) {
 
 	static HBITMAP bmp1, bmp2;
 	//Al objeto bmp1, se le asigna sin imagen:
@@ -571,7 +540,7 @@ void PonImagen     (HWND dialog, WPARAM IDC, char *imagen) {
 		STM_GETIMAGE, IMAGE_BITMAP, 0);
 	//Al objeto bmp2, se le asigna una imagen local:
 	bmp2 = (HBITMAP)LoadImage(NULL, imagen,
-		IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+		IMAGE_BITMAP, m, n, LR_LOADFROMFILE);
 
 	SendDlgItemMessage(
 		dialog,
@@ -582,7 +551,7 @@ void PonImagen     (HWND dialog, WPARAM IDC, char *imagen) {
 
 }
 void AgregaNodo    (node Datos) {
-	//ME QUEDÉ AQUÍ REVISANDO
+	//ME QUEDÉ AQUÍ REVISANDO // ya no
 	node*aux = 0;
 	aux = new node;
 	aux->sig = 0;
@@ -600,6 +569,7 @@ void AgregaNodo    (node Datos) {
 	{
 		last->sig = aux;
 		aux->ante = last;
+
 		last = aux;
 	}
 };
@@ -731,7 +701,8 @@ bool CapturaNodo   (HWND Dlg, node*Punt) {
 	strcpy(datitos.MasName, NombreMas);
 	strcpy(datitos.Motivo, Motiv);
 	strcpy(datitos.cost, Dineros);
-	if (exc) {
+
+	if (exc) {     //tene que pasar por aqui??
 		Punt = 0;
 		MessageBox(Dlg,mensa,"  ",MB_OK);
 		Punt = &datitos;
