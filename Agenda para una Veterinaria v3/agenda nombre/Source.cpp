@@ -5,6 +5,8 @@
 #include <string.h>
 
 #include <commdlg.h> //1. 
+#include <iostream>
+#include <conio.h>
 
 using namespace std;
 
@@ -50,14 +52,15 @@ bool CapturaNodo   (HWND Dlg, node*Punt);                  //Funcion tipo bool
 char*ConvierteFecha(char*Fecha);                           //Funcion tipo char
 //node*BuscarDato(int id);
 void icon (HWND Dlg);
+int cont = 0;                                               //Contador del número de citas
 
 
 
-
-void LeeArchivo();
+void LeeArchivo();                                         //Lista con citas
 void EscribirArchivo();
 
-void LeeDatos();                                           //imágenes
+void LeeDatos();                                           //Imágenes y contador
+void EscribirDatos();
 
 HWND ghDlg = 0;
 HINSTANCE _hInst;
@@ -109,7 +112,9 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrev, PSTR cmd, int show)
 			DispatchMessage(&msg);
 		}
 	}
+
 	
+
 	return (int)msg.wParam;
 }
 
@@ -184,7 +189,7 @@ BOOL CALLBACK ProcDialog1  (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 			{
 				//MessageBox(Dlg, "Se guardó", "informacion", MB_OK | MB_ICONINFORMATION);
 				EscribirArchivo();
-
+				 EscribirDatos();  //contador
 				PostQuitMessage(0);
 			}
 			else {
@@ -239,7 +244,7 @@ BOOL CALLBACK ProcDialog1  (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 					   {
 						   //MessageBox(Dlg, "Se guardó", "informacion", MB_OK | MB_ICONINFORMATION);
 						   EscribirArchivo();
-
+						   EscribirDatos();  //contador
 						   PostQuitMessage(0);
 					   }
 					   else {
@@ -269,20 +274,20 @@ BOOL CALLBACK ProcDialog1  (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 	case WM_CLOSE:
 	{
 
-		if (MessageBox(Dlg,"¿Quieres guardadr los cambios?",
-			"Alto",
-			MB_YESNO |
-			MB_ICONASTERISK | MB_DEFBUTTON1) == IDYES)
-		{
-			//MessageBox(Dlg, "Se guardó","informacion",MB_OK | MB_ICONINFORMATION);
-			EscribirArchivo();
+		//if (MessageBox(Dlg,"¿Quieres guardadr los cambios?",
+		//	"Alto",
+		//	MB_YESNO |
+		//	MB_ICONASTERISK | MB_DEFBUTTON1) == IDYES)
+		//{
+		//	//MessageBox(Dlg, "Se guardó","informacion",MB_OK | MB_ICONINFORMATION);
+		//	EscribirArchivo();
 
-			PostQuitMessage(0);
-		}
-		else {  
-			//MessageBox(Dlg, "No se guardó", "informacion", MB_OK | MB_ICONEXCLAMATION);
-			PostQuitMessage(0); }
-
+		//	PostQuitMessage(0);
+		//}
+		//else {  
+		//	//MessageBox(Dlg, "No se guardó", "informacion", MB_OK | MB_ICONEXCLAMATION);
+		//	PostQuitMessage(0); }
+		PostQuitMessage(0);
 		
 		return true; }
 	case WM_DESTROY:{return true;}
@@ -455,6 +460,7 @@ BOOL CALLBACK Alta         (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 			}
 
 			MessageBox(Dlg, "Elemento agregado", "Agregar Cita", MB_OK + MB_ICONINFORMATION);
+			cont += 1;
 
 			//delete aux;
 
@@ -611,6 +617,7 @@ BOOL CALLBACK Modificar    (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 	case WM_DESTROY:
 	{return true; }
 	}
+
 	return false;
 }
 
@@ -743,18 +750,28 @@ void MostarLista   (HWND objeto, UINT mensa) {
 		//Me salen númerons raros como: íííííííííííííííííííííííí. seguramente están en binario
 
 		//MessageBox(objeto, TextCom, "", MB_OK);
+		SendMessage(objeto, mensa, 0, (LPARAM)"——<Seleccionar>——————");
 		SendMessage(objeto, mensa, 0, (LPARAM)fecha_temp);
+		SendMessage(objeto, mensa, 0, (LPARAM)"");
 		SendMessage(objeto, mensa, 0, (LPARAM)hora_temp);
+		SendMessage(objeto, mensa, 0, (LPARAM)"");
 		SendMessage(objeto, mensa, 0, (LPARAM)NombreClt);
+		SendMessage(objeto, mensa, 0, (LPARAM)"");
 		SendMessage(objeto, mensa, 0, (LPARAM)PhoneClt);
+		SendMessage(objeto, mensa, 0, (LPARAM)"");
 		SendMessage(objeto, mensa, 0, (LPARAM)TextCom);
+		SendMessage(objeto, mensa, 0, (LPARAM)"");
 		SendMessage(objeto, mensa, 0, (LPARAM)NombreMas);
+		SendMessage(objeto, mensa, 0, (LPARAM)"");
 		SendMessage(objeto, mensa, 0, (LPARAM)Motiv);
+		SendMessage(objeto, mensa, 0, (LPARAM)"");
 		SendMessage(objeto, mensa, 0, (LPARAM)Dineros);
 
 		SendMessage(objeto, mensa, 0, (LPARAM)"——————————————————————————————");
-		
+		if (cont < 5) {
+			SendMessage(objeto, mensa, 0, (LPARAM)"——————————————————————————————");
 
+		}
 		
 	/*	MessageBox(ghDlg, aux->CltName, "", MB_OK);
 		MessageBox(ghDlg, aux->species, "", MB_OK);
@@ -911,6 +928,8 @@ void EscribirArchivo()
 
 void LeeDatos() {
 
+
+	char c[10]="";
 	ifstream aechi;
 	aechi.open(_arch_dat);
 	if (aechi.is_open()) {
@@ -918,11 +937,45 @@ void LeeDatos() {
 
 
 
-
 		aechi.getline(_pic2, MAX_PATH);
+
+		//aechi.seekg(0, ios::end);
+		//aechi.tellp(0,ios::end);
+		//aechi.getline( c,10);           //este es el contador de citas
+		//cont = atoi(c);
+		while (!aechi.eof())
+		{
+			aechi.getline(c, 10);
+			
+		}
+		cont = atoi(c);
+
+		aechi.close();
+	}
+
+
+}
+
+void EscribirDatos() {
+
+
+	char c[10] = "";
+	_itoa(cont, c, 10);
+
+	ofstream aechi;
+	aechi.open(_arch_dat, ios::out);
+	if (aechi.is_open()) {
+		aechi.write(_pic, MAX_PATH);
+		aechi << endl;
+
+		aechi.write(_pic2, MAX_PATH);
+		aechi << endl;
+
+		aechi.write(c, 10);           //este es el contador de citas
+		
 		/*while (!aechi.eof())
 		{
-			
+
 			aechi.getline(_pic2, MAX_PATH);
 		}
 */

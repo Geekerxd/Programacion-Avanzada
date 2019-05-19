@@ -3,7 +3,6 @@
 // Usado por Veterinario.rc
 //
 #define IDD_DIALOG1                     101
-//#define IDI_ICON1                       101
 #define IDR_MENU1                       102
 #define IDD_Ven_Inf                     103
 #define IDD_Ven_Ace                     106
@@ -39,6 +38,7 @@
 #define IDC_RADIO2                      1027
 #define IDC_LIST_M                      1027
 #define IDC_LIST2                       1028
+#define IDC_DATETIMEPICKER1             1029
 #define ID_VER_INFORMAION               40001
 #define ID_AYUDA_ACERCADELPROGRAMA      40002
 #define ID_ACERCA                       40003
@@ -61,7 +61,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        119
 #define _APS_NEXT_COMMAND_VALUE         40016
-#define _APS_NEXT_CONTROL_VALUE         1029
+#define _APS_NEXT_CONTROL_VALUE         1030
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
