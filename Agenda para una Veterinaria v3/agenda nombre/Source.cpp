@@ -25,8 +25,8 @@ struct node
 	char	Motivo[150];   // Motivo de la consulta
 	char	cost[10];      // Costo de la Consulta
 
-	//bool	urgent;
-	//bool	gender;
+	
+	bool	gender;        // Género del Animal
 
 	node	*sig;
 	node	*ante;
@@ -53,8 +53,19 @@ bool CapturaNodo   (HWND Dlg, node*Punt);                  //Funcion tipo bool
 char*ConvierteFecha(char*Fecha);                           //Funcion tipo char
 //node*BuscarDato(int id);
 void icon (HWND Dlg);
-int cont = 0;                                               //Contador del número de citas
+int cont = 0;                                              //Contador del número de citas
 bool lineas = true;                                        //vanndera se ira por menu principal o ver agenda
+
+
+int v, w;                                                  //Para el list box GetCursel
+char *cad;
+bool flag=false;
+
+
+
+
+
+
 
 
 void LeeArchivo();                                         //Lista con citas
@@ -134,10 +145,8 @@ BOOL CALLBACK ProcDialog1  (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 	
 	case WM_INITDIALOG:
 	{
-		icon(Dlg);
-		//SendMessage(Dlg, WM_SETICON, ICON_SMALL,(LPARAM)LoadIcon(NULL,MAKEINTRESOURCE(IDI_ICON1)));
-		//SendMessage(Dlg, WM_SETICON, ICON_BIG,(LPARAM)LoadIcon(NULL,MAKEINTRESOURCE(IDI_ICON1)));
-
+		icon(Dlg);//icono del perro
+		
 		hlist = GetDlgItem(Dlg, IDC_LIST_M);
 		lineas = true;
 		MostarLista(hlist, LB_ADDSTRING);
@@ -427,6 +436,14 @@ BOOL CALLBACK Alta         (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 		}
 		case IDC_AGREGAR:
 
+			/*
+			
+				Me quede aquí. Voy agregar el bool gender y hacer validaciones, ademas de poner la foto, y tal vez el filtro
+			
+			*/
+
+
+
 			node *aux = 0;
 			aux = new node;
 			aux->sig = 0;
@@ -538,13 +555,19 @@ BOOL CALLBACK Baja         (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 }
 BOOL CALLBACK Ver_Agen     (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
 {
-	static HWND hlist = 0;
+	static HWND hlist      = 0;
+	static HWND HBorrar    = 0;
+	static HWND HModificar = 0;
+	//int index = 0;
+
 
 	switch (Mensaje)
 	{
 	case WM_INITDIALOG:
 	{
 
+		HBorrar = GetDlgItem(Dlg, IDC_BUTTON1);
+		HModificar = GetDlgItem(Dlg, IDC_BUTTON2);
 
 		hlist = GetDlgItem(Dlg, IDC_LIST1);
 		lineas = false;
@@ -566,16 +589,61 @@ BOOL CALLBACK Ver_Agen     (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 		case IDOK:
 			EndDialog(Dlg, 0);
 			return true;
-		case IDCANCEL:
-			EndDialog(Dlg, 0);
+	
+		case IDC_BUTTON1: {             //Quitar cita
+
+			v = SendMessage(hlist, LB_GETCURSEL, 0, 0);
+			
+			if (cont < 5) {
+				for (int i = 0; i < cont; i++) {
+					if (v == 18 * i) {                  //modificar 18 si agrego datos
+						flag = true;
+						break;
+					}
+				}
+			
+			}
+			else {
+				for (int i = 0; i < cont; i++) {
+					if (v == 17 * i) {                  //modificar 17 si agrego datos
+						flag = true;
+						break;
+					}
+				}
+			}
+
+			if (flag) {
+
+				v += 7;
+
+				if (v == -1) {
+					break;
+				}
+				else {
+					w = SendMessage(hlist, LB_GETTEXTLEN, (WPARAM)v, (LPARAM)cad);
+
+
+
+
+					cad = (char*)malloc(w + 1);
+					SendMessage(hlist, LB_GETTEXT, (WPARAM)v, (LPARAM)cad);
+					
+
+				}
+
+				//DialogBox(_hInst, MAKEINTRESOURCE(IDD_baja), Dlg, Baja);
+			}
+			else { MessageBox(Dlg, "Favor de seleccionar una Cita", "Anuncio", MB_ICONEXCLAMATION); }
+
+			flag = false;
+			v = -1;
 			return true;
-		case IDC_BUTTON1:
-			DialogBox(_hInst, MAKEINTRESOURCE(IDD_baja), Dlg, Baja);
+		}
+		case IDC_BUTTON2: {                                               //Modificar cita
+			DialogBox(_hInst, MAKEINTRESOURCE(IDD_modi_cita), Dlg, Modificar);
 
 			return true;
-		case IDC_BUTTON2:
-			DialogBox(_hInst, MAKEINTRESOURCE(IDD_modi_cita), Dlg, Modificar);
-			return true;
+		}
 
 
 		}
