@@ -38,6 +38,7 @@ node *inicio = 0, *last = 0, *prev = 0, *ant = 0, *nuevo;
 char file[80]        = "citas.txt";      //Nombre del archivo donde están, de forma binaria, todos todos los datos de las CITAS.
 char _arch_esp[]     = "species.txt";    //Nombre del archivo donde estan todos los nombres de las "ESPECIES de la MASCOTAS".
 char _arch_dat[]     = "Datos.txt";      //Nombre del archivo donde estan todas las direcciones de las IMAGENES.
+char _conta[]        = "contador.txt";          //almacena un contador
 
 char _pic[MAX_PATH]  =  "" ;             //Variable que almacena la direccion de la imágen 1.
 char _pic2[MAX_PATH] =  "";              //Variable que almacena la direccion de la imágen 2.
@@ -53,7 +54,7 @@ char*ConvierteFecha(char*Fecha);                           //Funcion tipo char
 //node*BuscarDato(int id);
 void icon (HWND Dlg);
 int cont = 0;                                               //Contador del número de citas
-
+bool lineas = true;                                        //vanndera se ira por menu principal o ver agenda
 
 
 void LeeArchivo();                                         //Lista con citas
@@ -138,6 +139,7 @@ BOOL CALLBACK ProcDialog1  (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 		//SendMessage(Dlg, WM_SETICON, ICON_BIG,(LPARAM)LoadIcon(NULL,MAKEINTRESOURCE(IDI_ICON1)));
 
 		hlist = GetDlgItem(Dlg, IDC_LIST_M);
+		lineas = true;
 		MostarLista(hlist, LB_ADDSTRING);
 		
 
@@ -545,6 +547,7 @@ BOOL CALLBACK Ver_Agen     (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 
 
 		hlist = GetDlgItem(Dlg, IDC_LIST1);
+		lineas = false;
 		MostarLista(hlist, LB_ADDSTRING);
 		
 		//SendDlgItemMessage(Dlg, IDC_LIST1, LB_RESETCONTENT, 0, 0);
@@ -750,24 +753,26 @@ void MostarLista   (HWND objeto, UINT mensa) {
 		//Me salen númerons raros como: íííííííííííííííííííííííí. seguramente están en binario
 
 		//MessageBox(objeto, TextCom, "", MB_OK);
-		SendMessage(objeto, mensa, 0, (LPARAM)"——<Seleccionar>——————");
+
+		if (!lineas)SendMessage(objeto, mensa, 0, (LPARAM)"——<Seleccionar>——————");
 		SendMessage(objeto, mensa, 0, (LPARAM)fecha_temp);
-		SendMessage(objeto, mensa, 0, (LPARAM)"");
+		if (!lineas)SendMessage(objeto, mensa, 0, (LPARAM)"");
 		SendMessage(objeto, mensa, 0, (LPARAM)hora_temp);
-		SendMessage(objeto, mensa, 0, (LPARAM)"");
+		if (!lineas)SendMessage(objeto, mensa, 0, (LPARAM)"");
 		SendMessage(objeto, mensa, 0, (LPARAM)NombreClt);
-		SendMessage(objeto, mensa, 0, (LPARAM)"");
+		if (!lineas)SendMessage(objeto, mensa, 0, (LPARAM)"");
 		SendMessage(objeto, mensa, 0, (LPARAM)PhoneClt);
-		SendMessage(objeto, mensa, 0, (LPARAM)"");
+		if (!lineas)SendMessage(objeto, mensa, 0, (LPARAM)"");
 		SendMessage(objeto, mensa, 0, (LPARAM)TextCom);
-		SendMessage(objeto, mensa, 0, (LPARAM)"");
+		if (!lineas)SendMessage(objeto, mensa, 0, (LPARAM)"");
 		SendMessage(objeto, mensa, 0, (LPARAM)NombreMas);
-		SendMessage(objeto, mensa, 0, (LPARAM)"");
+		if (!lineas)SendMessage(objeto, mensa, 0, (LPARAM)"");
 		SendMessage(objeto, mensa, 0, (LPARAM)Motiv);
-		SendMessage(objeto, mensa, 0, (LPARAM)"");
+		if (!lineas)SendMessage(objeto, mensa, 0, (LPARAM)"");
 		SendMessage(objeto, mensa, 0, (LPARAM)Dineros);
 
-		SendMessage(objeto, mensa, 0, (LPARAM)"——————————————————————————————");
+		SendMessage(objeto, mensa, 0, (LPARAM)"—————————————————————————————————————————————");
+
 		if (cont < 5) {
 			SendMessage(objeto, mensa, 0, (LPARAM)"——————————————————————————————");
 
@@ -930,29 +935,29 @@ void LeeDatos() {
 
 
 	char c[10]="";
+
 	ifstream aechi;
-	aechi.open(_arch_dat);
+	aechi.open(_arch_dat,ios::in);
 	if (aechi.is_open()) {
 		aechi.getline(_pic,MAX_PATH);
 
-
-
 		aechi.getline(_pic2, MAX_PATH);
 
-		//aechi.seekg(0, ios::end);
-		//aechi.tellp(0,ios::end);
-		//aechi.getline( c,10);           //este es el contador de citas
-		//cont = atoi(c);
-		while (!aechi.eof())
-		{
-			aechi.getline(c, 10);
-			
-		}
-		cont = atoi(c);
-
+		
 		aechi.close();
 	}
 
+	ifstream aechi02;
+	aechi02.open(_conta, ios::in);
+	if (aechi02.is_open()) {
+		
+
+		aechi02.getline(c, 10);
+		cont = atoi(c);
+
+
+		aechi02.close();
+	}
 
 }
 
@@ -962,25 +967,26 @@ void EscribirDatos() {
 	char c[10] = "";
 	_itoa(cont, c, 10);
 
-	ofstream aechi;
-	aechi.open(_arch_dat, ios::out);
-	if (aechi.is_open()) {
-		aechi.write(_pic, MAX_PATH);
-		aechi << endl;
+	//ofstream aechi;
+	//aechi.open(_arch_dat, ios::out);
+	//if (aechi.is_open()) {
+	//	aechi.write(_pic, 250);
+	//	aechi << endl;
+	//	aechi.write(_pic2, 250);
+	//	aechi << endl;
 
-		aechi.write(_pic2, MAX_PATH);
-		aechi << endl;
 
-		aechi.write(c, 10);           //este es el contador de citas
+	//	aechi.close();
+	//}
+
+	ofstream aechi02;
+	aechi02.open(_conta, ios::out);
+	if (aechi02.is_open()) {
 		
-		/*while (!aechi.eof())
-		{
+		aechi02.write(c, 10);           //este es el contador de citas
 
-			aechi.getline(_pic2, MAX_PATH);
-		}
-*/
 
-		aechi.close();
+		aechi02.close();
 	}
 
 
