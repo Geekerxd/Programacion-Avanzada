@@ -8,6 +8,8 @@
 
 using namespace std;
 
+//#define IDI_ICON1    "Icon_Dog.ico"
+//#define  ICON "Icon_Dog.ico"
 
 
 struct node
@@ -47,7 +49,7 @@ bool CapturaNodo   (HWND Dlg, node*Punt);                  //Funcion tipo bool
 
 char*ConvierteFecha(char*Fecha);                           //Funcion tipo char
 //node*BuscarDato(int id);
-
+void icon (HWND Dlg);
 
 
 
@@ -123,8 +125,12 @@ BOOL CALLBACK ProcDialog1  (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 	static HWND hlist = 0;
 	switch (Mensaje)
 	{
+	
 	case WM_INITDIALOG:
 	{
+		icon(Dlg);
+		//SendMessage(Dlg, WM_SETICON, ICON_SMALL,(LPARAM)LoadIcon(NULL,MAKEINTRESOURCE(IDI_ICON1)));
+		//SendMessage(Dlg, WM_SETICON, ICON_BIG,(LPARAM)LoadIcon(NULL,MAKEINTRESOURCE(IDI_ICON1)));
 
 		hlist = GetDlgItem(Dlg, IDC_LIST_M);
 		MostarLista(hlist, LB_ADDSTRING);
@@ -143,7 +149,7 @@ BOOL CALLBACK ProcDialog1  (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 
 			DialogBox(_hInst, MAKEINTRESOURCE(IDD_Doc_Inf), Dlg, InfDoc);
 
-			EndDialog(Dlg, 0);
+			DestroyWindow(Dlg);
 			ghDlg = CreateDialog(_hInst, MAKEINTRESOURCE(IDD_DIALOG1), 0, ProcDialog1);
 			ShowWindow(ghDlg, _show);
 
@@ -152,8 +158,8 @@ BOOL CALLBACK ProcDialog1  (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 		case IDC_BUTTON2: { //Dar de Alta
 
 			DialogBox(_hInst, MAKEINTRESOURCE(IDD_alta), Dlg, Alta);
-
-			EndDialog(Dlg, 0);
+			DestroyWindow(Dlg);
+			//EndDialog(Dlg, 0);
 			ghDlg = CreateDialog(_hInst, MAKEINTRESOURCE(IDD_DIALOG1), 0, ProcDialog1);
 			ShowWindow(ghDlg, _show);
 
@@ -163,7 +169,7 @@ BOOL CALLBACK ProcDialog1  (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 
 			DialogBox(_hInst, MAKEINTRESOURCE(IDD_ver_agenda), Dlg, Ver_Agen);
 
-			EndDialog(Dlg, 0);
+			DestroyWindow(Dlg);
 			ghDlg = CreateDialog(_hInst, MAKEINTRESOURCE(IDD_DIALOG1), 0, ProcDialog1);
 			ShowWindow(ghDlg, _show);
 
@@ -192,7 +198,7 @@ BOOL CALLBACK ProcDialog1  (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 		case ID_MENU_INFORMACIONDELDOCTOR: {
 
 			DialogBox(_hInst, MAKEINTRESOURCE(IDD_Doc_Inf), Dlg, InfDoc);
-			EndDialog(Dlg, 0);
+			DestroyWindow(Dlg);
 			ghDlg = CreateDialog(_hInst, MAKEINTRESOURCE(IDD_DIALOG1), 0, ProcDialog1);
 			ShowWindow(ghDlg, _show);
 			return true;
@@ -200,7 +206,7 @@ BOOL CALLBACK ProcDialog1  (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 		case ID__DARDEALTA: {
 
 			DialogBox(_hInst, MAKEINTRESOURCE(IDD_alta), Dlg, Alta);
-			EndDialog(Dlg, 0);
+			DestroyWindow(Dlg);
 			ghDlg = CreateDialog(_hInst, MAKEINTRESOURCE(IDD_DIALOG1), 0, ProcDialog1);
 			ShowWindow(ghDlg, _show);
 			return true;
@@ -213,7 +219,7 @@ BOOL CALLBACK ProcDialog1  (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 		case ID__VERAGENDA: {
 
 			DialogBox(_hInst, MAKEINTRESOURCE(IDD_ver_agenda), Dlg, Ver_Agen);
-			EndDialog(Dlg, 0);
+			DestroyWindow(Dlg);
 			ghDlg = CreateDialog(_hInst, MAKEINTRESOURCE(IDD_DIALOG1), 0, ProcDialog1);
 			ShowWindow(ghDlg, _show);
 			return true;
@@ -927,3 +933,10 @@ void LeeDatos() {
 
 }
 
+void icon (HWND Dlg) {
+	HICON newSmallIco, newBigIco, oldSmallIco, oldBigIco;
+	newSmallIco = reinterpret_cast<HICON>(LoadImage(nullptr, "Icon_Dog.ico", IMAGE_ICON, 16, 16, LR_LOADFROMFILE));
+	newBigIco = reinterpret_cast<HICON>(LoadImage(nullptr, "Icon_Dog.ico", IMAGE_ICON, 32, 32, LR_LOADFROMFILE));
+	oldSmallIco = reinterpret_cast<HICON>(SendMessage(Dlg, WM_SETICON, ICON_SMALL, reinterpret_cast<LPARAM>(newSmallIco)));
+	oldBigIco = reinterpret_cast<HICON>(SendMessage(Dlg, WM_SETICON, ICON_BIG, reinterpret_cast<LPARAM>(newBigIco)));
+}
