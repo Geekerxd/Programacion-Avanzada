@@ -2,6 +2,7 @@
 // Archivo de inclusión generado de Microsoft Visual C++.
 // Usado por Veterinario.rc
 //
+#define IDOK2                           3
 #define IDD_DIALOG1                     101
 #define IDR_MENU1                       102
 #define IDD_Ven_Inf                     103
@@ -11,6 +12,7 @@
 #define IDD_baja                        112
 #define IDD_ver_agenda                  114
 #define IDD_modi_cita                   116
+#define IDD_DIALOG_Im                   119
 #define IDC_Edi_Inf                     1001
 #define IDC_BUTTON1                     1002
 #define IDC_BUTTON2                     1003
@@ -38,7 +40,6 @@
 #define IDC_RADIO2                      1027
 #define IDC_LIST_M                      1027
 #define IDC_LIST2                       1028
-#define IDC_DATETIMEPICKER1             1029
 #define ID_VER_INFORMAION               40001
 #define ID_AYUDA_ACERCADELPROGRAMA      40002
 #define ID_ACERCA                       40003
@@ -59,7 +60,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        119
+#define _APS_NEXT_RESOURCE_VALUE        121
 #define _APS_NEXT_COMMAND_VALUE         40016
 #define _APS_NEXT_CONTROL_VALUE         1030
 #define _APS_NEXT_SYMED_VALUE           101

@@ -4,14 +4,13 @@
 #include <stdio.h>
 #include <string.h>
 
-#include <commdlg.h> //1. 
+#include <CommDlg.h> //1. #include <CommDlg.h>
 #include <iostream>
 #include <conio.h>
 
 using namespace std;
 
-//#define IDI_ICON1    "Icon_Dog.ico"
-//#define  ICON "Icon_Dog.ico"
+OPENFILENAME ofn;
 
 
 struct node
@@ -38,17 +37,22 @@ node *inicio = 0, *last = 0, *prev = 0, *ant = 0, *nuevo;
 char file[80]        = "citas.txt";      //Nombre del archivo donde están, de forma binaria, todos todos los datos de las CITAS.
 char _arch_esp[]     = "species.txt";    //Nombre del archivo donde estan todos los nombres de las "ESPECIES de la MASCOTAS".
 char _arch_dat[]     = "Datos.txt";      //Nombre del archivo donde estan todas las direcciones de las IMAGENES.
+char _arch_dat2[]     = "Datos2.txt";      //Nombre del archivo donde estan todas las direcciones de las IMAGENES.
 char _conta[]        = "contador.txt";          //almacena un contador
 
-char _pic[MAX_PATH]  =  "" ;             //Variable que almacena la direccion de la imágen 1.
+//char _pic[MAX_PATH]  =  "" ;             //Variable que almacena la direccion de la imágen 1.
 char _pic2[MAX_PATH] =  "";              //Variable que almacena la direccion de la imágen 2.
+char Folder[MAX_PATH] = "";  
 
 
-void AgregaNodo    (node Datos);
+void AgregaNodo    (node Datos);                //en des-uso   
 void MostarLista   (HWND objeto, UINT mensa);
 void LlenaEspecies (HWND objeto, UINT mensa, char *file);
 void PonImagen     (HWND dialog, WPARAM IDC, char *imagen, int m, int n);
-bool CapturaNodo   (HWND Dlg, node*Punt);                  //Funcion tipo bool
+bool CapturaNodo   (HWND Dlg, node*Punt);       //en des-uso           //Funcion tipo bool
+
+char szFileName[MAX_PATH] = "";
+void openfilename();
 
 char*ConvierteFecha(char*Fecha);                           //Funcion tipo char
 //node*BuscarDato(int id);
@@ -87,6 +91,7 @@ BOOL CALLBACK Alta         (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 BOOL CALLBACK Baja         (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam);
 BOOL CALLBACK Ver_Agen     (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam);
 BOOL CALLBACK Modificar    (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam);
+BOOL CALLBACK ima          (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam);
 
 
 
@@ -106,7 +111,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrev, PSTR cmd, int show)
 	LeeArchivo();
 	LeeDatos();
 
-
+	//GetCurrentDirectory(MAX_PATH,Folder);
 
 	_hInst = hInst;
 	_show = show;
@@ -152,7 +157,7 @@ BOOL CALLBACK ProcDialog1  (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 		MostarLista(hlist, LB_ADDSTRING);
 		
 
-		PonImagen(Dlg, IDC_hi, _pic, 83, 108);
+		PonImagen(Dlg, IDC_hi, szFileName, 83, 108);
 		PonImagen(Dlg, IDC_bienve, _pic2, 500, 50);
 
 		return true; }
@@ -200,7 +205,7 @@ BOOL CALLBACK ProcDialog1  (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 			{
 				//MessageBox(Dlg, "Se guardó", "informacion", MB_OK | MB_ICONINFORMATION);
 				EscribirArchivo();
-				 EscribirDatos();  //contador
+				EscribirDatos();  //contador eimagenes
 				PostQuitMessage(0);
 			}
 			else {
@@ -313,7 +318,7 @@ BOOL CALLBACK informacion  (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 	case WM_INITDIALOG:
 	{
 
-		PonImagen(Dlg, IDC_hola, _pic, 83, 108);
+		PonImagen(Dlg, IDC_hola, szFileName, 83, 108);
 
 		return true; }
 	case WM_COMMAND:
@@ -366,27 +371,34 @@ BOOL CALLBACK informacion2 (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 BOOL CALLBACK InfDoc       (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
 {
 	
+	//char szFile[MAX_PATH];  // buffer for file name
+
+
 
 	switch (Mensaje)
 	{
 	case WM_INITDIALOG:
 	{
-		PonImagen(Dlg, IDC_h, _pic, 83, 108);
+		PonImagen(Dlg, IDC_h, szFileName, 83, 108);
 
 		return true; }
 	case WM_COMMAND:
 	{
 		switch (LOWORD(wParam))
 		{
-		case IDC_BUTTON1:
-			
-				
-			
-			return true;
+	
 		case IDOK:
 			EndDialog(Dlg, 0);
 			return true;
 		case IDC_Edi_Inf:
+
+			EndDialog(Dlg, 0);
+			DialogBox(_hInst, MAKEINTRESOURCE(IDD_DIALOG_Im), Dlg, ima);
+			DialogBox(_hInst, MAKEINTRESOURCE(IDD_Doc_Inf), Dlg, InfDoc);
+
+
+
+
 			MessageBox(Dlg, "Aún No Está Definida Esta Función", " ", MB_ICONINFORMATION);
 			return true;
 
@@ -691,6 +703,53 @@ BOOL CALLBACK Modificar    (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 
 	return false;
 }
+BOOL CALLBACK ima          (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
+{
+
+
+	switch (Mensaje)
+	{
+	case WM_INITDIALOG:
+	{
+
+
+		return true; }
+	case WM_COMMAND:
+	{
+		switch (LOWORD(wParam))
+		{
+		case IDC_BUTTON1:
+		{
+			openfilename();
+			if (GetOpenFileName(&ofn) == TRUE) {
+				SetWindowText(GetDlgItem(Dlg, IDC_EDIT1), ofn.lpstrFile);
+			}
+			return true;
+		}
+
+		case IDOK:
+			EndDialog(Dlg, 0);
+			return true;
+		case IDCANCEL:
+			int opc = MessageBox(0, "¿Esta seguro que desea salir?", "Aviso", MB_ICONINFORMATION + MB_OKCANCEL);
+			if (opc == IDOK) {
+				EndDialog(Dlg, 0);
+			}
+			
+			return true;
+		}
+		return true; }
+	case WM_CLOSE:
+	{
+		EndDialog(Dlg, 0);
+		return true; }
+	case WM_DESTROY:
+	{return true; }
+	}
+
+	return false;
+}
+
 
 
 
@@ -1004,15 +1063,15 @@ void LeeDatos() {
 
 	char c[10]="";
 
-	ifstream aechi;
-	aechi.open(_arch_dat,ios::in);
-	if (aechi.is_open()) {
-		aechi.getline(_pic,MAX_PATH);
-
-		aechi.getline(_pic2, MAX_PATH);
+	GetCurrentDirectory(MAX_PATH, szFileName);
+	
+	ifstream a;
+	a.open("C:\\Users\\rishar\\Pictures\\Datos.txt",ios::in);
+	if (a.is_open()) {
+		a.getline(szFileName, MAX_PATH);//szFileName
 
 		
-		aechi.close();
+		a.close();
 	}
 
 	ifstream aechi02;
@@ -1027,6 +1086,17 @@ void LeeDatos() {
 		aechi02.close();
 	}
 
+	ifstream aechi3;
+	aechi3.open(_arch_dat2, ios::in);
+	if (aechi3.is_open()) {
+		
+		aechi3.getline(_pic2, MAX_PATH);
+
+
+		aechi3.close();
+	}
+
+
 }
 
 void EscribirDatos() {
@@ -1035,20 +1105,29 @@ void EscribirDatos() {
 	char c[10] = "";
 	_itoa(cont, c, 10);
 
-	//ofstream aechi;
-	//aechi.open(_arch_dat, ios::out);
-	//if (aechi.is_open()) {
-	//	aechi.write(_pic, 250);
-	//	aechi << endl;
-	//	aechi.write(_pic2, 250);
-	//	aechi << endl;
+	
+
+	ofstream aechi;
+	aechi.open(_arch_dat, ios::out);
+	if (aechi.is_open()) {
+/*
+		int i = 0;
+		while (szFileName[i] !=".") {
+		
+
+			i++ ;
+		}*/
+
+		aechi<<szFileName;//szFileName
+		
+		
+		aechi.close();
+	}
 
 
-	//	aechi.close();
-	//}
 
 	ofstream aechi02;
-	aechi02.open(_conta, ios::out);
+	aechi02.open(_conta, ios::out| ios::trunc);
 	if (aechi02.is_open()) {
 		
 		aechi02.write(c, 10);           //este es el contador de citas
@@ -1056,6 +1135,13 @@ void EscribirDatos() {
 
 		aechi02.close();
 	}
+	/*ofstream aechi3;
+	aechi3.open(_arch_dat2, ios::out);
+	if (aechi3.is_open()) {
+		aechi3.write(_pic2, MAX_PATH);
+
+		aechi3.close();
+	}*/
 
 
 }
@@ -1066,4 +1152,23 @@ void icon (HWND Dlg) {
 	newBigIco = reinterpret_cast<HICON>(LoadImage(nullptr, "Icon_Dog.ico", IMAGE_ICON, 32, 32, LR_LOADFROMFILE));
 	oldSmallIco = reinterpret_cast<HICON>(SendMessage(Dlg, WM_SETICON, ICON_SMALL, reinterpret_cast<LPARAM>(newSmallIco)));
 	oldBigIco = reinterpret_cast<HICON>(SendMessage(Dlg, WM_SETICON, ICON_BIG, reinterpret_cast<LPARAM>(newBigIco)));
+}
+void openfilename() {
+	ZeroMemory(&ofn, sizeof(ofn));
+	ofn.lStructSize = sizeof(ofn);
+	ofn.lpstrFilter = "Todos\0*.*\0Archivos Texto\0*.TXT\0Archivos Word (97-2003)\0*.doc\0Archivos Word\0*.docx\0Imagenes jpg\0*.jpg\0";
+	ofn.lpstrFile = szFileName;
+	ofn.nMaxFile = MAX_PATH;
+	//ofn.Flags = OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_HIDEREADONLY; 
+	ofn.Flags = OFN_EXPLORER | OFN_PATHMUSTEXIST |
+		OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT;
+	ofn.lpstrDefExt = "txt";
+
+
+	//if (GetSaveFileName(&ofn))
+	//{
+	//	// Do something usefull with the filename stored in szFileName
+	//	MessageBox(ghDlg, ofn.lpstrFile, ofn.lpstrFile, MB_OK);
+
+	//}
 }
