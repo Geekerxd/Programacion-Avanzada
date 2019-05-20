@@ -47,7 +47,8 @@ char _pic2[MAX_PATH] =  "";              //Variable que almacena la direccion de
 char Folder[MAX_PATH] = ""; ;
 
 
-//void AgregaNodo    (node Datos);                //en des-uso   
+void AgregaDatosNodo   (HWND Dlg, HWND hCboSpc);
+
 void MostarLista   (HWND objeto, UINT mensa);
 void LlenaEspecies (HWND objeto, UINT mensa, char *file);
 void PonImagen     (HWND dialog, WPARAM IDC, char *imagen, int m, int n);
@@ -479,70 +480,34 @@ BOOL CALLBACK Alta         (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 					   EndDialog(Dlg, 0);
 					   return true;
 		}
-		case IDC_AGREGAR:
+		case IDC_AGREGAR: {
 
 			/*
-			
-				Me quede aquí. Voy agregar el bool gender y hacer validaciones
-			
-			*/
-			
-			
 
-			if (SendDlgItemMessage(Dlg, IDC_RADIO1, BM_GETCHECK, 0, 0) == BST_UNCHECKED&& SendDlgItemMessage(Dlg, IDC_RADIO2, BM_GETCHECK, 0, 0) == BST_UNCHECKED){ excp = 0; } 
+				Me quede aquí. Voy agregar el bool gender y hacer validaciones
+
+			*/
+
+
+
+			if (SendDlgItemMessage(Dlg, IDC_RADIO1, BM_GETCHECK, 0, 0) == BST_UNCHECKED && SendDlgItemMessage(Dlg, IDC_RADIO2, BM_GETCHECK, 0, 0) == BST_UNCHECKED) { excp = 0; }
 
 			if (SendDlgItemMessage(Dlg, IDC_RADIO1, BM_GETCHECK, 0, 0) == BST_CHECKED || SendDlgItemMessage(Dlg, IDC_RADIO2, BM_GETCHECK, 0, 0) == BST_CHECKED) { excp = -1; }
-			
 
-			
+
+
 			if (excp == -1) {
 
-				node *aux = 0;
-				aux = new node;
-				aux->sig = 0;
-				aux->ante = 0;
-
-				if (SendDlgItemMessage(Dlg, IDC_RADIO1, BM_GETCHECK, 0, 0) == BST_CHECKED) {
-					aux->gender = true;
-				}
-				else if (SendDlgItemMessage(Dlg, IDC_RADIO2, BM_GETCHECK, 0, 0) == BST_CHECKED) {
-					aux->gender = false;
-				}
-
-
-				SendMessage(hCboSpc, WM_GETTEXT, (WPARAM)80, (LPARAM)aux->species);
-				SendDlgItemMessage(Dlg, IDC_EDIT1, WM_GETTEXT, (WPARAM)80, (LPARAM)aux->CltName);
-				SendDlgItemMessage(Dlg, IDC_EDIT2, WM_GETTEXT, (WPARAM)80, (LPARAM)aux->Phone);
-				SendDlgItemMessage(Dlg, IDC_EDIT3, WM_GETTEXT, (WPARAM)80, (LPARAM)aux->MasName);
-				SendDlgItemMessage(Dlg, IDC_EDIT4, WM_GETTEXT, (WPARAM)150, (LPARAM)aux->Motivo);
-				SendDlgItemMessage(Dlg, IDC_EDIT5, WM_GETTEXT, (WPARAM)80, (LPARAM)aux->cost);
-
-				SendDlgItemMessage(Dlg, IDC_FECHA, WM_GETTEXT, (WPARAM)11, (LPARAM)aux->date);
-				SendDlgItemMessage(Dlg, IDC_HORA, WM_GETTEXT, (WPARAM)6, (LPARAM)aux->time);
-
-
-				if (inicio == 0)
-				{
-					inicio = aux;
-					last = aux;
-				}
-				else
-				{
-					last->sig = aux;
-					aux->ante = last;
-
-					last = aux;
-				}
-
+				AgregaDatosNodo(Dlg, hCboSpc); //el importante
 				MessageBox(Dlg, "Elemento agregado", "Agregar Cita", MB_OK + MB_ICONINFORMATION);
-				cont += 1;
 
-				
 			}
-			else if (excp==0) { MessageBox(Dlg, "no tiene seleccionado ningun radio button", "", MB_ICONERROR); excp = -1;}
+			else if (excp == 0) { MessageBox(Dlg, "no tiene seleccionado ningun radio button", "", MB_ICONERROR); excp = -1; }
 
-			excp = -1;
-			return true;    ///FIN de "case IDC_AGREGAR"
+			
+
+
+			return true;   } ///FIN de "case IDC_AGREGAR"
 		}///FIN del switch (LOWORD(wParam))
 		return true;
 	}///FIN del case WM_COMMAND:
@@ -851,29 +816,55 @@ void PonImagen     (HWND dialog, WPARAM IDC, char *imagen,int m, int n) {
 //
 //};
 
-//void AgregaNodo    (node Datos) {
-//	//ME QUEDÉ AQUÍ REVISANDO // ya no
-//	node*aux = 0;
-//	aux = new node;
-//	aux->sig = 0;
-//	aux->ante = 0;
-//
-//	
-//	//strcpy(aux->CltName, Datos.CltName);
-//
-//	if (inicio == 0)
-//	{
-//		inicio = aux;
-//		last = aux;
-//	}
-//	else
-//	{
-//		last->sig = aux;
-//		aux->ante = last;
-//
-//		last = aux;
-//	}
-//};
+
+void AgregaDatosNodo(HWND Dlg, HWND hCboSpc){
+	
+	node *aux = 0;
+	aux = new node;
+	aux->sig = 0;
+	aux->ante = 0;
+
+	if (SendDlgItemMessage(Dlg, IDC_RADIO1, BM_GETCHECK, 0, 0) == BST_CHECKED) {
+		aux->gender = true;
+	}
+	else if (SendDlgItemMessage(Dlg, IDC_RADIO2, BM_GETCHECK, 0, 0) == BST_CHECKED) {
+		aux->gender = false;
+	}
+
+
+	SendMessage(hCboSpc, WM_GETTEXT, (WPARAM)80, (LPARAM)aux->species);  //validar aquí
+	SendDlgItemMessage(Dlg, IDC_EDIT1, WM_GETTEXT, (WPARAM)80, (LPARAM)aux->CltName);
+	SendDlgItemMessage(Dlg, IDC_EDIT2, WM_GETTEXT, (WPARAM)80, (LPARAM)aux->Phone);
+	SendDlgItemMessage(Dlg, IDC_EDIT3, WM_GETTEXT, (WPARAM)80, (LPARAM)aux->MasName);
+	SendDlgItemMessage(Dlg, IDC_EDIT4, WM_GETTEXT, (WPARAM)150, (LPARAM)aux->Motivo);
+	SendDlgItemMessage(Dlg, IDC_EDIT5, WM_GETTEXT, (WPARAM)80, (LPARAM)aux->cost);
+
+	SendDlgItemMessage(Dlg, IDC_FECHA, WM_GETTEXT, (WPARAM)11, (LPARAM)aux->date);
+	SendDlgItemMessage(Dlg, IDC_HORA, WM_GETTEXT, (WPARAM)6, (LPARAM)aux->time);
+
+
+	if (inicio == 0)
+	{
+		inicio = aux;
+		last = aux;
+	}
+	else
+	{
+		last->sig = aux;
+		aux->ante = last;
+
+		last = aux;
+	}
+
+	
+	cont += 1;
+
+
+}
+
+			
+
+
 
 void MostarLista   (HWND objeto, UINT mensa) {
 	node datitos;
