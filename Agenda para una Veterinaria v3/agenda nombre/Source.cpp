@@ -24,34 +24,35 @@ struct node
 	char	Motivo[150];   // Motivo de la consulta
 	char	cost[10];      // Costo de la Consulta
 
-	
-	bool	gender=false;        // Género del Animal
-	int     interes[3] = {3,6,9};
 
+	bool	gender = false;        // Género del Animal
+	int     interes[3] = { 3,6,9 };
+
+	int Emparejador;
 	node	*sig;
 	node	*ante;
 };
-	
+
 
 node *inicio = 0, *last = 0, *prev = 0, *ant = 0, *nuevo;
 
-char file[80]        = "citas.txt";      //Nombre del archivo donde están, de forma binaria, todos todos los datos de las CITAS.
-char _arch_esp[]     = "species.txt";    //Nombre del archivo donde estan todos los nombres de las "ESPECIES de la MASCOTAS".
-char _arch_dat[]     = "";      //Nombre del archivo donde estan todas las direcciones de las IMAGENES.
-char *p;
-char _arch_dat2[]     = "Datos2.txt";      //Nombre del archivo donde estan todas las direcciones de las IMAGENES.
-char _conta[]        = "contador.txt";          //almacena un contador
+char file[80] = "citas.txt";      //Nombre del archivo donde están, de forma binaria, todos todos los datos de las CITAS.
+char _arch_esp[] = "species.txt";    //Nombre del archivo donde estan todos los nombres de las "ESPECIES de la MASCOTAS".
+char _arch_dat[] = "";      //Nombre del archivo donde estan todas las direcciones de las IMAGENES.
+
+char _arch_dat2[] = "Datos2.txt";      //Nombre del archivo donde estan todas las direcciones de las IMAGENES.
+char _conta[] = "contador.txt";          //almacena un contador
 
 //char _pic[MAX_PATH]  =  "" ;             //Variable que almacena la direccion de la imágen 1.
-char _pic2[MAX_PATH] =  "";              //Variable que almacena la direccion de la imágen 2.
+char _pic2[MAX_PATH] = "";              //Variable que almacena la direccion de la imágen 2.
 char Folder[MAX_PATH] = ""; ;
 
 
-void AgregaDatosNodo   (HWND Dlg, HWND hCboSpc);
+void AgregaDatosNodo(HWND Dlg, HWND hCboSpc);
 
-void MostarLista   (HWND objeto, UINT mensa);
-void LlenaEspecies (HWND objeto, UINT mensa, char *file);
-void PonImagen     (HWND dialog, WPARAM IDC, char *imagen, int m, int n);
+void MostarLista(HWND objeto, UINT mensa);
+void LlenaEspecies(HWND objeto, UINT mensa, char *file);
+void PonImagen(HWND dialog, WPARAM IDC, char *imagen, int m, int n);
 //bool CapturaNodo   (HWND Dlg, node*Punt);       //en des-uso           //Funcion tipo bool
 
 char szFileName[MAX_PATH] = "";
@@ -59,19 +60,19 @@ void openfilename();
 
 char*ConvierteFecha(char*Fecha);                           //Funcion tipo char
 //node*BuscarDato(int id);
-void icon (HWND Dlg);
+void icon(HWND Dlg);
 int cont = 0;                                              //Contador del número de citas
 bool lineas = true;                                        //vanndera se ira por menu principal o ver agenda
 
 
 int v, w;                                                  //Para el list box GetCursel
 char *cad;
-bool flag=false;
+bool flag = false;
 
 
 //informacion del doctor
 char DocName[50] = "";
-char DocCed [50] = "";
+char DocCed[50] = "";
 
 //de validaciones
 int excp = -1;
@@ -93,15 +94,15 @@ HINSTANCE _hInst;
 int _show = 0;
 
 
-BOOL CALLBACK ProcDialog1  (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam);
-BOOL CALLBACK informacion  (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam);
-BOOL CALLBACK informacion2 (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam);
-BOOL CALLBACK InfDoc       (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam);
-BOOL CALLBACK Alta         (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam);
-BOOL CALLBACK Baja         (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam);
-BOOL CALLBACK Ver_Agen     (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam);
-BOOL CALLBACK Modificar    (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam);
-BOOL CALLBACK ima          (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam);
+BOOL CALLBACK ProcDialog1(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam);
+BOOL CALLBACK informacion(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam);
+BOOL CALLBACK informacion2(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam);
+BOOL CALLBACK InfDoc(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam);
+BOOL CALLBACK Alta(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam);
+BOOL CALLBACK Baja(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam);
+BOOL CALLBACK Ver_Agen(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam);
+BOOL CALLBACK Modificar(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam);
+BOOL CALLBACK ima(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam);
 
 
 
@@ -127,7 +128,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrev, PSTR cmd, int show)
 	_hInst = hInst;
 	_show = show;
 
-	ghDlg = CreateDialog(hInst, MAKEINTRESOURCE(IDD_DIALOG1),0, ProcDialog1);
+	ghDlg = CreateDialog(hInst, MAKEINTRESOURCE(IDD_DIALOG1), 0, ProcDialog1);
 	ShowWindow(ghDlg, show);
 
 	MSG msg;
@@ -141,7 +142,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrev, PSTR cmd, int show)
 		}
 	}
 
-	
+
 
 	return (int)msg.wParam;
 }
@@ -153,34 +154,34 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrev, PSTR cmd, int show)
 
 
 
-BOOL CALLBACK ProcDialog1  (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
+BOOL CALLBACK ProcDialog1(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
 {
 	static HWND hlist = 0;
 	switch (Mensaje)
 	{
-	
+
 	case WM_INITDIALOG:
 	{
 		icon(Dlg);//icono del perro
-		
+
 		hlist = GetDlgItem(Dlg, IDC_LIST_M);
 		lineas = true;
 		MostarLista(hlist, LB_ADDSTRING);
-		
+
 
 		PonImagen(Dlg, IDC_hi, szFileName, 30, 30);
 		PonImagen(Dlg, IDC_bienve, _pic2, 500, 50);
 
 
-		SendDlgItemMessage(Dlg, IDC_STATIC_02, WM_SETTEXT,50, (LPARAM)DocName);
-		
+		SendDlgItemMessage(Dlg, IDC_STATIC_02, WM_SETTEXT, 50, (LPARAM)DocName);
+
 
 		return true; }
 	case WM_COMMAND:
 	{
 		switch (LOWORD(wParam))
 		{
-			 // Botones de la área del menú principal
+			// Botones de la área del menú principal
 		case IDC_BUTTON1: { //Informacion del doctor
 
 			DialogBox(_hInst, MAKEINTRESOURCE(IDD_Doc_Inf), Dlg, InfDoc);
@@ -221,7 +222,7 @@ BOOL CALLBACK ProcDialog1  (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 				//MessageBox(Dlg, "Se guardó", "informacion", MB_OK | MB_ICONINFORMATION);
 				EscribirArchivo();
 				EscribirDatos();  //contador eimagenes
-                EscribirDoc();
+				EscribirDoc();
 				PostQuitMessage(0);
 			}
 			else {
@@ -231,7 +232,7 @@ BOOL CALLBACK ProcDialog1  (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 			return true;
 		}
 
-			 // Botones del menú de arriba
+						  // Botones del menú de arriba
 		case ID_MENU_INFORMACIONDELDOCTOR: {
 
 			DialogBox(_hInst, MAKEINTRESOURCE(IDD_Doc_Inf), Dlg, InfDoc);
@@ -269,28 +270,28 @@ BOOL CALLBACK ProcDialog1  (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 
 		case ID_salir: {
 
-					   if (MessageBox(Dlg, "¿Quieres guardadr los cambios?",
-						   "Alto",
-						   MB_YESNO |
-						   MB_ICONASTERISK | MB_DEFBUTTON1) == IDYES)
-					   {
-						   //MessageBox(Dlg, "Se guardó", "informacion", MB_OK | MB_ICONINFORMATION);
-						   EscribirArchivo();
-						   EscribirDatos();  //contador
-						   EscribirDoc();
-						   PostQuitMessage(0);
-					   }
-					   else {
-						   //MessageBox(Dlg, "No se guardó", "informacion", MB_OK | MB_ICONEXCLAMATION);
-						   PostQuitMessage(0);
-					   }
+			if (MessageBox(Dlg, "¿Quieres guardadr los cambios?",
+				"Alto",
+				MB_YESNO |
+				MB_ICONASTERISK | MB_DEFBUTTON1) == IDYES)
+			{
+				//MessageBox(Dlg, "Se guardó", "informacion", MB_OK | MB_ICONINFORMATION);
+				EscribirArchivo();
+				EscribirDatos();  //contador
+				EscribirDoc();
+				PostQuitMessage(0);
+			}
+			else {
+				//MessageBox(Dlg, "No se guardó", "informacion", MB_OK | MB_ICONEXCLAMATION);
+				PostQuitMessage(0);
+			}
 
 
-					   return true;
+			return true;
 		}
-			 // éxtras
+					   // éxtras
 		case ID_VER_INFORMAION: //éste es "modal"
-		
+
 			DialogBox(_hInst, MAKEINTRESOURCE(IDD_Ven_Inf), Dlg, informacion);
 			return true;
 		case ID_ACERCA:         //éste es "NO modal"
@@ -299,10 +300,10 @@ BOOL CALLBACK ProcDialog1  (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 			ShowWindow(Dialg, _show);
 			return true;
 
-		
+
 
 		}/// fin de "switch (LOWORD(wParam))"
-		return true; 
+		return true;
 	}/// fin de "case WM_COMMAND"
 	case WM_CLOSE:
 	{
@@ -321,15 +322,15 @@ BOOL CALLBACK ProcDialog1  (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 		//	//MessageBox(Dlg, "No se guardó", "informacion", MB_OK | MB_ICONEXCLAMATION);
 		//	PostQuitMessage(0); }
 		PostQuitMessage(0);
-		
+
 		return true; }
-	case WM_DESTROY:{return true;}
+	case WM_DESTROY: {return true; }
 	}///fin de "switch (Mensaje)"
 	return false;
 }
-BOOL CALLBACK informacion  (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
+BOOL CALLBACK informacion(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
 {
-	
+
 	switch (Mensaje)
 	{
 	case WM_INITDIALOG:
@@ -357,7 +358,7 @@ BOOL CALLBACK informacion  (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 	}
 	return false;
 }
-BOOL CALLBACK informacion2 (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
+BOOL CALLBACK informacion2(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
 {
 
 	switch (Mensaje)
@@ -385,9 +386,9 @@ BOOL CALLBACK informacion2 (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 	}
 	return false;
 }
-BOOL CALLBACK InfDoc       (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
+BOOL CALLBACK InfDoc(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
 {
-	
+
 	//char szFile[MAX_PATH];  // buffer for file name
 
 
@@ -406,7 +407,7 @@ BOOL CALLBACK InfDoc       (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 	{
 		switch (LOWORD(wParam))
 		{
-	
+
 
 		case IDC_G_Cambios: {
 
@@ -445,7 +446,7 @@ BOOL CALLBACK InfDoc       (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 	}
 	return false;
 }
-BOOL CALLBACK Alta         (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
+BOOL CALLBACK Alta(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
 {
 	static HWND hCboSpc = 0; //handle conbo box species
 
@@ -459,15 +460,15 @@ BOOL CALLBACK Alta         (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 		//doc info
 		PonImagen(Dlg, IDC_hi, szFileName, 30, 30);
 		SendDlgItemMessage(Dlg, IDC_STATIC_02, WM_SETTEXT, 50, (LPARAM)DocName);
-		
+
 		hCboSpc = GetDlgItem(Dlg, IDC_COMBO1);
 		LlenaEspecies(hCboSpc, CB_ADDSTRING, _arch_esp);
 
 
 		//El "hCboSpc"==="hCombo"  //esto es temporal
-		
-		
-		return true; 
+
+
+		return true;
 	}
 	case WM_COMMAND:
 	{
@@ -475,10 +476,10 @@ BOOL CALLBACK Alta         (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 		{
 		case IDCANCEL: {
 
-					   /*if (MessageBox(Dlg, "¿Quieres salir sin agregar cita?","Alto",MB_YESNO |MB_ICONASTERISK | MB_DEFBUTTON1) == IDYES)
-					   {EndDialog(Dlg, 0);}else {}*/
-					   EndDialog(Dlg, 0);
-					   return true;
+			/*if (MessageBox(Dlg, "¿Quieres salir sin agregar cita?","Alto",MB_YESNO |MB_ICONASTERISK | MB_DEFBUTTON1) == IDYES)
+			{EndDialog(Dlg, 0);}else {}*/
+			EndDialog(Dlg, 0);
+			return true;
 		}
 		case IDC_AGREGAR: {
 
@@ -504,7 +505,7 @@ BOOL CALLBACK Alta         (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 			}
 			else if (excp == 0) { MessageBox(Dlg, "no tiene seleccionado ningun radio button", "", MB_ICONERROR); excp = -1; }
 
-			
+
 
 
 			return true;   } ///FIN de "case IDC_AGREGAR"
@@ -522,13 +523,13 @@ BOOL CALLBACK Alta         (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 		return true; }
 	case WM_DESTROY:
 	{
-		
-	return true; }
+
+		return true; }
 	}//fin del switch (Mensaje)
 
 	return false;
 }
-BOOL CALLBACK Baja         (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
+BOOL CALLBACK Baja(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
 {
 
 
@@ -561,13 +562,13 @@ BOOL CALLBACK Baja         (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 	}
 	return false;
 }
-BOOL CALLBACK Ver_Agen     (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
+BOOL CALLBACK Ver_Agen(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
 {
-	static HWND hlist      = 0;
-	static HWND HBorrar    = 0;
+	static HWND hlist = 0;
+	static HWND HBorrar = 0;
 	static HWND HModificar = 0;
 	//int index = 0;
-
+	int _temp ;
 
 	switch (Mensaje)
 	{
@@ -583,10 +584,10 @@ BOOL CALLBACK Ver_Agen     (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 		hlist = GetDlgItem(Dlg, IDC_LIST1);
 		lineas = false;
 		MostarLista(hlist, LB_ADDSTRING);
-		
+
 		//SendDlgItemMessage(Dlg, IDC_LIST1, LB_RESETCONTENT, 0, 0);
 
-	
+
 		return true;
 	}
 	case WM_COMMAND:
@@ -597,24 +598,26 @@ BOOL CALLBACK Ver_Agen     (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 		case IDOK:
 			EndDialog(Dlg, 0);
 			return true;
-	
-		case IDC_BUTTON1: {             //Quitar cita
 
+		case IDC_BUTTON1: {             //Quitar cita
+			flag = false;
 			v = SendMessage(hlist, LB_GETCURSEL, 0, 0);
-			
+
 			if (cont < 5) {
 				for (int i = 0; i < cont; i++) {
 					if (v == 18 * i) {                  //modificar 18 si agrego datos
 						flag = true;
+						_temp = i;
 						break;
 					}
 				}
-			
+
 			}
 			else {
 				for (int i = 0; i < cont; i++) {
 					if (v == 17 * i) {                  //modificar 17 si agrego datos
 						flag = true;
+						_temp = i;
 						break;
 					}
 				}
@@ -622,7 +625,7 @@ BOOL CALLBACK Ver_Agen     (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 
 			if (flag) {
 
-				v += 7;
+				/*v += 7;
 
 				if (v == -1) {
 					break;
@@ -635,9 +638,23 @@ BOOL CALLBACK Ver_Agen     (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 
 					cad = (char*)malloc(w + 1);
 					SendMessage(hlist, LB_GETTEXT, (WPARAM)v, (LPARAM)cad);
-					
 
+
+				}*/
+				node *gAux;
+				gAux = inicio;
+				while (gAux != 0) {
+					if (_temp == gAux->Emparejador) {
+
+						DialogBox(_hInst, MAKEINTRESOURCE(IDD_baja), Dlg, Baja);
+						break;
+
+					}
+
+					gAux = gAux->sig;
 				}
+
+
 
 				//DialogBox(_hInst, MAKEINTRESOURCE(IDD_baja), Dlg, Baja);
 			}
@@ -665,7 +682,7 @@ BOOL CALLBACK Ver_Agen     (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 	}
 	return false;
 }
-BOOL CALLBACK Modificar    (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
+BOOL CALLBACK Modificar(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
 {
 
 
@@ -699,7 +716,7 @@ BOOL CALLBACK Modificar    (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 
 	return false;
 }
-BOOL CALLBACK ima          (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
+BOOL CALLBACK ima(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
 {
 
 
@@ -731,7 +748,7 @@ BOOL CALLBACK ima          (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 			if (opc == IDOK) {
 				EndDialog(Dlg, 0);
 			}
-			
+
 			return true;
 		}
 		return true; }
@@ -746,7 +763,7 @@ BOOL CALLBACK ima          (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 	return false;
 }
 
-void PonImagen     (HWND dialog, WPARAM IDC, char *imagen,int m, int n) {
+void PonImagen(HWND dialog, WPARAM IDC, char *imagen, int m, int n) {
 
 	static HBITMAP bmp1, bmp2;
 	//Al objeto bmp1, se le asigna sin imagen:
@@ -817,8 +834,8 @@ void PonImagen     (HWND dialog, WPARAM IDC, char *imagen,int m, int n) {
 //};
 
 
-void AgregaDatosNodo(HWND Dlg, HWND hCboSpc){
-	
+void AgregaDatosNodo(HWND Dlg, HWND hCboSpc) {
+
 	node *aux = 0;
 	aux = new node;
 	aux->sig = 0;
@@ -856,27 +873,27 @@ void AgregaDatosNodo(HWND Dlg, HWND hCboSpc){
 		last = aux;
 	}
 
-	
+	aux->Emparejador = cont;
 	cont += 1;
 
 
 }
 
-			
 
 
 
-void MostarLista   (HWND objeto, UINT mensa) {
+
+void MostarLista(HWND objeto, UINT mensa) {
 	node datitos;
-	
-	char TextCom    [300]="";
-	char NombreClt  [80] ="";
-	char PhoneClt   [80] ="";
-	char NombreMas  [80] ="";
-	char Motiv      [150]="";
-	char Dineros    [80] ="";
-	char fecha_temp [11] ="";
-	char hora_temp  [11] ="";
+
+	char TextCom[300] = "";
+	char NombreClt[80] = "";
+	char PhoneClt[80] = "";
+	char NombreMas[80] = "";
+	char Motiv[150] = "";
+	char Dineros[80] = "";
+	char fecha_temp[11] = "";
+	char hora_temp[11] = "";
 
 
 	//--------------------------------------
@@ -885,16 +902,16 @@ void MostarLista   (HWND objeto, UINT mensa) {
 	aux = inicio;
 	while (aux != 0)
 	{
-		
 
-		strcpy(NombreClt, aux->CltName );
-		strcpy(TextCom,   aux->species );
-		strcpy(PhoneClt,  aux->Phone   );
-		strcpy(NombreMas, aux->MasName );
-		strcpy(Motiv,     aux->Motivo  );
-		strcpy(Dineros,   aux->cost    );
-		strcpy(fecha_temp,aux->date    );
-		strcpy(hora_temp, aux->time    );
+
+		strcpy(NombreClt, aux->CltName);
+		strcpy(TextCom, aux->species);
+		strcpy(PhoneClt, aux->Phone);
+		strcpy(NombreMas, aux->MasName);
+		strcpy(Motiv, aux->Motivo);
+		strcpy(Dineros, aux->cost);
+		strcpy(fecha_temp, aux->date);
+		strcpy(hora_temp, aux->time);
 
 
 		//Me salen númerons raros como: íííííííííííííííííííííííí. seguramente están en binario
@@ -924,25 +941,25 @@ void MostarLista   (HWND objeto, UINT mensa) {
 			SendMessage(objeto, mensa, 0, (LPARAM)"——————————————————————————————");
 
 		}
-		
-	/*	MessageBox(ghDlg, aux->CltName, "", MB_OK);
-		MessageBox(ghDlg, aux->species, "", MB_OK);
-		MessageBox(ghDlg, aux->Phone, "", MB_OK);
-		MessageBox(ghDlg, aux->MasName, "", MB_OK);
-		MessageBox(ghDlg, aux->Motivo, "", MB_OK);
-		MessageBox(ghDlg, aux->cost, "", MB_OK);
-		MessageBox(ghDlg, aux->date, "", MB_OK);
-		MessageBox(ghDlg, aux->time, "" ,  MB_OK);*/
-		
-		
-		
+
+		/*	MessageBox(ghDlg, aux->CltName, "", MB_OK);
+			MessageBox(ghDlg, aux->species, "", MB_OK);
+			MessageBox(ghDlg, aux->Phone, "", MB_OK);
+			MessageBox(ghDlg, aux->MasName, "", MB_OK);
+			MessageBox(ghDlg, aux->Motivo, "", MB_OK);
+			MessageBox(ghDlg, aux->cost, "", MB_OK);
+			MessageBox(ghDlg, aux->date, "", MB_OK);
+			MessageBox(ghDlg, aux->time, "" ,  MB_OK);*/
+
+
+
 		aux = aux->sig;
 	}
 
-	
+
 
 };
-void LlenaEspecies (HWND objeto, UINT mensa, char *file)
+void LlenaEspecies(HWND objeto, UINT mensa, char *file)
 {
 	// objeto  ===   hCboSpc
 	// mensa   ===   CB_ADDSTRING
@@ -1015,10 +1032,10 @@ void LeeArchivo()
 	archivaldo.open(file, ios::binary);  // | ios::trunc
 	if (archivaldo.is_open())
 	{
-		 pinfo = new node;
+		pinfo = new node;
 		archivaldo.read((char*)pinfo, sizeof(node));
 		pinfo->ante = 0;
-		pinfo->sig= 0;
+		pinfo->sig = 0;
 
 		while (!archivaldo.eof()) {
 			if (inicio == 0)
@@ -1040,9 +1057,9 @@ void LeeArchivo()
 			pinfo->sig = 0;
 
 		}
-			//AgregaNodo(info);                                //aqui se acomoda el nodo en la lista ligada
-			//archivaldo.read((char*)&info, sizeof(node));
-		
+		//AgregaNodo(info);                                //aqui se acomoda el nodo en la lista ligada
+		//archivaldo.read((char*)&info, sizeof(node));
+
 		archivaldo.close();
 	}
 	else
@@ -1082,10 +1099,11 @@ void EscribirArchivo()
 void LeeDatos() {
 
 
-	char c[10]="";
+	char c[10] = "";
+
 
 	//GetCurrentDirectory(MAX_PATH, szFileName);
-	
+
 	ifstream uno;
 	uno.open("Datos3.txt", ios::in);
 	if (uno.is_open()) {
@@ -1097,20 +1115,20 @@ void LeeDatos() {
 	}
 
 	strcpy(_arch_dat, Folder);
-	
+
 	ifstream a;
-	a.open(_arch_dat,ios::in);
+	a.open(_arch_dat, ios::in);
 	if (a.is_open()) {
 		a.getline(szFileName, MAX_PATH);//szFileName
 
-		
+
 		a.close();
 	}
 
 	ifstream aechi02;
 	aechi02.open(_conta, ios::in);
 	if (aechi02.is_open()) {
-		
+
 
 		aechi02.getline(c, 10);
 		cont = atoi(c);
@@ -1122,9 +1140,9 @@ void LeeDatos() {
 	ifstream aechi3;
 	aechi3.open(_arch_dat2, ios::in);
 	if (aechi3.is_open()) {
-		
+
 		aechi3.getline(_pic2, MAX_PATH);
-		
+
 
 
 
@@ -1140,7 +1158,7 @@ void EscribirDatos() {
 	_itoa(cont, c, 10);
 
 	//GetCurrentDirectory(MAX_PATH, _arch_dat);
-	
+
 
 	ofstream aechi;
 	aechi.open(Folder, ios::out);
@@ -1148,17 +1166,17 @@ void EscribirDatos() {
 
 
 		aechi.write(szFileName, MAX_PATH);//szFileName
-		
-		
+
+
 		aechi.close();
 	}
 
 
 
 	ofstream aechi02;
-	aechi02.open(_conta, ios::out| ios::trunc);
+	aechi02.open(_conta, ios::out | ios::trunc);
 	if (aechi02.is_open()) {
-		
+
 		aechi02.write(c, 10);           //este es el contador de citas
 
 
@@ -1196,9 +1214,9 @@ void EscribirDoc() {
 	l.open("Info_Doc.txt", ios::out);
 	if (l.is_open()) {
 
+
+		l.write(DocName, sizeof DocName);
 		
-		l.write(DocName,sizeof DocName);
-		l << endl;
 		l.write(DocCed, sizeof DocCed);
 
 
@@ -1209,7 +1227,7 @@ void EscribirDoc() {
 }
 
 
-void icon (HWND Dlg) {
+void icon(HWND Dlg) {
 	HICON newSmallIco, newBigIco, oldSmallIco, oldBigIco;
 	newSmallIco = reinterpret_cast<HICON>(LoadImage(nullptr, "Icon_Dog.ico", IMAGE_ICON, 16, 16, LR_LOADFROMFILE));
 	newBigIco = reinterpret_cast<HICON>(LoadImage(nullptr, "Icon_Dog.ico", IMAGE_ICON, 32, 32, LR_LOADFROMFILE));
