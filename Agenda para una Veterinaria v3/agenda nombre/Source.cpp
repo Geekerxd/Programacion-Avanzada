@@ -67,7 +67,9 @@ char *cad;
 bool flag=false;
 
 
-
+//informacion del doctor
+char DocName[50] = "";
+char DocCed [50] = "";
 
 
 
@@ -158,8 +160,12 @@ BOOL CALLBACK ProcDialog1  (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 		MostarLista(hlist, LB_ADDSTRING);
 		
 
-		PonImagen(Dlg, IDC_hi, szFileName, 83, 108);
+		PonImagen(Dlg, IDC_hi, szFileName, 30, 30);
 		PonImagen(Dlg, IDC_bienve, _pic2, 500, 50);
+
+
+		SendDlgItemMessage(Dlg, IDC_STATIC_02, WM_SETTEXT,50, (LPARAM)DocName);
+		
 
 		return true; }
 	case WM_COMMAND:
@@ -380,7 +386,10 @@ BOOL CALLBACK InfDoc       (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 	{
 	case WM_INITDIALOG:
 	{
-		PonImagen(Dlg, IDC_h, szFileName, 83, 108);
+		PonImagen(Dlg, IDC_h, szFileName, 150, 150);
+
+		SendDlgItemMessage(Dlg, IDC_EDIT1, WM_SETTEXT, 50, (LPARAM)DocName);
+		SendDlgItemMessage(Dlg, IDC_EDIT2, WM_SETTEXT, 50, (LPARAM)DocCed);
 
 		return true; }
 	case WM_COMMAND:
@@ -388,6 +397,21 @@ BOOL CALLBACK InfDoc       (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 		switch (LOWORD(wParam))
 		{
 	
+
+		case IDC_G_Cambios: {
+
+
+
+			//aqui una funcion con  todo esto
+
+			SendDlgItemMessage(Dlg, IDC_EDIT1, WM_GETTEXT, 50, (LPARAM)DocName);
+			SendDlgItemMessage(Dlg, IDC_EDIT2, WM_GETTEXT, 50, (LPARAM)DocCed);
+
+			MessageBox(Dlg, "Se agregó", " ", MB_ICONINFORMATION);
+
+			return true;
+		}
+
 		case IDOK:
 			EndDialog(Dlg, 0);
 			return true;
