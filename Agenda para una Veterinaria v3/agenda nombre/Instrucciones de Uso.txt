@@ -1,0 +1,6 @@
+Antes de correr el programa asegurese que "Datos2.txt" y "Datos3.txt"
+tengan la direccion de esta carpeta.
+Solo remplaze:
+C:\Users\rishar\source\repos\La Agenda para una veterinaria\Agenda para una Veterinaria v3\agenda nombre\bienvenido(a).bmp   
+por:
+C:\( SU UBICACION AQUI )\bienvenido(a).bmp   

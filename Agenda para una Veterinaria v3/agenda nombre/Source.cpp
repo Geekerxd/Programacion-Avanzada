@@ -36,13 +36,14 @@ node *inicio = 0, *last = 0, *prev = 0, *ant = 0, *nuevo;
 
 char file[80]        = "citas.txt";      //Nombre del archivo donde están, de forma binaria, todos todos los datos de las CITAS.
 char _arch_esp[]     = "species.txt";    //Nombre del archivo donde estan todos los nombres de las "ESPECIES de la MASCOTAS".
-char _arch_dat[]     = "Datos.txt";      //Nombre del archivo donde estan todas las direcciones de las IMAGENES.
+char _arch_dat[]     = "";      //Nombre del archivo donde estan todas las direcciones de las IMAGENES.
+char *p;
 char _arch_dat2[]     = "Datos2.txt";      //Nombre del archivo donde estan todas las direcciones de las IMAGENES.
 char _conta[]        = "contador.txt";          //almacena un contador
 
 //char _pic[MAX_PATH]  =  "" ;             //Variable que almacena la direccion de la imágen 1.
 char _pic2[MAX_PATH] =  "";              //Variable que almacena la direccion de la imágen 2.
-char Folder[MAX_PATH] = "";  
+char Folder[MAX_PATH] = ""; ;
 
 
 void AgregaNodo    (node Datos);                //en des-uso   
@@ -1063,10 +1064,22 @@ void LeeDatos() {
 
 	char c[10]="";
 
-	GetCurrentDirectory(MAX_PATH, szFileName);
+	//GetCurrentDirectory(MAX_PATH, szFileName);
+	
+	ifstream uno;
+	uno.open("Datos3.txt", ios::in);
+	if (uno.is_open()) {
+
+		uno.getline(Folder, MAX_PATH);
+
+
+		uno.close();
+	}
+
+	strcpy(_arch_dat, Folder);
 	
 	ifstream a;
-	a.open("C:\\Users\\rishar\\Pictures\\Datos.txt",ios::in);
+	a.open(_arch_dat,ios::in);
 	if (a.is_open()) {
 		a.getline(szFileName, MAX_PATH);//szFileName
 
@@ -1091,6 +1104,8 @@ void LeeDatos() {
 	if (aechi3.is_open()) {
 		
 		aechi3.getline(_pic2, MAX_PATH);
+		
+
 
 
 		aechi3.close();
@@ -1105,20 +1120,15 @@ void EscribirDatos() {
 	char c[10] = "";
 	_itoa(cont, c, 10);
 
+	//GetCurrentDirectory(MAX_PATH, _arch_dat);
 	
 
 	ofstream aechi;
-	aechi.open(_arch_dat, ios::out);
+	aechi.open(Folder, ios::out);
 	if (aechi.is_open()) {
-/*
-		int i = 0;
-		while (szFileName[i] !=".") {
-		
 
-			i++ ;
-		}*/
 
-		aechi<<szFileName;//szFileName
+		aechi.write(szFileName, MAX_PATH);//szFileName
 		
 		
 		aechi.close();
