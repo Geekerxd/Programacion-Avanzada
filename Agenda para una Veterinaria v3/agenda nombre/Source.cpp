@@ -572,7 +572,7 @@ BOOL CALLBACK Ver_Agen(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
 
 			if (cont < 5) {
 				for (int i = 0; i < cont; i++) {
-					if (v == 20 * i) {                  //modificar 18 si agrego datos
+					if (v == 20 * i) {               
 						flag = true;
 						_temp = i;
 						break;
@@ -582,7 +582,7 @@ BOOL CALLBACK Ver_Agen(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
 			}
 			else {
 				for (int i = 0; i < cont; i++) {
-					if (v == 19 * i) {                  //modificar 17 si agrego datos
+					if (v == 19 * i) {                
 						flag = true;
 						_temp = i;
 						break;
@@ -651,6 +651,7 @@ BOOL CALLBACK Ver_Agen(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
 					if (_temp == gAux->Emparejador) {
 						Gt = _temp;
 						DialogBox(_hInst, MAKEINTRESOURCE(IDD_modi_cita), Dlg, Modificar);
+						EndDialog(Dlg, 0);
 						break;
 
 					}
@@ -685,12 +686,47 @@ BOOL CALLBACK Ver_Agen(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
 }
 BOOL CALLBACK Modificar(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
 {
+	node *gAux;
 
 
 	switch (Mensaje)
 	{
 	case WM_INITDIALOG:
 	{
+		char j[10] = "";
+
+		_itoa(Gt, j, 10);
+
+		SendDlgItemMessage(Dlg, IDC_STATIC_03, WM_SETTEXT, 10, (LPARAM)j);
+
+
+		gAux = inicio;
+		while (gAux != 0) {
+			if (Gt == gAux->Emparejador) {
+
+				SendDlgItemMessage(Dlg, IDC_EDIT1, WM_SETTEXT, 10, (LPARAM)gAux->CltName);
+				SendDlgItemMessage(Dlg, IDC_EDIT2, WM_SETTEXT, 10, (LPARAM)gAux->Phone);
+				SendDlgItemMessage(Dlg, IDC_EDIT6, WM_SETTEXT, 10, (LPARAM)gAux->species);
+				if (gAux->gender == true) {
+					SendDlgItemMessage(Dlg, IDC_EDIT7, WM_SETTEXT, 10, (LPARAM)"Macho");//cambiar este por radio button cheched
+				}
+				else { SendDlgItemMessage(Dlg, IDC_EDIT7, WM_SETTEXT, 10, (LPARAM)"Hembra"); }
+
+				SendDlgItemMessage(Dlg, IDC_EDIT8, WM_SETTEXT, 10, (LPARAM)gAux->MasName);
+				SendDlgItemMessage(Dlg, IDC_EDIT9, WM_SETTEXT, 10, (LPARAM)gAux->Motivo);
+				SendDlgItemMessage(Dlg, IDC_EDIT10, WM_SETTEXT, 10, (LPARAM)gAux->cost);
+				SendDlgItemMessage(Dlg, IDC_EDIT11, WM_SETTEXT, 10, (LPARAM)gAux->date);
+				SendDlgItemMessage(Dlg, IDC_EDIT12, WM_SETTEXT, 10, (LPARAM)gAux->time);
+
+
+
+
+				break;
+
+			}
+
+			gAux = gAux->sig;
+		}
 
 
 		return true; }
@@ -699,9 +735,12 @@ BOOL CALLBACK Modificar(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
 		switch (LOWORD(wParam))
 		{
 
-		case IDOK:
-			EndDialog(Dlg, 0);
-			return true;
+		case IDC_BUTTON1: {
+
+			//me quedé aquí
+				   //EndDialog(Dlg, 0);
+				   return true;
+		}
 		case IDCANCEL:
 			EndDialog(Dlg, 0);
 			return true;
@@ -1066,16 +1105,6 @@ void MostarLista(HWND objeto, UINT mensa) {
 			SendMessage(objeto, mensa, 0, (LPARAM)"—————————————————————————————————————————————");
 
 		}
-
-		/*	MessageBox(ghDlg, aux->CltName, "", MB_OK);
-			MessageBox(ghDlg, aux->species, "", MB_OK);
-			MessageBox(ghDlg, aux->Phone, "", MB_OK);
-			MessageBox(ghDlg, aux->MasName, "", MB_OK);
-			MessageBox(ghDlg, aux->Motivo, "", MB_OK);
-			MessageBox(ghDlg, aux->cost, "", MB_OK);
-			MessageBox(ghDlg, aux->date, "", MB_OK);
-			MessageBox(ghDlg, aux->time, "" ,  MB_OK);*/
-
 
 
 		aux = aux->sig;

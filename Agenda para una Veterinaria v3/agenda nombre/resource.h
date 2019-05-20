@@ -22,9 +22,16 @@
 #define IDC_EDIT1                       1005
 #define IDC_EDIT2                       1006
 #define IDC_COMBO1                      1007
+#define IDC_EDIT6                       1007
+#define IDC_EDIT7                       1008
 #define IDC_EDIT3                       1009
+#define IDC_EDIT8                       1009
 #define IDC_EDIT4                       1010
+#define IDC_EDIT9                       1010
 #define IDC_EDIT5                       1011
+#define IDC_EDIT10                      1011
+#define IDC_EDIT11                      1012
+#define IDC_EDIT12                      1013
 #define IDC_DATETIMEPICKER2             1018
 #define IDC_FECHA                       1018
 #define IDC_DATETIMEPICKER3             1019
