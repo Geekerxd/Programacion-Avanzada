@@ -1,3 +1,3 @@
 ﻿  Source.cpp
-c:\users\rishar\source\repos\la agenda para una veterinaria\agenda para una veterinaria v3\agenda nombre\source.cpp(1021): warning C4172: devolución de dirección de la variable local o temporal: FechaOk
+c:\users\rishar\source\repos\la agenda para una veterinaria\agenda para una veterinaria v3\agenda nombre\source.cpp(1060): warning C4172: devolución de dirección de la variable local o temporal: FechaOk
   agenda nombre.vcxproj -> C:\Users\rishar\source\repos\La Agenda para una veterinaria\Agenda para una Veterinaria v3\Debug\agenda nombre.exe

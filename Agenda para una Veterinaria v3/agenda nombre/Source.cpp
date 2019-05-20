@@ -605,7 +605,7 @@ BOOL CALLBACK Ver_Agen(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
 
 			if (cont < 5) {
 				for (int i = 0; i < cont; i++) {
-					if (v == 18 * i) {                  //modificar 18 si agrego datos
+					if (v == 20 * i) {                  //modificar 18 si agrego datos
 						flag = true;
 						_temp = i;
 						break;
@@ -615,7 +615,7 @@ BOOL CALLBACK Ver_Agen(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
 			}
 			else {
 				for (int i = 0; i < cont; i++) {
-					if (v == 17 * i) {                  //modificar 17 si agrego datos
+					if (v == 19 * i) {                  //modificar 17 si agrego datos
 						flag = true;
 						_temp = i;
 						break;
@@ -624,23 +624,6 @@ BOOL CALLBACK Ver_Agen(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
 			}
 
 			if (flag) {
-
-				/*v += 7;
-
-				if (v == -1) {
-					break;
-				}
-				else {
-					w = SendMessage(hlist, LB_GETTEXTLEN, (WPARAM)v, (LPARAM)cad);
-
-
-
-
-					cad = (char*)malloc(w + 1);
-					SendMessage(hlist, LB_GETTEXT, (WPARAM)v, (LPARAM)cad);
-
-
-				}*/
 				node *gAux;
 				gAux = inicio;
 				while (gAux != 0) {
@@ -662,11 +645,59 @@ BOOL CALLBACK Ver_Agen(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
 
 			flag = false;
 			v = -1;
+
+
+
 			return true;
 		}
 		case IDC_BUTTON2: {                                               //Modificar cita
-			DialogBox(_hInst, MAKEINTRESOURCE(IDD_modi_cita), Dlg, Modificar);
+			flag = false;
+			v = SendMessage(hlist, LB_GETCURSEL, 0, 0);
 
+			if (cont < 5) {
+				for (int i = 0; i < cont; i++) {
+					if (v == 20 * i) {                  //modificar 18 si agrego datos
+						flag = true;
+						_temp = i;
+						break;
+					}
+				}
+
+			}
+			else {
+				for (int i = 0; i < cont; i++) {
+					if (v == 19 * i) {                  //modificar 17 si agrego datos
+						flag = true;
+						_temp = i;
+						break;
+					}
+				}
+			}
+
+			if (flag) {
+				node *gAux;
+				gAux = inicio;
+				while (gAux != 0) {
+					if (_temp == gAux->Emparejador) {
+
+						DialogBox(_hInst, MAKEINTRESOURCE(IDD_modi_cita), Dlg, Modificar);
+						break;
+
+					}
+
+					gAux = gAux->sig;
+				}
+
+
+
+				
+			}
+			else { MessageBox(Dlg, "Favor de seleccionar una Cita", "Anuncio", MB_ICONEXCLAMATION); }
+
+			flag = false;
+			v = -1;
+
+			
 			return true;
 		}
 
@@ -929,6 +960,14 @@ void MostarLista(HWND objeto, UINT mensa) {
 		if (!lineas)SendMessage(objeto, mensa, 0, (LPARAM)"");
 		SendMessage(objeto, mensa, 0, (LPARAM)TextCom);
 		if (!lineas)SendMessage(objeto, mensa, 0, (LPARAM)"");
+
+		if (aux->gender == true) {
+		SendMessage(objeto, mensa, 0, (LPARAM)"Macho");
+		}
+		else { SendMessage(objeto, mensa, 0, (LPARAM)"Hembra"); }
+
+		if (!lineas)SendMessage(objeto, mensa, 0, (LPARAM)"");
+
 		SendMessage(objeto, mensa, 0, (LPARAM)NombreMas);
 		if (!lineas)SendMessage(objeto, mensa, 0, (LPARAM)"");
 		SendMessage(objeto, mensa, 0, (LPARAM)Motiv);
