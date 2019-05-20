@@ -81,6 +81,10 @@ void EscribirArchivo();
 void LeeDatos();                                           //Imágenes y contador
 void EscribirDatos();
 
+void LeeDoc();
+void EscribirDoc();
+
+
 HWND ghDlg = 0;
 HINSTANCE _hInst;
 int _show = 0;
@@ -113,6 +117,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrev, PSTR cmd, int show)
 
 	LeeArchivo();
 	LeeDatos();
+	LeeDoc();
 
 	//GetCurrentDirectory(MAX_PATH,Folder);
 
@@ -213,6 +218,7 @@ BOOL CALLBACK ProcDialog1  (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 				//MessageBox(Dlg, "Se guardó", "informacion", MB_OK | MB_ICONINFORMATION);
 				EscribirArchivo();
 				EscribirDatos();  //contador eimagenes
+                EscribirDoc();
 				PostQuitMessage(0);
 			}
 			else {
@@ -268,6 +274,7 @@ BOOL CALLBACK ProcDialog1  (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 						   //MessageBox(Dlg, "Se guardó", "informacion", MB_OK | MB_ICONINFORMATION);
 						   EscribirArchivo();
 						   EscribirDatos();  //contador
+						   EscribirDoc();
 						   PostQuitMessage(0);
 					   }
 					   else {
@@ -450,6 +457,9 @@ BOOL CALLBACK Alta         (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 	{
 	case WM_INITDIALOG:
 	{
+		//doc info
+		PonImagen(Dlg, IDC_hi, szFileName, 30, 30);
+		SendDlgItemMessage(Dlg, IDC_STATIC_02, WM_SETTEXT, 50, (LPARAM)DocName);
 		
 		hCboSpc = GetDlgItem(Dlg, IDC_COMBO1);
 		LlenaEspecies(hCboSpc, CB_ADDSTRING, _arch_esp);
@@ -602,6 +612,9 @@ BOOL CALLBACK Ver_Agen     (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 	{
 	case WM_INITDIALOG:
 	{
+		//doc info
+		PonImagen(Dlg, IDC_hi, szFileName, 30, 30);
+		SendDlgItemMessage(Dlg, IDC_STATIC_02, WM_SETTEXT, 50, (LPARAM)DocName);
 
 		HBorrar = GetDlgItem(Dlg, IDC_BUTTON1);
 		HModificar = GetDlgItem(Dlg, IDC_BUTTON2);
@@ -613,9 +626,6 @@ BOOL CALLBACK Ver_Agen     (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 		//SendDlgItemMessage(Dlg, IDC_LIST1, LB_RESETCONTENT, 0, 0);
 
 	
-		
-		
-
 		return true;
 	}
 	case WM_COMMAND:
@@ -775,9 +785,6 @@ BOOL CALLBACK ima          (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 	return false;
 }
 
-
-
-
 void PonImagen     (HWND dialog, WPARAM IDC, char *imagen,int m, int n) {
 
 	static HBITMAP bmp1, bmp2;
@@ -797,79 +804,80 @@ void PonImagen     (HWND dialog, WPARAM IDC, char *imagen,int m, int n) {
 
 }
 
-bool CapturaNodo(HWND Dlg, node*Punt) {
-	bool exc = false;
-	char mensa[] = "";
-	node datitos = *Punt;        //esto era el problema?
-	static HWND hCombo = 0;
-	hCombo = GetDlgItem(Dlg, IDC_COMBO1);
+//bool CapturaNodo(HWND Dlg, node*Punt) {
+//	bool exc = false;
+//	char mensa[] = "";
+//	node datitos = *Punt;        //esto era el problema?
+//	static HWND hCombo = 0;
+//	hCombo = GetDlgItem(Dlg, IDC_COMBO1);
+//
+//	char TextCom[80];    //bombo box
+//	char NombreClt[80];  //nombre del cliente
+//	char PhoneClt[80];   //telefono
+//	char NombreMas[80];  //nombre de la mascota
+//	char Motiv[150];     //
+//	char Dineros[80];    //
+//	char fecha_temp[11] = "";
+//
+//	int index = SendMessage(hCombo, CB_GETCURSEL, 0, 0);
+//	SendMessage(hCombo, CB_GETLBTEXT, (WPARAM)index, (LPARAM)TextCom);
+//	SendDlgItemMessage(Dlg, IDC_EDIT1, WM_GETTEXT, (WPARAM)80, (LPARAM)NombreClt);
+//	SendDlgItemMessage(Dlg, IDC_EDIT2, WM_GETTEXT, (WPARAM)80, (LPARAM)PhoneClt);
+//	SendDlgItemMessage(Dlg, IDC_EDIT3, WM_GETTEXT, (WPARAM)80, (LPARAM)NombreMas);
+//	SendDlgItemMessage(Dlg, IDC_EDIT4, WM_GETTEXT, (WPARAM)150, (LPARAM)Motiv);
+//	SendDlgItemMessage(Dlg, IDC_EDIT5, WM_GETTEXT, (WPARAM)80, (LPARAM)Dineros);
+//
+//	SendDlgItemMessage(Dlg, IDC_FECHA, WM_GETTEXT, (WPARAM)11, (LPARAM)fecha_temp);
+//	SendDlgItemMessage(Dlg, IDC_HORA, WM_GETTEXT, (WPARAM)6, (LPARAM)datitos.time);
+//
+//	strcpy(datitos.date, ConvierteFecha(fecha_temp));
+//
+//
+//	// AQUI: validar...
+//	if (exc == true) {
+//		strcpy(mensa, "favor de capturar nombre\n");
+//	}
+//
+//	strcpy(datitos.species, TextCom);
+//	strcpy(datitos.CltName, NombreClt);
+//	strcpy(datitos.Phone, PhoneClt);
+//	strcpy(datitos.MasName, NombreMas);
+//	strcpy(datitos.Motivo, Motiv);
+//	strcpy(datitos.cost, Dineros);
+//
+//	if (exc) {     //tene que pasar por aqui??
+//		Punt = 0;
+//		MessageBox(Dlg, mensa, "  ", MB_OK);
+//		Punt = &datitos;
+//	}
+//
+//	return exc;
+//
+//};
 
-	char TextCom[80];    //bombo box
-	char NombreClt[80];  //nombre del cliente
-	char PhoneClt[80];   //telefono
-	char NombreMas[80];  //nombre de la mascota
-	char Motiv[150];     //
-	char Dineros[80];    //
-	char fecha_temp[11] = "";
-
-	int index = SendMessage(hCombo, CB_GETCURSEL, 0, 0);
-	SendMessage(hCombo, CB_GETLBTEXT, (WPARAM)index, (LPARAM)TextCom);
-	SendDlgItemMessage(Dlg, IDC_EDIT1, WM_GETTEXT, (WPARAM)80, (LPARAM)NombreClt);
-	SendDlgItemMessage(Dlg, IDC_EDIT2, WM_GETTEXT, (WPARAM)80, (LPARAM)PhoneClt);
-	SendDlgItemMessage(Dlg, IDC_EDIT3, WM_GETTEXT, (WPARAM)80, (LPARAM)NombreMas);
-	SendDlgItemMessage(Dlg, IDC_EDIT4, WM_GETTEXT, (WPARAM)150, (LPARAM)Motiv);
-	SendDlgItemMessage(Dlg, IDC_EDIT5, WM_GETTEXT, (WPARAM)80, (LPARAM)Dineros);
-
-	SendDlgItemMessage(Dlg, IDC_FECHA, WM_GETTEXT, (WPARAM)11, (LPARAM)fecha_temp);
-	SendDlgItemMessage(Dlg, IDC_HORA, WM_GETTEXT, (WPARAM)6, (LPARAM)datitos.time);
-
-	strcpy(datitos.date, ConvierteFecha(fecha_temp));
-
-
-	// AQUI: validar...
-	if (exc == true) {
-		strcpy(mensa, "favor de capturar nombre\n");
-	}
-
-	strcpy(datitos.species, TextCom);
-	strcpy(datitos.CltName, NombreClt);
-	strcpy(datitos.Phone, PhoneClt);
-	strcpy(datitos.MasName, NombreMas);
-	strcpy(datitos.Motivo, Motiv);
-	strcpy(datitos.cost, Dineros);
-
-	if (exc) {     //tene que pasar por aqui??
-		Punt = 0;
-		MessageBox(Dlg, mensa, "  ", MB_OK);
-		Punt = &datitos;
-	}
-
-	return exc;
-
-};
-void AgregaNodo    (node Datos) {
-	//ME QUEDÉ AQUÍ REVISANDO // ya no
-	node*aux = 0;
-	aux = new node;
-	aux->sig = 0;
-	aux->ante = 0;
-
-	
-	//strcpy(aux->CltName, Datos.CltName);
-
-	if (inicio == 0)
-	{
-		inicio = aux;
-		last = aux;
-	}
-	else
-	{
-		last->sig = aux;
-		aux->ante = last;
-
-		last = aux;
-	}
-};
+//void AgregaNodo    (node Datos) {
+//	//ME QUEDÉ AQUÍ REVISANDO // ya no
+//	node*aux = 0;
+//	aux = new node;
+//	aux->sig = 0;
+//	aux->ante = 0;
+//
+//	
+//	//strcpy(aux->CltName, Datos.CltName);
+//
+//	if (inicio == 0)
+//	{
+//		inicio = aux;
+//		last = aux;
+//	}
+//	else
+//	{
+//		last->sig = aux;
+//		aux->ante = last;
+//
+//		last = aux;
+//	}
+//};
 
 void MostarLista   (HWND objeto, UINT mensa) {
 	node datitos;
@@ -1010,7 +1018,7 @@ char*ConvierteFecha(char*Fecha)
 }
 
 
-
+//nodo
 void LeeArchivo()
 {
 	//node info;
@@ -1083,6 +1091,7 @@ void EscribirArchivo()
 
 }
 
+//datos extras
 void LeeDatos() {
 
 
@@ -1137,7 +1146,6 @@ void LeeDatos() {
 
 
 }
-
 void EscribirDatos() {
 
 
@@ -1179,6 +1187,40 @@ void EscribirDatos() {
 
 
 }
+
+//Doc info
+void LeeDoc() {
+	ifstream k;
+	k.open("Info_Doc.txt", ios::in);
+	if (k.is_open()) {
+
+		k.read(DocName, 50);
+		k.read(DocCed, 50);
+
+
+		k.close();
+	}
+
+}
+void EscribirDoc() {
+
+
+	ofstream l;
+	l.open("Info_Doc.txt", ios::out);
+	if (l.is_open()) {
+
+		
+		l.write(DocName,sizeof DocName);
+		l << endl;
+		l.write(DocCed, sizeof DocCed);
+
+
+
+		l.close();
+	}
+
+}
+
 
 void icon (HWND Dlg) {
 	HICON newSmallIco, newBigIco, oldSmallIco, oldBigIco;
