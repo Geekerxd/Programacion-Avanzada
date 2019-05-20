@@ -45,6 +45,16 @@
 #define IDC_STATIC_01                   1030
 #define IDC_STATIC_02                   1031
 #define IDC_RADIO5                      1032
+#define IDC_STATIC_03                   1032
+#define IDC_STATIC_4                    1033
+#define IDC_STATIC_5                    1034
+#define IDC_STATIC_6                    1035
+#define IDC_STATIC_7                    1036
+#define IDC_STATIC_8                    1037
+#define IDC_STATIC_9                    1038
+#define IDC_STATIC_10                   1039
+#define IDC_STATIC_11                   1040
+#define IDC_STATIC_12                   1041
 #define ID_VER_INFORMAION               40001
 #define ID_AYUDA_ACERCADELPROGRAMA      40002
 #define ID_ACERCA                       40003
@@ -67,7 +77,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        121
 #define _APS_NEXT_COMMAND_VALUE         40016
-#define _APS_NEXT_CONTROL_VALUE         1032
+#define _APS_NEXT_CONTROL_VALUE         1033
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

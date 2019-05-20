@@ -76,7 +76,7 @@ char DocCed[50] = "";
 
 //de validaciones
 int excp = -1;
-
+int Gt;
 
 
 void LeeArchivo();                                         //Lista con citas
@@ -529,39 +529,6 @@ BOOL CALLBACK Alta(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
 
 	return false;
 }
-BOOL CALLBACK Baja(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
-{
-
-
-	switch (Mensaje)
-	{
-	case WM_INITDIALOG:
-	{
-
-
-		return true; }
-	case WM_COMMAND:
-	{
-		switch (LOWORD(wParam))
-		{
-
-		case IDOK:
-			EndDialog(Dlg, 0);
-			return true;
-		case IDCANCEL:
-			EndDialog(Dlg, 0);
-			return true;
-		}
-		return true; }
-	case WM_CLOSE:
-	{
-		EndDialog(Dlg, 0);
-		return true; }
-	case WM_DESTROY:
-	{return true; }
-	}
-	return false;
-}
 BOOL CALLBACK Ver_Agen(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
 {
 	static HWND hlist = 0;
@@ -629,7 +596,10 @@ BOOL CALLBACK Ver_Agen(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
 				while (gAux != 0) {
 					if (_temp == gAux->Emparejador) {
 
+						Gt = _temp;
+						
 						DialogBox(_hInst, MAKEINTRESOURCE(IDD_baja), Dlg, Baja);
+						EndDialog(Dlg, 0);
 						break;
 
 					}
@@ -679,7 +649,7 @@ BOOL CALLBACK Ver_Agen(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
 				gAux = inicio;
 				while (gAux != 0) {
 					if (_temp == gAux->Emparejador) {
-
+						Gt = _temp;
 						DialogBox(_hInst, MAKEINTRESOURCE(IDD_modi_cita), Dlg, Modificar);
 						break;
 
@@ -745,6 +715,117 @@ BOOL CALLBACK Modificar(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
 	{return true; }
 	}
 
+	return false;
+}
+BOOL CALLBACK Baja(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
+{
+	node *gAux;
+
+	switch (Mensaje)
+	{
+	case WM_INITDIALOG:
+	{
+		char j[10]="";
+
+		_itoa(Gt, j, 10);
+
+		SendDlgItemMessage(Dlg, IDC_STATIC_03, WM_SETTEXT, 10, (LPARAM)j);
+
+		
+		gAux = inicio;
+		while (gAux != 0) {
+			if (Gt == gAux->Emparejador) {
+
+				SendDlgItemMessage(Dlg, IDC_STATIC_4, WM_SETTEXT, 10, (LPARAM)gAux->CltName);
+				SendDlgItemMessage(Dlg, IDC_STATIC_5, WM_SETTEXT, 10, (LPARAM)gAux->Phone);
+				SendDlgItemMessage(Dlg, IDC_STATIC_6, WM_SETTEXT, 10, (LPARAM)gAux->species);
+				if (gAux->gender == true) {
+					SendDlgItemMessage(Dlg,IDC_STATIC_7, WM_SETTEXT, 10, (LPARAM)"Macho");
+				}
+				else { SendDlgItemMessage(Dlg, IDC_STATIC_7, WM_SETTEXT, 10, (LPARAM)"Hembra"); }
+
+				SendDlgItemMessage(Dlg, IDC_STATIC_8, WM_SETTEXT, 10, (LPARAM)gAux->MasName);
+				SendDlgItemMessage(Dlg, IDC_STATIC_9, WM_SETTEXT, 10, (LPARAM)gAux->Motivo);
+				SendDlgItemMessage(Dlg, IDC_STATIC_10, WM_SETTEXT, 10, (LPARAM)gAux->cost);
+				SendDlgItemMessage(Dlg, IDC_STATIC_11, WM_SETTEXT, 10, (LPARAM)gAux->date);
+				SendDlgItemMessage(Dlg, IDC_STATIC_12, WM_SETTEXT, 10, (LPARAM)gAux->time);
+
+
+
+
+				break;
+
+			}
+
+			gAux = gAux->sig;
+		}
+
+
+		return true; }
+	case WM_COMMAND:
+	{
+		switch (LOWORD(wParam))   //Gt
+		{
+
+		case IDC_BUTTON1: {      //borrar
+				  
+			
+
+			gAux = inicio;
+			while (gAux != 0) {
+				if (Gt == gAux->Emparejador) {
+
+					node*aux = gAux;
+					node*ant = gAux;
+					if (aux == inicio) {
+						inicio = inicio->sig;
+					}
+					else {
+						ant->ante->sig = aux->sig;
+						aux->sig->ante = ant->ante;
+					}
+					/*delete aux;
+					delete ant;*/
+					//gAux->Emparejador -= 1;
+					cont -= 1;
+					
+
+					break;
+
+				}
+
+				gAux = gAux->sig;
+			}
+
+
+			gAux = inicio;
+			int i = 0;
+			while (gAux != 0) {
+				gAux->Emparejador = i;
+
+				gAux = gAux->sig;
+				i++;
+			}
+
+			MessageBox(Dlg, "Cita Borrada", "", MB_OK + MB_ICONINFORMATION);
+			
+			EndDialog(Dlg, 0);
+			//DialogBox(_hInst, MAKEINTRESOURCE(IDD_ver_agenda), Dlg, Ver_Agen);
+
+				   return true;
+		}
+		case IDCANCEL:
+			EndDialog(Dlg, 0);
+			return true;
+		}
+		return true; }
+	case WM_CLOSE:
+	{
+		EndDialog(Dlg, 0);
+		return true; }
+	case WM_DESTROY:
+	{return true; }
+	}
 	return false;
 }
 BOOL CALLBACK ima(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
@@ -909,9 +990,6 @@ void AgregaDatosNodo(HWND Dlg, HWND hCboSpc) {
 
 
 }
-
-
-
 
 
 void MostarLista(HWND objeto, UINT mensa) {
