@@ -487,26 +487,27 @@ BOOL CALLBACK Alta         (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 			
 			*/
 			
-			/*
-			if (SendDlgItemMessage(Dlg, IDC_RADIO1, BM_GETCHECK, 0, 0) == BST_INDETERMINATE) { excp = 0; } // 0 para radio button
+			
 
-			if (SendDlgItemMessage(Dlg, IDC_RADIO2, BM_GETCHECK, 0, 0) == BST_INDETERMINATE) { excp = 0; }*/
+			if (SendDlgItemMessage(Dlg, IDC_RADIO1, BM_GETCHECK, 0, 0) == BST_UNCHECKED&& SendDlgItemMessage(Dlg, IDC_RADIO2, BM_GETCHECK, 0, 0) == BST_UNCHECKED){ excp = 0; } 
 
+			if (SendDlgItemMessage(Dlg, IDC_RADIO1, BM_GETCHECK, 0, 0) == BST_CHECKED || SendDlgItemMessage(Dlg, IDC_RADIO2, BM_GETCHECK, 0, 0) == BST_CHECKED) { excp = -1; }
+			
 
-			node *aux = 0;
-			aux = new node;
-			aux->sig = 0;
-			aux->ante = 0;
+			
+			if (excp == -1) {
 
-			/*
-			if (excp = -1) {
+				node *aux = 0;
+				aux = new node;
+				aux->sig = 0;
+				aux->ante = 0;
 
 				if (SendDlgItemMessage(Dlg, IDC_RADIO1, BM_GETCHECK, 0, 0) == BST_CHECKED) {
 					aux->gender = true;
 				}
 				else if (SendDlgItemMessage(Dlg, IDC_RADIO2, BM_GETCHECK, 0, 0) == BST_CHECKED) {
 					aux->gender = false;
-				}*/
+				}
 
 
 				SendMessage(hCboSpc, WM_GETTEXT, (WPARAM)80, (LPARAM)aux->species);
@@ -536,22 +537,11 @@ BOOL CALLBACK Alta         (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 				MessageBox(Dlg, "Elemento agregado", "Agregar Cita", MB_OK + MB_ICONINFORMATION);
 				cont += 1;
 
-				//delete aux;
-				//if (CapturaNodo(Dlg, &temp) == false){                                                 //todo esto es por las validaciones
-				//AgregaNodo(temp);
-				//MessageBox(Dlg, "Elemento agregado", "Agregar Cita", MB_OK + MB_ICONINFORMATION);      // Esto pasa cada vez que presiono el botón de agregar.
-				//}
-				//else{MessageBox(Dlg, "No se pudo abrir", "hmmm", MB_OK + MB_ICONINFORMATION);}
-				////                                                                                        <<< Esto haría mas o menos lo mismo: >>>
-				////CapturaNodo(Dlg,temp);                                                               << Primero se guardan los datos en el nodo                    >>
-				////AgregaNodo(temp);                                                                    << Después el nodo es acomodado en la lista doblemente ligada >>
-				////MessageBox(Dlg, "Elemento agregado", "Agregar Cita", MB_OK + MB_ICONINFORMATION);
-
-				/*
+				
 			}
-			else if (excp=0) { MessageBox(Dlg, "no tiene seleccionado ningun radio button", "", MB_ICONERROR); }*/
+			else if (excp==0) { MessageBox(Dlg, "no tiene seleccionado ningun radio button", "", MB_ICONERROR); excp = -1;}
 
-
+			excp = -1;
 			return true;    ///FIN de "case IDC_AGREGAR"
 		}///FIN del switch (LOWORD(wParam))
 		return true;
