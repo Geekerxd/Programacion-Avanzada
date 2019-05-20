@@ -25,7 +25,8 @@ struct node
 	char	cost[10];      // Costo de la Consulta
 
 	
-	bool	gender;        // Género del Animal
+	bool	gender=false;        // Género del Animal
+	int     interes[3] = {3,6,9};
 
 	node	*sig;
 	node	*ante;
@@ -46,11 +47,11 @@ char _pic2[MAX_PATH] =  "";              //Variable que almacena la direccion de
 char Folder[MAX_PATH] = ""; ;
 
 
-void AgregaNodo    (node Datos);                //en des-uso   
+//void AgregaNodo    (node Datos);                //en des-uso   
 void MostarLista   (HWND objeto, UINT mensa);
 void LlenaEspecies (HWND objeto, UINT mensa, char *file);
 void PonImagen     (HWND dialog, WPARAM IDC, char *imagen, int m, int n);
-bool CapturaNodo   (HWND Dlg, node*Punt);       //en des-uso           //Funcion tipo bool
+//bool CapturaNodo   (HWND Dlg, node*Punt);       //en des-uso           //Funcion tipo bool
 
 char szFileName[MAX_PATH] = "";
 void openfilename();
@@ -71,7 +72,8 @@ bool flag=false;
 char DocName[50] = "";
 char DocCed [50] = "";
 
-
+//de validaciones
+int excp = -1;
 
 
 
@@ -409,7 +411,7 @@ BOOL CALLBACK InfDoc       (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 
 
 
-			//aqui una funcion con  todo esto
+			//aqui una funcion con  todo esto                                                      //validar nombre
 
 			SendDlgItemMessage(Dlg, IDC_EDIT1, WM_GETTEXT, 50, (LPARAM)DocName);
 			SendDlgItemMessage(Dlg, IDC_EDIT2, WM_GETTEXT, 50, (LPARAM)DocCed);
@@ -428,10 +430,6 @@ BOOL CALLBACK InfDoc       (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 			DialogBox(_hInst, MAKEINTRESOURCE(IDD_DIALOG_Im), Dlg, ima);
 			DialogBox(_hInst, MAKEINTRESOURCE(IDD_Doc_Inf), Dlg, InfDoc);
 
-
-
-
-			MessageBox(Dlg, "Aún No Está Definida Esta Función", " ", MB_ICONINFORMATION);
 			return true;
 
 
@@ -485,10 +483,14 @@ BOOL CALLBACK Alta         (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 
 			/*
 			
-				Me quede aquí. Voy agregar el bool gender y hacer validaciones, ademas de poner la foto, y tal vez el filtro
+				Me quede aquí. Voy agregar el bool gender y hacer validaciones
 			
 			*/
+			
+			/*
+			if (SendDlgItemMessage(Dlg, IDC_RADIO1, BM_GETCHECK, 0, 0) == BST_INDETERMINATE) { excp = 0; } // 0 para radio button
 
+			if (SendDlgItemMessage(Dlg, IDC_RADIO2, BM_GETCHECK, 0, 0) == BST_INDETERMINATE) { excp = 0; }*/
 
 
 			node *aux = 0;
@@ -496,54 +498,58 @@ BOOL CALLBACK Alta         (HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam
 			aux->sig = 0;
 			aux->ante = 0;
 
+			/*
+			if (excp = -1) {
+
+				if (SendDlgItemMessage(Dlg, IDC_RADIO1, BM_GETCHECK, 0, 0) == BST_CHECKED) {
+					aux->gender = true;
+				}
+				else if (SendDlgItemMessage(Dlg, IDC_RADIO2, BM_GETCHECK, 0, 0) == BST_CHECKED) {
+					aux->gender = false;
+				}*/
 
 
-			/*int index = SendMessage(hCboSpc, CB_GETCURSEL, 0, 0);
-			SendMessage(hCboSpc, CB_GETLBTEXT, (WPARAM)index, (LPARAM)aux->species);*/
+				SendMessage(hCboSpc, WM_GETTEXT, (WPARAM)80, (LPARAM)aux->species);
+				SendDlgItemMessage(Dlg, IDC_EDIT1, WM_GETTEXT, (WPARAM)80, (LPARAM)aux->CltName);
+				SendDlgItemMessage(Dlg, IDC_EDIT2, WM_GETTEXT, (WPARAM)80, (LPARAM)aux->Phone);
+				SendDlgItemMessage(Dlg, IDC_EDIT3, WM_GETTEXT, (WPARAM)80, (LPARAM)aux->MasName);
+				SendDlgItemMessage(Dlg, IDC_EDIT4, WM_GETTEXT, (WPARAM)150, (LPARAM)aux->Motivo);
+				SendDlgItemMessage(Dlg, IDC_EDIT5, WM_GETTEXT, (WPARAM)80, (LPARAM)aux->cost);
 
-			SendMessage(hCboSpc, WM_GETTEXT, (WPARAM)80, (LPARAM)aux->species);
-			SendDlgItemMessage(Dlg, IDC_EDIT1, WM_GETTEXT, (WPARAM)80, (LPARAM)aux->CltName);
-			SendDlgItemMessage(Dlg, IDC_EDIT2, WM_GETTEXT, (WPARAM)80, (LPARAM)aux->Phone);
-			SendDlgItemMessage(Dlg, IDC_EDIT3, WM_GETTEXT, (WPARAM)80, (LPARAM)aux->MasName);
-			SendDlgItemMessage(Dlg, IDC_EDIT4, WM_GETTEXT, (WPARAM)150, (LPARAM)aux->Motivo);
-			SendDlgItemMessage(Dlg, IDC_EDIT5, WM_GETTEXT, (WPARAM)80, (LPARAM)aux->cost);
-
-			SendDlgItemMessage(Dlg, IDC_FECHA, WM_GETTEXT, (WPARAM)11, (LPARAM)aux->date);
-			SendDlgItemMessage(Dlg, IDC_HORA, WM_GETTEXT, (WPARAM)6, (LPARAM)aux->time);
+				SendDlgItemMessage(Dlg, IDC_FECHA, WM_GETTEXT, (WPARAM)11, (LPARAM)aux->date);
+				SendDlgItemMessage(Dlg, IDC_HORA, WM_GETTEXT, (WPARAM)6, (LPARAM)aux->time);
 
 
-			if (inicio == 0)
-			{
-				inicio = aux;
-				last = aux;
+				if (inicio == 0)
+				{
+					inicio = aux;
+					last = aux;
+				}
+				else
+				{
+					last->sig = aux;
+					aux->ante = last;
+
+					last = aux;
+				}
+
+				MessageBox(Dlg, "Elemento agregado", "Agregar Cita", MB_OK + MB_ICONINFORMATION);
+				cont += 1;
+
+				//delete aux;
+				//if (CapturaNodo(Dlg, &temp) == false){                                                 //todo esto es por las validaciones
+				//AgregaNodo(temp);
+				//MessageBox(Dlg, "Elemento agregado", "Agregar Cita", MB_OK + MB_ICONINFORMATION);      // Esto pasa cada vez que presiono el botón de agregar.
+				//}
+				//else{MessageBox(Dlg, "No se pudo abrir", "hmmm", MB_OK + MB_ICONINFORMATION);}
+				////                                                                                        <<< Esto haría mas o menos lo mismo: >>>
+				////CapturaNodo(Dlg,temp);                                                               << Primero se guardan los datos en el nodo                    >>
+				////AgregaNodo(temp);                                                                    << Después el nodo es acomodado en la lista doblemente ligada >>
+				////MessageBox(Dlg, "Elemento agregado", "Agregar Cita", MB_OK + MB_ICONINFORMATION);
+
+				/*
 			}
-			else
-			{
-				last->sig = aux;
-				aux->ante = last;
-
-				last = aux;
-			}
-
-			MessageBox(Dlg, "Elemento agregado", "Agregar Cita", MB_OK + MB_ICONINFORMATION);
-			cont += 1;
-
-			//delete aux;
-
-			//if (CapturaNodo(Dlg, &temp) == false){                                                 //todo esto es por las validaciones
-			//AgregaNodo(temp);
-
-
-			//MessageBox(Dlg, "Elemento agregado", "Agregar Cita", MB_OK + MB_ICONINFORMATION);      // Esto pasa cada vez que presiono el botón de agregar.
-			//}
-			//else{MessageBox(Dlg, "No se pudo abrir", "hmmm", MB_OK + MB_ICONINFORMATION);}
-
-			////                                                                                        <<< Esto haría mas o menos lo mismo: >>>
-			////CapturaNodo(Dlg,temp);                                                               << Primero se guardan los datos en el nodo                    >>
-			////AgregaNodo(temp);                                                                    << Después el nodo es acomodado en la lista doblemente ligada >>
-
-			////MessageBox(Dlg, "Elemento agregado", "Agregar Cita", MB_OK + MB_ICONINFORMATION);
-
+			else if (excp=0) { MessageBox(Dlg, "no tiene seleccionado ningun radio button", "", MB_ICONERROR); }*/
 
 
 			return true;    ///FIN de "case IDC_AGREGAR"

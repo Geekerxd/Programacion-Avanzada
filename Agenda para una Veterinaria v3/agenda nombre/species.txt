@@ -1,6 +1,11 @@
 Gato
+
 Perro
+
 Hamster
+
 Tortuga
+
 Conejo
+
 cocodrilo

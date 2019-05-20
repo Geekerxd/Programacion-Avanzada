@@ -40,8 +40,11 @@
 #define IDC_RADIO2                      1027
 #define IDC_LIST_M                      1027
 #define IDC_LIST2                       1028
+#define IDC_RADIO3                      1028
+#define IDC_RADIO4                      1029
 #define IDC_STATIC_01                   1030
 #define IDC_STATIC_02                   1031
+#define IDC_RADIO5                      1032
 #define ID_VER_INFORMAION               40001
 #define ID_AYUDA_ACERCADELPROGRAMA      40002
 #define ID_ACERCA                       40003

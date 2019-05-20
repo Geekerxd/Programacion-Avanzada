@@ -1,6 +1,1 @@
-﻿  Source.cpp
-c:\users\rishar\source\repos\la agenda para una veterinaria\agenda para una veterinaria v3\agenda nombre\source.cpp(455): warning C4101: 'temp': variable local sin referencia
-c:\users\rishar\source\repos\la agenda para una veterinaria\agenda para una veterinaria v3\agenda nombre\source.cpp(883): warning C4101: 'datitos': variable local sin referencia
-c:\users\rishar\source\repos\la agenda para una veterinaria\agenda para una veterinaria v3\agenda nombre\source.cpp(1068): warning C4101: 'info': variable local sin referencia
-c:\users\rishar\source\repos\la agenda para una veterinaria\agenda para una veterinaria v3\agenda nombre\source.cpp(1017): warning C4172: devolución de dirección de la variable local o temporal: FechaOk
-  agenda nombre.vcxproj -> C:\Users\rishar\source\repos\La Agenda para una veterinaria\Agenda para una Veterinaria v3\Debug\agenda nombre.exe
+﻿  agenda nombre.vcxproj -> C:\Users\rishar\source\repos\La Agenda para una veterinaria\Agenda para una Veterinaria v3\Debug\agenda nombre.exe
