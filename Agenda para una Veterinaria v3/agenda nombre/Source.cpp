@@ -781,8 +781,16 @@ BOOL CALLBACK Baja(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
 						inicio = inicio->sig;
 					}
 					else {
-						ant->ante->sig = aux->sig;
-						aux->sig->ante = ant->ante;
+						
+						if (aux->sig == NULL) {
+							ant->ante->sig = NULL;
+						}
+						else {
+							ant->ante->sig = aux->sig;
+							aux->sig->ante = ant->ante;
+						
+						}
+					
 					}
 					/*delete aux;
 					delete ant;*/
@@ -1055,7 +1063,7 @@ void MostarLista(HWND objeto, UINT mensa) {
 		SendMessage(objeto, mensa, 0, (LPARAM)"—————————————————————————————————————————————");
 
 		if (cont < 5) {
-			SendMessage(objeto, mensa, 0, (LPARAM)"——————————————————————————————");
+			SendMessage(objeto, mensa, 0, (LPARAM)"—————————————————————————————————————————————");
 
 		}
 
