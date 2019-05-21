@@ -707,16 +707,24 @@ BOOL CALLBACK Modificar(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
 				SendDlgItemMessage(Dlg, IDC_EDIT1, WM_SETTEXT, 10, (LPARAM)gAux->CltName);
 				SendDlgItemMessage(Dlg, IDC_EDIT2, WM_SETTEXT, 10, (LPARAM)gAux->Phone);
 				SendDlgItemMessage(Dlg, IDC_EDIT6, WM_SETTEXT, 10, (LPARAM)gAux->species);
-				if (gAux->gender == true) {
-					SendDlgItemMessage(Dlg, IDC_EDIT7, WM_SETTEXT, 10, (LPARAM)"Macho");//cambiar este por radio button cheched
+
+
+				if (gAux->gender ==true) {
+					
+					SendMessage(GetDlgItem(Dlg, IDC_RADIO1), BM_SETCHECK, BST_CHECKED, 1);
+					
 				}
-				else { SendDlgItemMessage(Dlg, IDC_EDIT7, WM_SETTEXT, 10, (LPARAM)"Hembra"); }
+				else if (gAux->gender == false) {
+					SendMessage(GetDlgItem(Dlg, IDC_RADIO2), BM_SETCHECK, BST_CHECKED, 1);
+				}
 
 				SendDlgItemMessage(Dlg, IDC_EDIT8, WM_SETTEXT, 10, (LPARAM)gAux->MasName);
 				SendDlgItemMessage(Dlg, IDC_EDIT9, WM_SETTEXT, 10, (LPARAM)gAux->Motivo);
 				SendDlgItemMessage(Dlg, IDC_EDIT10, WM_SETTEXT, 10, (LPARAM)gAux->cost);
-				SendDlgItemMessage(Dlg, IDC_EDIT11, WM_SETTEXT, 10, (LPARAM)gAux->date);
-				SendDlgItemMessage(Dlg, IDC_EDIT12, WM_SETTEXT, 10, (LPARAM)gAux->time);
+
+
+				SendDlgItemMessage(Dlg, IDC_DATETIMEPICKER1, WM_SETTEXT, 10, (LPARAM)gAux->date);
+				SendDlgItemMessage(Dlg, IDC_DATETIMEPICKER4, WM_SETTEXT, 10, (LPARAM)gAux->time);
 
 
 
@@ -736,6 +744,21 @@ BOOL CALLBACK Modificar(HWND Dlg, UINT Mensaje, WPARAM wParam, LPARAM lparam)
 		{
 
 		case IDC_BUTTON1: {
+
+
+
+
+
+
+			//if (SendDlgItemMessage(Dlg, IDC_RADIO1, BM_GETCHECK, 0, 0) == BST_CHECKED) {
+			//	gAux->gender = true;
+			//}
+			//else if (SendDlgItemMessage(Dlg, IDC_RADIO2, BM_GETCHECK, 0, 0) == BST_CHECKED) {
+			//	gAux->gender = false;
+			//}
+
+
+
 
 			//me quedé aquí
 				   //EndDialog(Dlg, 0);

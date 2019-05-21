@@ -23,15 +23,12 @@
 #define IDC_EDIT2                       1006
 #define IDC_COMBO1                      1007
 #define IDC_EDIT6                       1007
-#define IDC_EDIT7                       1008
 #define IDC_EDIT3                       1009
 #define IDC_EDIT8                       1009
 #define IDC_EDIT4                       1010
 #define IDC_EDIT9                       1010
 #define IDC_EDIT5                       1011
 #define IDC_EDIT10                      1011
-#define IDC_EDIT11                      1012
-#define IDC_EDIT12                      1013
 #define IDC_DATETIMEPICKER2             1018
 #define IDC_FECHA                       1018
 #define IDC_DATETIMEPICKER3             1019
@@ -54,7 +51,9 @@
 #define IDC_RADIO5                      1032
 #define IDC_STATIC_03                   1032
 #define IDC_STATIC_4                    1033
+#define IDC_DATETIMEPICKER1             1033
 #define IDC_STATIC_5                    1034
+#define IDC_DATETIMEPICKER4             1034
 #define IDC_STATIC_6                    1035
 #define IDC_STATIC_7                    1036
 #define IDC_STATIC_8                    1037
@@ -84,7 +83,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        121
 #define _APS_NEXT_COMMAND_VALUE         40016
-#define _APS_NEXT_CONTROL_VALUE         1033
+#define _APS_NEXT_CONTROL_VALUE         1034
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
